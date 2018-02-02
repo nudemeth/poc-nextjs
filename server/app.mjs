@@ -12,7 +12,7 @@ const app = express();
 const __dirname = process.cwd();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'server', 'views'));
 app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
