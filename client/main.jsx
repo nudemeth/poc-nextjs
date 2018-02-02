@@ -17,4 +17,4 @@ class UI {
     }
 }
 
-export default UI;
+exports.UI = UI;

@@ -5,7 +5,8 @@ module.exports = {
     entry: path.join(__dirname,'client','main.jsx'),
     output: {
         path: path.join(__dirname,'public','js'),
-        filename: 'bundle.js'
+        filename: 'bundle.js',
+        library: ['nudemeth','poc','web']
     },
     module: {
         loaders: [{

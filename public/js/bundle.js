@@ -1,3 +1,4 @@
+var nudemeth = nudemeth || {}; nudemeth["poc"] = nudemeth["poc"] || {}; nudemeth["poc"]["web"] =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -1058,10 +1059,6 @@ module.exports = memoizeStringOnly;
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
 var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
@@ -1098,7 +1095,7 @@ var UI = function UI() {
     };
 };
 
-exports.default = UI;
+exports.UI = UI;
 
 /***/ }),
 /* 18 */

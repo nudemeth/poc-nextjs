@@ -1,7 +1,9 @@
 extends layout
 
 block content
-  div#container #{container}
+  #container.
+    !{container}
   script(type='text/javascript' src='./js/bundle.js')
   script(type='text/javascript').
-    var ui = 1;
+    var ui = new nudemeth.poc.web.UI();
+    ui.renderClient(#{model});
