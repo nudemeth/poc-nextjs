@@ -10,7 +10,7 @@ class UI {
     }
 
     renderClient = () => {
-        return ReactDOM.render(
+        return ReactDOM.hydrate(
             <h1>Hello World!</h1>,
             document.getElementById('container')
         );

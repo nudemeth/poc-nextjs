@@ -1087,7 +1087,7 @@ var UI = function UI() {
     };
 
     this.renderClient = function () {
-        return _reactDom2.default.render(_react2.default.createElement(
+        return _reactDom2.default.hydrate(_react2.default.createElement(
             'h1',
             null,
             'Hello World!'
