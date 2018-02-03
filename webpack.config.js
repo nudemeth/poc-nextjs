@@ -1,12 +1,14 @@
 const webpack = require('webpack');
 const path = require('path');
+const nodeExternals = require('webpack-node-externals');
 
-module.exports = {
-    entry: path.join(__dirname,'client','main.jsx'),
+module.exports = [{
+    name: 'client',
+    entry: path.join(__dirname,'src','client','main.jsx'),
     output: {
-        path: path.join(__dirname,'public','js'),
+        path: path.join(__dirname,'static','js'),
         filename: 'bundle.js',
-        library: ['nudemeth','poc','web']
+        library: ['web']
     },
     module: {
         loaders: [{
@@ -18,4 +20,26 @@ module.exports = {
             }
         }]
     }
-}
+}, {
+    name: 'server',
+    target: 'node',
+    externals: [nodeExternals()],
+    entry: path.join(__dirname,'src','server','main.js'),
+    output: {
+        path: path.join(__dirname,'bin'),
+        filename: 'server.js'
+    },
+    module: {
+        loaders: [{
+            test: /\.(js|jsx)$/,
+            loader: 'babel-loader',
+            exclude: /node_modules/,
+            query: {
+                presets: ['stage-2','react']
+            }
+        }]
+    },
+    plugins: [
+        new webpack.BannerPlugin({banner: '#!/usr/bin/env node', raw: true})
+    ]
+}];

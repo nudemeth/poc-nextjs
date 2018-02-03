@@ -1,10 +1,10 @@
-#!/usr/bin/env node
+//#!/usr/bin/env node
 
 /**
  * Module dependencies.
  */
 
-import app from '../server/app';
+import app from './app.js';
 import Debug from 'debug';
 import http from 'http';
 
