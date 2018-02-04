@@ -86,7 +86,7 @@ class SideBar extends React.Component {
                     </Drawer>
                 </Hidden>
             </div>
-        )
+        );
     }
 }
 

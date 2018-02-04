@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Header from './Header.jsx'
 import SideBar from './SideBar.jsx'
 import Content from './Content.jsx'
@@ -25,17 +26,20 @@ class Container extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
         return (
-            <div className={classes.root}>
-                <div className={classes.appFrame}>
+            <div className={this.props.classes.root}>
+                <div className={this.props.classes.appFrame}>
                     <Header />
                     <SideBar />
-                    <Content {...this.props} />
+                    <Content model={this.props.model} />
                 </div>
             </div>
-        )
+        );
     }
 }
 
-export default withStyles(styles,{ withTheme: true })(Container);
+Container.propTypes = {
+    classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles, { withTheme: true })(Container);

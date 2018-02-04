@@ -36,13 +36,11 @@ class Home extends React.Component {
     }
 
     render() {
-        return (
-            <div>
-                <TitleBar title={this.state.model.title} />
-                <h2>{this.state.model.greeting}</h2>
-                <Button raised color="primary">Hello</Button>
-            </div>
-        );
+        return [
+            <TitleBar key="1" title={this.state.model.title} />,
+            <h2 key="2">{this.state.model.greeting}</h2>,
+            <Button key="3" raised color="primary">Hello</Button>
+        ];
     }
 }
 

@@ -35,12 +35,10 @@ class About extends React.Component {
     }
 
     render() {
-        return (
-            <div>
-                <TitleBar title={this.state.model.title} />
-                <h2>{this.state.model.text}</h2>
-            </div>
-        );
+        return [
+            <TitleBar key="1" title={this.state.model.title} />,
+            <h2 key="2">{this.state.model.text}</h2>
+        ];
     }
 }
 

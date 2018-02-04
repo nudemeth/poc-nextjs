@@ -3,6 +3,7 @@ import AppBar from 'material-ui/AppBar';
 import ToolBar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
+import Icon from 'material-ui/Icon';
 import { withStyles } from 'material-ui/styles';
 
 const drawerWidth = 240;
@@ -12,7 +13,7 @@ const styles = theme => ({
     },
     menuButton: {
         marginLeft: -12,
-        marginRight: 20,
+        marginRight: 10,
     },
     appBar: {
         position: 'absolute',
@@ -34,7 +35,7 @@ class Header extends React.Component {
             <AppBar className={classes.appBar}>
                 <ToolBar>
                     <IconButton className={classes.menuButton} aria-label="Menu">
-                        menu
+                        <Icon>menu</Icon>
                     </IconButton>
                     <Typography type="title" color="inherit" className={classes.flex}>
                         Title

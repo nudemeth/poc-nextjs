@@ -18,7 +18,7 @@ class UI {
         return ReactDOMServer.renderToString(
             <StaticRouter location={location} context={model}>
                 <JssProvider registry={this.sheetsRegistry} generateClassName={generateClassName}>
-                    <Container model={model} {...this.props} />
+                    <Container model={model} />
                 </JssProvider>
             </StaticRouter>
         );
@@ -28,7 +28,7 @@ class UI {
         let history = createBrowserHistory();
         return ReactDOM.hydrate(
             <BrowserRouter>
-                <Container history={history} model={model} {...this.props} />
+                <Container history={history} model={model} />
             </BrowserRouter>,
             document.getElementById('container')
         );
