@@ -6,4 +6,6 @@ block content
   script(type='text/javascript' src='./js/bundle.js')
   script(type='text/javascript').
     let ui = new web.UI();
-    ui.renderClient(#{model});
+    ui.renderClient(JSON.parse(!{model}));
+  style#jss-style(type='text/css').
+    !{css}

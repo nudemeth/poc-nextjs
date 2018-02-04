@@ -4,7 +4,7 @@ const nodeExternals = require('webpack-node-externals');
 
 module.exports = [{
     name: 'client',
-    entry: path.join(__dirname,'src','client','main.jsx'),
+    entry: path.join(__dirname,'src','components','main.jsx'),
     output: {
         path: path.join(__dirname,'static','js'),
         filename: 'bundle.js',

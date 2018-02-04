@@ -5,8 +5,8 @@ import logger from 'morgan';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 
-import index from './routes/index.js';
-import users from './routes/users.js';
+import page from './routes/page.js';
+import data from './routes/data.js';
 
 const app = express();
 const __dirname = process.cwd();
@@ -23,8 +23,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'static')));
 
-app.use('/', index);
-app.use('/users', users);
+app.use('/', page);
+app.use('/data', data);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
