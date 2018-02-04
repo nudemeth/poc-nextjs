@@ -1,5 +1,6 @@
 import React from 'react';
 import TitleBar from '../browser/TitleBar.jsx';
+import uuidv4 from 'uuid/v4';
 
 class About extends React.Component {
     constructor(props) {
@@ -36,8 +37,8 @@ class About extends React.Component {
 
     render() {
         return [
-            <TitleBar key="1" title={this.state.model.title} />,
-            <h2 key="2">{this.state.model.text}</h2>
+            <TitleBar key={uuidv4()} title={this.state.model.title} />,
+            <h2 key={uuidv4()}>{this.state.model.text}</h2>
         ];
     }
 }

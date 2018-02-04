@@ -1,6 +1,7 @@
 import React from 'react';
 import TitleBar from '../browser/TitleBar.jsx';
 import Button from 'material-ui/Button';
+import uuidv4 from 'uuid/v4';
 
 class Home extends React.Component {
     constructor(props) {
@@ -37,9 +38,9 @@ class Home extends React.Component {
 
     render() {
         return [
-            <TitleBar key="1" title={this.state.model.title} />,
-            <h2 key="2">{this.state.model.greeting}</h2>,
-            <Button key="3" raised color="primary">Hello</Button>
+            <TitleBar key={uuidv4()} title={this.state.model.title} />,
+            <h2 key={uuidv4()}>{this.state.model.greeting}</h2>,
+            <Button key={uuidv4()} raised color="primary">Hello</Button>
         ];
     }
 }
