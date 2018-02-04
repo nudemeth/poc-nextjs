@@ -60,5 +60,6 @@ typings/
 # vscode
 .vscode/
 
-# bin
+# generated sources
 bin/
+static/js/
