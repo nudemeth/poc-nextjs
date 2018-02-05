@@ -26,6 +26,10 @@ class UI {
 
     renderClient = (model) => {
         let history = createBrowserHistory();
+        let jssStyle = document.getElementById('jss-style');
+        if (jssStyle && jssStyle.parentNode) {
+            jssStyle.parentNode.removeChild(jssStyle);
+        }
         return ReactDOM.hydrate(
             <BrowserRouter>
                 <Container history={history} model={model} />

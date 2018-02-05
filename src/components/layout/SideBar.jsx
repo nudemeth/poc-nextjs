@@ -72,7 +72,7 @@ class SideBar extends React.Component {
                         keepMounted: true, // Better open performance on mobile.
                     }}
                 >
-                {drawer}
+                    {drawer}
                 </Drawer>
             </Hidden>,
             <Hidden key={uuidv4()} smDown implementation="css">
@@ -81,7 +81,7 @@ class SideBar extends React.Component {
                     open
                     classes={{paper: classes.drawerPaper, docked: classes.drawerDocked, }}
                 >
-                {drawer}
+                    {drawer}
                 </Drawer>
             </Hidden>
         ];
