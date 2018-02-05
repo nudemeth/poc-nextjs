@@ -23,14 +23,21 @@ const styles = theme => ({
 class Container extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            menuOpen: false,
+        }
     }
+
+    handleDrawerToggle = () => {
+        this.setState({ menuOpen: !this.state.menuOpen });
+    };
 
     render() {
         return (
             <div className={this.props.classes.root}>
                 <div className={this.props.classes.appFrame}>
-                    <Header />
-                    <SideBar />
+                    <Header handleDrawerToggle={this.handleDrawerToggle} />
+                    <SideBar menuOpen={this.state.menuOpen} handleDrawerToggle={this.handleDrawerToggle} />
                     <Content model={this.props.model} />
                 </div>
             </div>

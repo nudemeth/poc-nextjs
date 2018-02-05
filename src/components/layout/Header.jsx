@@ -34,7 +34,7 @@ class Header extends React.Component {
         return (
             <AppBar className={classes.appBar}>
                 <ToolBar>
-                    <IconButton className={classes.menuButton} aria-label="Menu">
+                    <IconButton className={classes.menuButton} aria-label="Menu" onClick={this.props.handleDrawerToggle}>
                         <Icon>menu</Icon>
                     </IconButton>
                     <Typography type="title" color="inherit" className={classes.flex}>

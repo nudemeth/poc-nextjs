@@ -30,13 +30,9 @@ class SideBar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            mobileOpen: false,
+            menuOpen: this.props.menuOpen,
         }
     }
-
-    handleDrawerToggle = () => {
-        this.setState({ mobileOpen: !this.state.mobileOpen });
-    };
 
     handleHomeClick = () => {
         this.props.history.push('/')
@@ -65,9 +61,9 @@ class SideBar extends React.Component {
             <Hidden key={uuidv4()} mdUp>
                 <Drawer
                     type="temporary"
-                    open={this.state.mobileOpen}
+                    open={this.props.menuOpen}
                     classes={{paper: classes.drawerPaper, docked: classes.drawerDocked, }}
-                    onClose={this.handleDrawerToggle}
+                    onClose={this.props.handleDrawerToggle}
                     ModalProps={{
                         keepMounted: true, // Better open performance on mobile.
                     }}
