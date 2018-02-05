@@ -4,6 +4,7 @@ import ToolBar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import Icon from 'material-ui/Icon';
+import Hidden from 'material-ui/Hidden';
 import { withStyles } from 'material-ui/styles';
 
 const drawerWidth = 240;
@@ -14,6 +15,9 @@ const styles = theme => ({
     menuButton: {
         marginLeft: -12,
         marginRight: 10,
+        [theme.breakpoints.up('md')]: {
+            display: 'none',
+        }
     },
     appBar: {
         position: 'absolute',

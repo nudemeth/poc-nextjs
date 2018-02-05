@@ -5,7 +5,7 @@ import { withStyles } from 'material-ui/styles';
 import Drawer from 'material-ui/Drawer';
 import Divider from 'material-ui/Divider';
 import Hidden from 'material-ui/Hidden';
-import List, { ListItem, ListItemIcon } from 'material-ui/List';
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import Icon from 'material-ui/Icon';
 import { withRouter } from 'react-router-dom';
 import uuidv4 from 'uuid/v4';
@@ -50,9 +50,11 @@ class SideBar extends React.Component {
             <List key={uuidv4()}>
                 <ListItem button onClick={this.handleHomeClick}>
                     <Icon color="inherit">home</Icon>
+                    <ListItemText primary="Home" />
                 </ListItem>
                 <ListItem button onClick={this.handleAboutClick}>
                     <Icon color="inherit">info</Icon>
+                    <ListItemText primary="Info" />
                 </ListItem>
             </List>
         ];
