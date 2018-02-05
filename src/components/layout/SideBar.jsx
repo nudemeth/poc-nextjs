@@ -13,12 +13,15 @@ import uuidv4 from 'uuid/v4';
 const drawerWidth = 240;
 const styles = theme => ({
     drawerHeader: theme.mixins.toolbar,
+    drawerDocked: {
+        height: '100%',
+    },
     drawerPaper: {
         width: 250,
+        height: '100%',
         [theme.breakpoints.up('md')]: {
             width: drawerWidth,
             position: 'relative',
-            height: '100%',
         },
     },
 });
@@ -63,7 +66,7 @@ class SideBar extends React.Component {
                 <Drawer
                     type="temporary"
                     open={this.state.mobileOpen}
-                    classes={{paper: classes.drawerPaper,}}
+                    classes={{paper: classes.drawerPaper, docked: classes.drawerDocked, }}
                     onClose={this.handleDrawerToggle}
                     ModalProps={{
                         keepMounted: true, // Better open performance on mobile.
@@ -76,9 +79,7 @@ class SideBar extends React.Component {
                 <Drawer
                     type="permanent"
                     open
-                    classes={{
-                        paper: classes.drawerPaper,
-                    }}
+                    classes={{paper: classes.drawerPaper, docked: classes.drawerDocked, }}
                 >
                 {drawer}
                 </Drawer>
