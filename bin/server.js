@@ -1,3 +1,3 @@
 require('babel-register')
 
-module.exports = require('../src/server/main.js')
+module.exports = require('../index.js')

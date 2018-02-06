@@ -1,5 +1,5 @@
 import express from 'express';
-import UI from '../../components/main.jsx';
+import UI from '../components/main.jsx';
 
 const router = express.Router();
 const ui = new UI();
