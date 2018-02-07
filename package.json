@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/server",
+    "start": "node ./index",
     "compile-client": "webpack --config=webpack.client.config.js",
     "compile-server": "webpack --config=webpack.server.config.js"
   },
