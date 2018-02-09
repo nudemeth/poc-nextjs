@@ -61,5 +61,4 @@ typings/
 .vscode/
 
 # generated sources
-dist/
-static/js/
+.next/

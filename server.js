@@ -1,92 +1,31 @@
-/**
- * Module dependencies.
- */
+const express = require('express');
+const next = require('next');
 
-import app from './app.js';
-import Debug from 'debug';
-import http from 'http';
+const dev = process.env.NODE_ENV !== 'production';
+const app = next({ dev });
+const handle = app.getRequestHandler();
 
-const debug = Debug('poc-web:server');
+app
+.prepare()
+.then(() => {
+    const server = express();
 
-/**
- * Get port from environment and store in Express.
- */
+    server.get('/p/:id', (req, res) => {
+        const actualPage = '/post';
+        const queryParams = { id: req.params.id };
+        app.render(req, res, actualPage, queryParams);
+    });
 
-const port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+    server.get('*', (req, res) => {
+        return handle(req, res);
+    });
 
-/**
- * Create HTTP server.
- */
-
-const server = http.createServer(app);
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
-
-/**
- * Normalize a port into a number, string, or false.
- */
-
-function normalizePort(val) {
-  let port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
-
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-
-  return false;
-}
-
-/**
- * Event listener for HTTP server "error" event.
- */
-
-function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
-
-  let bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
-
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
-}
-
-/**
- * Event listener for HTTP server "listening" event.
- */
-
-function onListening() {
-  let addr = server.address();
-  let bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
-}
-
-export default server;
+    server.listen(3000, (err) => {
+        if (err) throw err
+        console.log('> Ready on http://localhost:3000');
+    });
+})
+.catch((ex) => {
+    console.error(ex.stack);
+    process.exit(1);
+});
