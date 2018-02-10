@@ -1,5 +1,5 @@
 import React from 'react';
-import Container from '../components/layout/Container'
+import Container from '../components/layout/Container';
 
 class Index extends React.Component {
     constructor(props) {
@@ -12,11 +12,11 @@ class Index extends React.Component {
 
     render() {
         return (
-        <Container title='Index'>
-            <h1>This is Index Page: {this.props.abc}</h1>
-        </Container>
+            <Container title='Index'>
+                <h1>This is Index Page: {this.props.abc}</h1>
+            </Container>
         );
     }
 }
 
-export default Index
+export default Index;
