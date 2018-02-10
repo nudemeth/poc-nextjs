@@ -12,7 +12,7 @@ class Index extends React.Component {
 
     render() {
         return (
-        <Container>
+        <Container title='Index'>
             <h1>This is Index Page: {this.props.abc}</h1>
         </Container>
         );

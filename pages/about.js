@@ -13,7 +13,7 @@ class About extends React.Component {
 
     render() {
         return (
-            <Container>
+            <Container title='About'>
                 <h1>About Page: {this.props.userAgent}</h1>
             </Container>
         );
