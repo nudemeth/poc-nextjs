@@ -7,6 +7,14 @@ import getCssContext from './getCssContext';
 class Root extends React.Component {
     cssContext = null;
 
+    static getInitialProps = (ctx) => {
+        if (Page.getInitialProps) {
+            return Page.getInitialProps(ctx);
+        }
+    
+        return {};
+    };
+
     componentWillMount() {
         this.cssContext = this.props.cssContext || getCssContext();
     }
@@ -36,14 +44,6 @@ class Root extends React.Component {
 
 Root.propTypes = {
     cssContext: PropTypes.object,
-};
-
-Root.getInitialProps = (ctx) => {
-    if (Page.getInitialProps) {
-        return Page.getInitialProps(ctx);
-    }
-
-    return {};
 };
 
 export default Root;
