@@ -61,7 +61,7 @@ class DefaultDocument extends Document {
                     <meta name="theme-color" content={this.props.cssContext.theme.palette.primary[500]} />
                     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500' rel='stylesheet' type='text/css' />
                     <link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet' type='text/css' />
-                    <link href='/static/css/style.css' rel='stylesheet' type='text/css' />
+                    <link href='./static/css/style.css' rel='stylesheet' type='text/css' />
                 </Head>
                 <body>
                     <Main />

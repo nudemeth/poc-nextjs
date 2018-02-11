@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Head from 'next/head';
 import Header from './Header'
 import SideBar from './SideBar'
-import Root from '../common/Root';
+import withRoot from '../common/withRoot';
 import { withStyles } from 'material-ui/styles';
 
 const styles = theme => ({
@@ -47,20 +47,18 @@ class Container extends React.Component {
     render() {
         const { classes, theme } = this.props;
         return (
-            <Root>
-                <div className={classes.root}>
-                    <div className={classes.appFrame}>
-                        <Head>
-                            <title>{this.props.title}</title>
-                        </Head>
-                        <Header handleDrawerToggle={this.handleDrawerToggle} />
-                        <SideBar menuOpen={this.state.menuOpen} handleDrawerToggle={this.handleDrawerToggle} />
-                        <main role="main" className={classes.content}>
-                            {this.props.children}
-                        </main>
-                    </div>
+            <div className={classes.root}>
+                <div className={classes.appFrame}>
+                    <Head>
+                        <title>{this.props.title}</title>
+                    </Head>
+                    <Header handleDrawerToggle={this.handleDrawerToggle} />
+                    <SideBar menuOpen={this.state.menuOpen} handleDrawerToggle={this.handleDrawerToggle} />
+                    <main role="main" className={classes.content}>
+                        {this.props.children}
+                    </main>
                 </div>
-            </Root>
+            </div>
         );
     }
 }
@@ -70,4 +68,4 @@ Container.propTypes = {
     theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(Container);
+export default withRoot(withStyles(styles, { withTheme: true })(Container));
