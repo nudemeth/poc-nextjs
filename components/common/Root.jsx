@@ -34,7 +34,7 @@ class Root extends React.Component {
                 theme={this.cssContext.theme}
                 sheetsManager={this.cssContext.sheetsManager}
             >
-            {/* Reboot kickstart an elegant, consistent, and simple baseline to build upon. */}
+                {/* Reboot kickstart an elegant, consistent, and simple baseline to build upon. */}
                 <Reboot />
                 {this.props.children}
             </MuiThemeProvider>
