@@ -40,6 +40,11 @@ class Container extends React.Component {
         }
     }
 
+    static propTypes = {
+        classes: PropTypes.object.isRequired,
+        theme: PropTypes.object.isRequired
+    }
+
     handleDrawerToggle = () => {
         this.setState({ menuOpen: !this.state.menuOpen });
     };
@@ -62,10 +67,5 @@ class Container extends React.Component {
         );
     }
 }
-
-Container.propTypes = {
-    classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
-};
 
 export default withRoot(withStyles(styles, { withTheme: true })(Container));

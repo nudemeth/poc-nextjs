@@ -33,6 +33,11 @@ class Header extends React.Component {
         super(props);
     }
 
+    static propTypes = {
+        classes: PropTypes.object.isRequired,
+        theme: PropTypes.object.isRequired
+    }
+
     render() {
         const { classes, theme } = this.props;
         return (
@@ -49,10 +54,5 @@ class Header extends React.Component {
         );
     }
 }
-
-Header.propTypes = {
-    classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles, { withTheme: true })(Header);

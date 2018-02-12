@@ -16,6 +16,11 @@ class DrawerMenu extends React.Component {
         super(props);
     }
 
+    static propTypes = {
+        classes: PropTypes.object.isRequired,
+        theme: PropTypes.object.isRequired
+    }
+
     render() {
         const { classes } = this.props;
         return [
@@ -38,10 +43,5 @@ class DrawerMenu extends React.Component {
         ];
     }
 }
-
-DrawerMenu.propTypes = {
-    classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles, { withTheme: true })(DrawerMenu);
