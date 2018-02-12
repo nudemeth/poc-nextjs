@@ -3,10 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "start": "cross-env NODE_ENV=production node server.js",
+    "test": "npm-run-all --parallel json test-jest",
+    "test-jest": "cross-env NODE_ENV=test jest",
     "dev-json": "npm-run-all --parallel json dev",
     "dev": "node server.js",
     "build": "next build",
-    "start": "cross-env NODE_ENV=production node server.js",
     "export": "next export",
     "analyze": "cross-env ANALYZE=1 next build",
     "json": "json-server --watch test/api/db.json --routes test/api/routes.json --port 5000"
@@ -23,8 +25,12 @@
     "uuid": "^3.2.1"
   },
   "devDependencies": {
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "jest": "^22.2.2",
     "json-server": "^0.12.1",
     "npm-run-all": "^4.1.2",
+    "react-test-renderer": "^16.2.0",
     "webpack-bundle-analyzer": "^2.10.0"
   }
 }
