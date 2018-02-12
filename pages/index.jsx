@@ -1,4 +1,5 @@
 import React from 'react';
+import fetch from 'isomorphic-unfetch';
 import Container from '../components/layout/Container';
 
 class Index extends React.Component {
@@ -7,13 +8,16 @@ class Index extends React.Component {
     }
 
     static async getInitialProps({ req }) {
-        return { abc: "def" };
+        const res = await fetch('http://localhost:5000/api/v1/home');
+        const data = await res.json();
+
+        return { greeting: data.greeting };
     }
 
     render() {
         return (
             <Container title='Index'>
-                <h1>This is Index Page: {this.props.abc}</h1>
+                <h1>This is Index Page: {this.props.greeting}</h1>
             </Container>
         );
     }

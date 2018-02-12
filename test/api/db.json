@@ -1,0 +1,8 @@
+{
+    "home": {
+        "greeting": "Hello Next.js"
+    },
+    "about": {
+        "text": "About"
+    }
+}
