@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Link from 'next/link';
 import Divider from 'material-ui/Divider';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import Icon from 'material-ui/Icon';
@@ -21,14 +22,18 @@ class DrawerMenu extends React.Component {
             <div key={uuidv4()} className={classes.drawerHeader} />,
             <Divider key={uuidv4()} />,
             <List key={uuidv4()}>
-                <ListItem button>
-                    <Icon color="inherit">home</Icon>
-                    <ListItemText primary="Home" />
-                </ListItem>
-                <ListItem button>
-                    <Icon color="inherit">info</Icon>
-                    <ListItemText primary="Info" />
-                </ListItem>
+                <Link prefetch href="/">
+                    <ListItem button>
+                        <Icon color="inherit">home</Icon>
+                        <ListItemText primary="Home" />
+                    </ListItem>
+                </Link>
+                <Link prefetch href="/about">
+                    <ListItem button>
+                        <Icon color="inherit">info</Icon>
+                        <ListItemText primary="Info" />
+                    </ListItem>
+                </Link>
             </List>
         ];
     }
