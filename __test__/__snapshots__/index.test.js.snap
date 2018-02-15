@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Index page with Snapshot Testing Should show "This is Index Page: " in Index page 1`] = `
+exports[`Index page with Snapshot Testing Should show "This is Index Page: ABC" in Index page 1`] = `
 <div
   className="Container-root-1"
 >
@@ -151,6 +151,7 @@ exports[`Index page with Snapshot Testing Should show "This is Index Page: " in 
     >
       <h1>
         This is Index Page: 
+        ABC
       </h1>
     </main>
   </div>
