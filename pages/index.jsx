@@ -1,5 +1,9 @@
 import React from 'react';
 import fetch from 'isomorphic-unfetch';
+import { bindActionCreators } from 'redux';
+import { initStore, initGreeting, updateGreeting } from '../store/store';
+import withRedux from 'next-redux-wrapper';
+import { connect } from 'react-redux';
 import Container from '../components/layout/Container';
 
 class Index extends React.Component {
@@ -7,11 +11,21 @@ class Index extends React.Component {
         super(props);
     }
 
-    static async getInitialProps({ req }) {
-        const res = await fetch('http://localhost:5000/api/v1/home');
-        const data = await res.json();
+    static getInitialProps({ store }) {
+        /*const res = await fetch('http://localhost:5000/api/v1/home');
+        const data = await res.json();*/
+        store.dispatch(initGreeting('This is from server'));
 
-        return { greeting: data.greeting };
+        //return { greeting: data.greeting };
+        //return {};
+    }
+
+    componentDidMount() {
+        this.timer = this.props.updateGreeting();
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timer);
     }
 
     render() {
@@ -23,4 +37,12 @@ class Index extends React.Component {
     }
 }
 
-export default Index;
+const mapStateToProps = ({ greeting }) => ({ greeting });
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        updateGreeting: bindActionCreators(updateGreeting, dispatch)
+    };
+}
+
+export default withRedux(initStore, mapStateToProps, mapDispatchToProps)(Index);
