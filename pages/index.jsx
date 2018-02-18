@@ -1,10 +1,11 @@
 import React from 'react';
 import fetch from 'isomorphic-unfetch';
 import { bindActionCreators } from 'redux';
-import { initStore, initGreeting, updateGreeting } from '../store/store';
 import withRedux from 'next-redux-wrapper';
 import { connect } from 'react-redux';
 import Container from '../components/layout/Container';
+import { initGreeting, updateGreeting } from '../actions';
+import { withReduxSaga } from '../store';
 
 class Index extends React.Component {
     constructor(props) {
@@ -21,11 +22,7 @@ class Index extends React.Component {
     }
 
     componentDidMount() {
-        this.timer = this.props.updateGreeting();
-    }
-
-    componentWillUnmount() {
-        clearTimeout(this.timer);
+        this.props.dispatch(updateGreeting());
     }
 
     render() {
@@ -37,12 +34,6 @@ class Index extends React.Component {
     }
 }
 
-const mapStateToProps = ({ greeting }) => ({ greeting });
+const mapStateToProps = ({ greeting }) => ({ greeting })
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        updateGreeting: bindActionCreators(updateGreeting, dispatch)
-    };
-}
-
-export default withRedux(initStore, mapStateToProps, mapDispatchToProps)(Index);
+export default withReduxSaga(mapStateToProps)(Index);
