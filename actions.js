@@ -8,6 +8,6 @@ export const initGreeting = (gt) => {
     return { type: actionTypes.INIT, gt: gt};
 }
 
-export const updateGreeting = () => {
-    return { type: actionTypes.UPDATE, gt: 'This is from client'};
+export const updateGreeting = (gt) => {
+    return { type: actionTypes.UPDATE, gt: gt};
 }

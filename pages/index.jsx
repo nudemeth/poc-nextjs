@@ -22,7 +22,7 @@ class Index extends React.Component {
     }
 
     componentDidMount() {
-        this.props.dispatch(updateGreeting());
+        this.props.dispatch(updateGreeting('This is from client'));
     }
 
     render() {
@@ -37,3 +37,4 @@ class Index extends React.Component {
 const mapStateToProps = ({ greeting }) => ({ greeting })
 
 export default withReduxSaga(mapStateToProps)(Index);
+exports.Index = Index
