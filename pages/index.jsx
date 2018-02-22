@@ -37,4 +37,4 @@ class Index extends React.Component {
 const mapStateToProps = ({ greeting }) => ({ greeting })
 
 export default withReduxSaga(mapStateToProps)(Index);
-exports.Index = Index
+export { Index };
