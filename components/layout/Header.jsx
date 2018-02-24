@@ -5,6 +5,8 @@ import ToolBar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import Icon from 'material-ui/Icon';
+import Button from 'material-ui/Button';
+import Link from 'next/link';
 import { withStyles } from 'material-ui/styles';
 
 const drawerWidth = 240;
@@ -49,6 +51,9 @@ class Header extends React.Component {
                     <Typography type="title" color="inherit" className={classes.flex}>
                         Title
                     </Typography>
+                    <Link prefetch href="/login">
+                        <Button color="inherit">Login</Button>
+                    </Link>
                 </ToolBar>
             </AppBar>
         );

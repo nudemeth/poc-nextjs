@@ -8,10 +8,10 @@ class About extends React.Component {
     }
 
     static async getInitialProps({ req }) {
-        const res = await fetch('http://localhost:5000/api/v1/about');
-        const data = await res.json();
+        //const res = await fetch('http://localhost:5000/api/v1/about');
+        //const data = await res.json();
 
-        return { text: data.text };
+        return { text: "About Page" };
     }
 
     render() {
@@ -24,3 +24,4 @@ class About extends React.Component {
 }
 
 export default About
+export { About };
