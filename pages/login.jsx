@@ -1,5 +1,6 @@
 import React from 'react';
 import Container from '../components/layout/Container';
+import LoginCard from '../components/page/login/LoginCard';
 import { withReduxSaga } from '../store';
 
 class Login extends React.Component {
@@ -10,7 +11,7 @@ class Login extends React.Component {
     render() {
         return (
             <Container title='Login'>
-                <h1>This is Index Login Page</h1>
+                <LoginCard />
             </Container>
         );
     }
