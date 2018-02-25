@@ -66,7 +66,7 @@ class Login extends React.Component {
                     </Button>
                 </CardActions>
                 <div className={classes.dividerContainer}>
-                    <Divider className={classes.divider} />
+                    <Divider className={classes.divider}/>
                     <span className={classes.dividerText}>OR</span>
                     <Divider className={classes.divider}/>
                 </div>
