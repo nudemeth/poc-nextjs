@@ -1,11 +1,11 @@
 import { actionTypes } from './actions';
 
-export const appInitialState = {
-    greeting: 'sdf'
+export const initialState = {
+    greeting: ''
 }
 
 //REDUCER
-const reducer = (state = appInitialState, action) => {
+const rootReducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.INIT:
             return {
@@ -17,9 +17,11 @@ const reducer = (state = appInitialState, action) => {
                 ...state,
                 ...{ greeting: action.gt }
             };
+        case actionTypes.RESET:
+            return initialState;
         default:
             return state;
     }
 }
 
-export default reducer;
+export default rootReducer;

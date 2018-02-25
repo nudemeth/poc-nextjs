@@ -1,6 +1,7 @@
 export const actionTypes = {
     INIT: 'INIT',
-    UPDATE: 'UPDATE'
+    UPDATE: 'UPDATE',
+    RESET: 'RESET'
 }
 
 //ACTIONS

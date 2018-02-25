@@ -1,6 +1,7 @@
 import React from 'react';
 import fetch from 'isomorphic-unfetch';
-import Container from '../components/layout/Container'
+import Container from '../components/layout/Container';
+import { withReduxSaga } from '../store';
 
 class About extends React.Component {
     constructor(props) {
@@ -23,5 +24,5 @@ class About extends React.Component {
     }
 }
 
-export default About
+export default withReduxSaga()(About);
 export { About };

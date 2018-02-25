@@ -1,5 +1,6 @@
 import React from 'react';
 import Container from '../components/layout/Container';
+import { withReduxSaga } from '../store';
 
 class Login extends React.Component {
     constructor(props) {
@@ -15,5 +16,5 @@ class Login extends React.Component {
     }
 }
 
-export default Login;;
+export default withReduxSaga()(Login);
 export { Login };

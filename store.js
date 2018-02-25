@@ -2,7 +2,7 @@ import { createStore, applyMiddleware } from 'redux';
 import withRedux from 'next-redux-wrapper';
 import nextReduxSaga from 'next-redux-saga';
 import createSagaMiddleware from 'redux-saga';
-import mainReducer, { appInitialState } from './reducer';
+import rootReducer from './reducer';
 import rootSaga from './saga';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -11,9 +11,9 @@ const bindMiddleware = (middleware) => {
     return applyMiddleware(...middleware);
 }
 
-export function configureStore (initialState = appInitialState) {
+export function configureStore (initialState) {
     const store = createStore(
-        mainReducer,
+        rootReducer,
         initialState,
         bindMiddleware([sagaMiddleware])
     );
@@ -27,5 +27,5 @@ export function configureStore (initialState = appInitialState) {
 }
 
 export function withReduxSaga (...connectArgs) {
-    return Page =>  withRedux(configureStore, ...connectArgs)(nextReduxSaga(Page));
+    return Page => withRedux(configureStore, ...connectArgs)(nextReduxSaga(Page));
 }

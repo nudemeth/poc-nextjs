@@ -12,13 +12,13 @@ class Index extends React.Component {
         super(props);
     }
 
-    static getInitialProps({ store }) {
+    static async getInitialProps({ store }) {
         /*const res = await fetch('http://localhost:5000/api/v1/home');
         const data = await res.json();*/
         store.dispatch(initGreeting('This is from server'));
 
         //return { greeting: data.greeting };
-        //return {};
+        return {};
     }
 
     componentDidMount() {

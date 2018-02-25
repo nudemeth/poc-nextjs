@@ -5,10 +5,7 @@ import { actionTypes, updateGreeting } from './actions';
 
 function * updateGreetingSaga() {
     yield take(actionTypes.UPDATE);
-    while (true) {
-        yield put(updateGreeting('This is from client'));
-        yield call(delay, 3000);
-    }
+    yield put(updateGreeting('This is from client'));
 }
 
 export default updateGreetingSaga;
