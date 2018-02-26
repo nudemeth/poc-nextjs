@@ -1,6 +1,7 @@
 import React from 'react';
 import fetch from 'isomorphic-unfetch';
 import Container from '../components/layout/Container';
+import ProductList from '../components/page/products/ProductList';
 import { withReduxSaga } from '../store';
 
 class Products extends React.Component {
@@ -19,6 +20,7 @@ class Products extends React.Component {
         return (
             <Container title='Products'>
                 <h1>Products Page: {this.props.text}</h1>
+                <ProductList/>
             </Container>
         );
     }

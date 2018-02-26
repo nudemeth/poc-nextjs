@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
@@ -6,7 +7,7 @@ import TextField from 'material-ui/TextField';
 import Divider from 'material-ui/Divider';
 import { withStyles } from 'material-ui/styles';
 
-const styles = {
+const styles = theme => ({
     card: {
         maxWidth: 345,
         margin: 'auto'
@@ -31,11 +32,16 @@ const styles = {
         width: '20%',
         textAlign: 'center'
     }
-};
+});
 
 class Login extends React.Component {
     constructor(props) {
         super(props);
+    }
+
+    static propTypes = {
+        classes: PropTypes.object.isRequired,
+        theme: PropTypes.object.isRequired
     }
 
     render() {
@@ -80,4 +86,4 @@ class Login extends React.Component {
     }
 }
 
-export default withStyles(styles)(Login);
+export default withStyles(styles, { withTheme: true })(Login);
