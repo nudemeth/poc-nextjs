@@ -24,6 +24,7 @@ const styles = theme => ({
         width: '100%',
         padding: theme.spacing.unit * 3,
         height: 'calc(100% - 56px)',
+        overflowY: 'auto',
         marginTop: 56,
         [theme.breakpoints.up('sm')]: {
             height: 'calc(100% - 64px)',
