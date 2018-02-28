@@ -8,9 +8,7 @@ import { withStyles } from 'material-ui/styles';
 
 const styles = theme => ({
     card: {
-        minWidth: 345,
-        margin: '1em',
-        boxSizing: 'border-box'
+        minWidth: 345
     },
     media: {
         height: 200
@@ -20,13 +18,20 @@ const styles = theme => ({
     },
     listContainer: {
         display: 'flex',
-        flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'space-around',
+        listStyle: 'none',
+        flexDirection: 'row',
+        //justifyContent: 'space-between',
+        padding: 0/*,
         '&:after': {
             content: '""',
             flex: 'auto'
-        }
+        }*/
+    },
+    listItem: {
+        flex: '0 0 345px',
+        margin: '1em',
+        boxSizing: 'border-box'
     }
 });
 
@@ -43,118 +48,128 @@ class ProductList extends React.Component {
     render() {
         const { classes } = this.props;
         return (
-            <div className={classes.listContainer}>
-                <Card className={classes.card}>
-                    <CardHeader
-                        title="Item 1"
-                        subheader="September 14, 2017"
-                    />
-                    <CardMedia
-                        className={classes.media}
-                        image="https://material-ui-next.com/static/images/cards/paella.jpg"
-                        title="Contemplative Reptile"
-                    />
-                    <CardActions className={classes.actions} disableActionSpacing>
-                        <IconButton color="primary" aria-label="Add to Favorite">
-                            <Icon>favorite</Icon>
-                        </IconButton>
-                        <IconButton color="primary" aria-label="Share">
-                            <Icon>share</Icon>
-                        </IconButton>
-                        <IconButton color="primary" aria-label="Add to shopping cart">
-                            <Icon>add_shopping_cart</Icon>
-                        </IconButton>
-                    </CardActions>
-                </Card>
-                <Card className={classes.card}>
-                    <CardHeader
-                        title="Item 2"
-                        subheader="September 14, 2017"
-                    />
-                    <CardMedia
-                        className={classes.media}
-                        image="https://material-ui-next.com/static/images/cards/paella.jpg"
-                        title="Contemplative Reptile"
-                    />
-                    <CardActions className={classes.actions} disableActionSpacing>
-                        <IconButton color="primary" aria-label="Add to Favorite">
-                            <Icon>favorite</Icon>
-                        </IconButton>
-                        <IconButton color="primary" aria-label="Share">
-                            <Icon>share</Icon>
-                        </IconButton>
-                        <IconButton color="primary" aria-label="Add to shopping cart">
-                            <Icon>add_shopping_cart</Icon>
-                        </IconButton>
-                    </CardActions>
-                </Card>
-                <Card className={classes.card}>
-                    <CardHeader
-                        title="Item 3"
-                        subheader="September 14, 2017"
-                    />
-                    <CardMedia
-                        className={classes.media}
-                        image="https://material-ui-next.com/static/images/cards/paella.jpg"
-                        title="Contemplative Reptile"
-                    />
-                    <CardActions className={classes.actions} disableActionSpacing>
-                        <IconButton color="primary" aria-label="Add to Favorite">
-                            <Icon>favorite</Icon>
-                        </IconButton>
-                        <IconButton color="primary" aria-label="Share">
-                            <Icon>share</Icon>
-                        </IconButton>
-                        <IconButton color="primary" aria-label="Add to shopping cart">
-                            <Icon>add_shopping_cart</Icon>
-                        </IconButton>
-                    </CardActions>
-                </Card>
-                <Card className={classes.card}>
-                    <CardHeader
-                        title="Item 4"
-                        subheader="September 14, 2017"
-                    />
-                    <CardMedia
-                        className={classes.media}
-                        image="https://material-ui-next.com/static/images/cards/paella.jpg"
-                        title="Contemplative Reptile"
-                    />
-                    <CardActions className={classes.actions} disableActionSpacing>
-                        <IconButton color="primary" aria-label="Add to Favorite">
-                            <Icon>favorite</Icon>
-                        </IconButton>
-                        <IconButton color="primary" aria-label="Share">
-                            <Icon>share</Icon>
-                        </IconButton>
-                        <IconButton color="primary" aria-label="Add to shopping cart">
-                            <Icon>add_shopping_cart</Icon>
-                        </IconButton>
-                    </CardActions>
-                </Card>
-                <Card className={classes.card}>
-                    <CardHeader
-                        title="Item 5"
-                        subheader="September 14, 2017"
-                    />
-                    <CardMedia
-                        className={classes.media}
-                        image="https://material-ui-next.com/static/images/cards/paella.jpg"
-                        title="Contemplative Reptile"
-                    />
-                    <CardActions className={classes.actions} disableActionSpacing>
-                        <IconButton color="primary" aria-label="Add to Favorite">
-                            <Icon>favorite</Icon>
-                        </IconButton>
-                        <IconButton color="primary" aria-label="Share">
-                            <Icon>share</Icon>
-                        </IconButton>
-                        <IconButton color="primary" aria-label="Add to shopping cart">
-                            <Icon>add_shopping_cart</Icon>
-                        </IconButton>
-                    </CardActions>
-                </Card>
-            </div>
+            <ul className={classes.listContainer}>
+                <li className={classes.listItem}>
+                    <Card className={classes.card}>
+                        <CardHeader
+                            title="Item 1"
+                            subheader="September 14, 2017"
+                        />
+                        <CardMedia
+                            className={classes.media}
+                            image="https://material-ui-next.com/static/images/cards/paella.jpg"
+                            title="Contemplative Reptile"
+                        />
+                        <CardActions className={classes.actions} disableActionSpacing>
+                            <IconButton color="primary" aria-label="Add to Favorite">
+                                <Icon>favorite</Icon>
+                            </IconButton>
+                            <IconButton color="primary" aria-label="Share">
+                                <Icon>share</Icon>
+                            </IconButton>
+                            <IconButton color="primary" aria-label="Add to shopping cart">
+                                <Icon>add_shopping_cart</Icon>
+                            </IconButton>
+                        </CardActions>
+                    </Card>
+                </li>
+                <li className={classes.listItem}>
+                    <Card className={classes.card}>
+                        <CardHeader
+                            title="Item 2"
+                            subheader="September 14, 2017"
+                        />
+                        <CardMedia
+                            className={classes.media}
+                            image="https://material-ui-next.com/static/images/cards/paella.jpg"
+                            title="Contemplative Reptile"
+                        />
+                        <CardActions className={classes.actions} disableActionSpacing>
+                            <IconButton color="primary" aria-label="Add to Favorite">
+                                <Icon>favorite</Icon>
+                            </IconButton>
+                            <IconButton color="primary" aria-label="Share">
+                                <Icon>share</Icon>
+                            </IconButton>
+                            <IconButton color="primary" aria-label="Add to shopping cart">
+                                <Icon>add_shopping_cart</Icon>
+                            </IconButton>
+                        </CardActions>
+                    </Card>
+                </li>
+                <li className={classes.listItem}>
+                    <Card className={classes.card}>
+                        <CardHeader
+                            title="Item 3"
+                            subheader="September 14, 2017"
+                        />
+                        <CardMedia
+                            className={classes.media}
+                            image="https://material-ui-next.com/static/images/cards/paella.jpg"
+                            title="Contemplative Reptile"
+                        />
+                        <CardActions className={classes.actions} disableActionSpacing>
+                            <IconButton color="primary" aria-label="Add to Favorite">
+                                <Icon>favorite</Icon>
+                            </IconButton>
+                            <IconButton color="primary" aria-label="Share">
+                                <Icon>share</Icon>
+                            </IconButton>
+                            <IconButton color="primary" aria-label="Add to shopping cart">
+                                <Icon>add_shopping_cart</Icon>
+                            </IconButton>
+                        </CardActions>
+                    </Card>
+                </li>
+                <li className={classes.listItem}>
+                    <Card className={classes.card}>
+                        <CardHeader
+                            title="Item 4"
+                            subheader="September 14, 2017"
+                        />
+                        <CardMedia
+                            className={classes.media}
+                            image="https://material-ui-next.com/static/images/cards/paella.jpg"
+                            title="Contemplative Reptile"
+                        />
+                        <CardActions className={classes.actions} disableActionSpacing>
+                            <IconButton color="primary" aria-label="Add to Favorite">
+                                <Icon>favorite</Icon>
+                            </IconButton>
+                            <IconButton color="primary" aria-label="Share">
+                                <Icon>share</Icon>
+                            </IconButton>
+                            <IconButton color="primary" aria-label="Add to shopping cart">
+                                <Icon>add_shopping_cart</Icon>
+                            </IconButton>
+                        </CardActions>
+                    </Card>
+                </li>
+                <li className={classes.listItem}>
+                    <Card className={classes.card}>
+                        <CardHeader
+                            title="Item 5"
+                            subheader="September 14, 2017"
+                        />
+                        <CardMedia
+                            className={classes.media}
+                            image="https://material-ui-next.com/static/images/cards/paella.jpg"
+                            title="Contemplative Reptile"
+                        />
+                        <CardActions className={classes.actions} disableActionSpacing>
+                            <IconButton color="primary" aria-label="Add to Favorite">
+                                <Icon>favorite</Icon>
+                            </IconButton>
+                            <IconButton color="primary" aria-label="Share">
+                                <Icon>share</Icon>
+                            </IconButton>
+                            <IconButton color="primary" aria-label="Add to shopping cart">
+                                <Icon>add_shopping_cart</Icon>
+                            </IconButton>
+                        </CardActions>
+                    </Card>
+                </li>
+            </ul>
         );
     }
 }
