@@ -15,6 +15,9 @@ const styles = theme => ({
     },
     actions: {
         display: 'flex'
+    },
+    shoppingCart: {
+        marginLeft: 'auto'
     }
 });
 
@@ -34,22 +37,22 @@ class ProductItem extends React.Component {
             <li>
                 <Card className={classes.card}>
                     <CardHeader
-                        title="Item 1"
-                        subheader="September 14, 2017"
+                        title={this.props.title}
+                        subheader={this.props.itemDate}
                     />
                     <CardMedia
                         className={classes.media}
-                        image="https://material-ui-next.com/static/images/cards/paella.jpg"
-                        title="Contemplative Reptile"
+                        image={this.props.imageUrl}
+                        title={this.props.imageAlt}
                     />
                     <CardActions className={classes.actions} disableActionSpacing>
                         <IconButton color="primary" aria-label="Add to Favorite">
-                            <Icon>favorite</Icon>
+                            <Icon>favorite_border</Icon>
                         </IconButton>
                         <IconButton color="primary" aria-label="Share">
                             <Icon>share</Icon>
                         </IconButton>
-                        <IconButton color="primary" aria-label="Add to shopping cart">
+                        <IconButton color="primary" aria-label="Add to shopping cart" className={classes.shoppingCart}>
                             <Icon>add_shopping_cart</Icon>
                         </IconButton>
                     </CardActions>

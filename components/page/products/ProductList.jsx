@@ -32,11 +32,11 @@ class ProductList extends React.Component {
         const { classes } = this.props;
         return (
             <ul className={classes.listContainer}>
-                <ProductItem/>
-                <ProductItem/>
-                <ProductItem/>
-                <ProductItem/>
-                <ProductItem/>
+                <ProductItem title="Item 1" itemDate="September 14, 2017" imageUrl="https://material-ui-next.com/static/images/cards/paella.jpg" imageAlt="Contemplative Reptile" />
+                <ProductItem title="Item 2" itemDate="September 14, 2017" imageUrl="https://material-ui-next.com/static/images/cards/paella.jpg" imageAlt="Contemplative Reptile"/>
+                <ProductItem title="Item 3" itemDate="September 14, 2017" imageUrl="https://material-ui-next.com/static/images/cards/paella.jpg" imageAlt="Contemplative Reptile"/>
+                <ProductItem title="Item 4" itemDate="September 14, 2017" imageUrl="https://material-ui-next.com/static/images/cards/paella.jpg" imageAlt="Contemplative Reptile"/>
+                <ProductItem title="Item 5" itemDate="September 14, 2017" imageUrl="https://material-ui-next.com/static/images/cards/paella.jpg" imageAlt="Contemplative Reptile"/>
             </ul>
         );
     }
