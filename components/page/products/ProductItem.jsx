@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Link from 'next/link';
 import Card, { CardActions, CardContent, CardMedia, CardHeader } from 'material-ui/Card';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
@@ -11,7 +12,8 @@ const styles = theme => ({
         width: '100%'
     },
     media: {
-        height: 200
+        height: 200,
+        cursor: 'pointer'
     },
     actions: {
         display: 'flex'
@@ -40,11 +42,13 @@ class ProductItem extends React.Component {
                         title={this.props.title}
                         subheader={this.props.itemDate}
                     />
-                    <CardMedia
-                        className={classes.media}
-                        image={this.props.imageUrl}
-                        title={this.props.imageAlt}
-                    />
+                    <Link prefetch href="/product">
+                        <CardMedia
+                            className={classes.media}
+                            image={this.props.imageUrl}
+                            title={this.props.imageAlt}
+                        />
+                    </Link>
                     <CardActions className={classes.actions} disableActionSpacing>
                         <IconButton color="primary" aria-label="Add to Favorite">
                             <Icon>favorite_border</Icon>
