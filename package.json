@@ -11,7 +11,7 @@
     "build": "next build",
     "export": "next export",
     "analyze": "cross-env ANALYZE=1 next build",
-    "json": "json-server --watch test/api/db.json --routes test/api/routes.json --port 5000"
+    "json": "json-server --watch fake/api/db.json --routes fake/api/routes.json --port 5000"
   },
   "dependencies": {
     "cross-env": "^5.1.3",

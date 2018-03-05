@@ -2,6 +2,7 @@ import React from 'react';
 import fetch from 'isomorphic-unfetch';
 import Container from '../components/layout/Container';
 import ProductList from '../components/page/products/ProductList';
+import { loadProducts } from '../actions';
 import { withReduxSaga } from '../store';
 
 class Products extends React.Component {
@@ -9,11 +10,13 @@ class Products extends React.Component {
         super(props);
     }
 
-    static async getInitialProps({ req }) {
-        //const res = await fetch('http://localhost:5000/api/v1/about');
-        //const data = await res.json();
-
+    static async getInitialProps({ store }) {
+        store.dispatch(loadProducts());
         return { text: "Products Page" };
+    }
+
+    componentDidMount() {
+        this.props.dispatch(loadProducts());
     }
 
     render() {
@@ -26,5 +29,7 @@ class Products extends React.Component {
     }
 }
 
-export default withReduxSaga()(Products);
-export { About };
+const mapStateToProps = ({ products, error }) => ({ products, error })
+
+export default withReduxSaga(mapStateToProps)(Products);
+export { Products };

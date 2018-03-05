@@ -1,7 +1,9 @@
 import { actionTypes } from './actions';
 
 export const initialState = {
-    greeting: ''
+    greeting: '',
+    error: false,
+    products: null
 }
 
 //REDUCER
@@ -17,6 +19,16 @@ const rootReducer = (state = initialState, action) => {
                 ...state,
                 ...{ greeting: action.gt }
             };
+        case actionTypes.LOAD_PRODUCTS_SUCCESS:
+            return {
+                ...state,
+                ...{ products: action.products }
+            }
+        case actionTypes.LOAD_PRODUCTS_FAILURE:
+            return {
+                ...state,
+                ...{ error: action.error }
+            }
         case actionTypes.RESET:
             return initialState;
         default:

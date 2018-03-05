@@ -5,6 +5,8 @@ import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
+import { connect } from 'react-redux';
+import { loadProducts } from '../../../actions';
 import ProductItem from './ProductItem';
 
 const styles = theme => ({
@@ -30,6 +32,8 @@ class ProductList extends React.Component {
 
     render() {
         const { classes } = this.props;
+        console.log('data' + this.props.products);
+        console.log('error' + this.props.error);
         return (
             <ul className={classes.listContainer}>
                 <ProductItem title="Item 1" itemDate="September 14, 2017" imageUrl="https://material-ui-next.com/static/images/cards/paella.jpg" imageAlt="Contemplative Reptile" />
@@ -42,4 +46,6 @@ class ProductList extends React.Component {
     }
 }
 
-export default withStyles(styles, { withTheme: true })(ProductList);
+const mapStateToProps = ({ products, error }) => ({ products, error });
+
+export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(ProductList));
