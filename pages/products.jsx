@@ -29,7 +29,5 @@ class Products extends React.Component {
     }
 }
 
-const mapStateToProps = ({ products, error }) => ({ products, error })
-
-export default withReduxSaga(mapStateToProps)(Products);
+export default withReduxSaga()(Products);
 export { Products };

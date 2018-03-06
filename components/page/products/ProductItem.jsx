@@ -34,19 +34,19 @@ class ProductItem extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, product } = this.props;
         return (
             <li>
                 <Card className={classes.card}>
                     <CardHeader
-                        title={this.props.title}
-                        subheader={this.props.itemDate}
+                        title={product.name}
+                        subheader={(new Date(product.createDate)).toDateString()}
                     />
                     <Link prefetch href="/product">
                         <CardMedia
                             className={classes.media}
-                            image={this.props.imageUrl}
-                            title={this.props.imageAlt}
+                            image={product.imageUrl}
+                            title={product.imageAlt}
                         />
                     </Link>
                     <CardActions className={classes.actions} disableActionSpacing>

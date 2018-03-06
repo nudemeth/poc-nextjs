@@ -6,6 +6,7 @@ import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import { connect } from 'react-redux';
+import uuidv4 from 'uuid/v4';
 import { loadProducts } from '../../../actions';
 import ProductItem from './ProductItem';
 
@@ -31,16 +32,12 @@ class ProductList extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
-        console.log('data' + this.props.products);
-        console.log('error' + this.props.error);
+        const { classes, products } = this.props;
         return (
             <ul className={classes.listContainer}>
-                <ProductItem title="Item 1" itemDate="September 14, 2017" imageUrl="https://material-ui-next.com/static/images/cards/paella.jpg" imageAlt="Contemplative Reptile" />
-                <ProductItem title="Item 2" itemDate="September 14, 2017" imageUrl="https://material-ui-next.com/static/images/cards/paella.jpg" imageAlt="Contemplative Reptile"/>
-                <ProductItem title="Item 3" itemDate="September 14, 2017" imageUrl="https://material-ui-next.com/static/images/cards/paella.jpg" imageAlt="Contemplative Reptile"/>
-                <ProductItem title="Item 4" itemDate="September 14, 2017" imageUrl="https://material-ui-next.com/static/images/cards/paella.jpg" imageAlt="Contemplative Reptile"/>
-                <ProductItem title="Item 5" itemDate="September 14, 2017" imageUrl="https://material-ui-next.com/static/images/cards/paella.jpg" imageAlt="Contemplative Reptile"/>
+                {products.map((product, index) => {
+                    return <ProductItem key={uuidv4()} product={product} />;
+                })}
             </ul>
         );
     }
