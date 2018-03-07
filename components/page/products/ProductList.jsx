@@ -6,7 +6,6 @@ import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import { connect } from 'react-redux';
-import uuidv4 from 'uuid/v4';
 import { loadProducts } from '../../../actions';
 import ProductItem from './ProductItem';
 
@@ -36,7 +35,7 @@ class ProductList extends React.Component {
         return (
             <ul className={classes.listContainer}>
                 {products.map((product, index) => {
-                    return <ProductItem key={uuidv4()} product={product} />;
+                    return <ProductItem key={product.id} product={product} />;
                 })}
             </ul>
         );
