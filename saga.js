@@ -1,7 +1,7 @@
 import { delay } from 'redux-saga';
-import { all, call, put, take, takeLatest } from 'redux-saga/effects';
+import { all, call, put, take, takeLatest, takeEvery } from 'redux-saga/effects';
 import fetch from 'isomorphic-unfetch';
-import { actionTypes, updateGreeting, loadProductsFailure, loadProductsSuccess } from './actions';
+import { actionTypes, updateGreeting, loadProductsFailure, loadProductsSuccess, loadProductSuccess, loadProductFailure } from './actions';
 
 function * updateGreetingSaga() {
     yield take(actionTypes.UPDATE);
@@ -10,7 +10,7 @@ function * updateGreetingSaga() {
 
 function * loadProductsWorker() {
     try {
-        const res = yield fetch('http://localhost:5000/api/v1/products');
+        const res = yield fetch('http://localhost:5000/products');
         const data = yield res.json();
         yield put(loadProductsSuccess(data));
     } catch(err) {
@@ -18,10 +18,21 @@ function * loadProductsWorker() {
     }
 }
 
+function * loadProductWorker(action) {
+    try {
+        const res = yield fetch('http://localhost:5000/product/' + action.id);
+        const data = yield res.json();
+        yield put(loadProductSuccess(data));
+    } catch(err) {
+        yield put(loadProductFailure(err));
+    }
+}
+
 function * rootWatcher() {
     yield all([
         call(updateGreetingSaga),
-        takeLatest(actionTypes.LOAD_PRODUCTS, loadProductsWorker)
+        takeLatest(actionTypes.LOAD_PRODUCTS, loadProductsWorker),
+        takeEvery(actionTypes.LOAD_PRODUCT, loadProductWorker)
     ]);
 }
 

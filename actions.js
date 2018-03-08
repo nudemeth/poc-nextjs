@@ -4,7 +4,10 @@ export const actionTypes = {
     RESET: 'RESET',
     LOAD_PRODUCTS: 'LOAD_PRODUCTS',
     LOAD_PRODUCTS_SUCCESS: 'LOAD_PRODUCTS_SUCCESS',
-    LOAD_PRODUCTS_FAILURE: 'LOAD_PRODUCTS_FAILURE'
+    LOAD_PRODUCTS_FAILURE: 'LOAD_PRODUCTS_FAILURE',
+    LOAD_PRODUCT: 'LOAD_PRODUCT',
+    LOAD_PRODUCT_SUCCESS: 'LOAD_PRODUCT_SUCCESS',
+    LOAD_PRODUCT_FAILURE: 'LOAD_PRODUCT_FAILURE'
 }
 
 //ACTIONS
@@ -26,4 +29,16 @@ export const loadProductsSuccess = (products) => {
 
 export const loadProductsFailure = (error) => {
     return { type: actionTypes.LOAD_PRODUCTS_FAILURE, error };
+}
+
+export const loadProduct = (id) => {
+    return { type: actionTypes.LOAD_PRODUCT, id };
+}
+
+export const loadProductSuccess = (product) => {
+    return { type: actionTypes.LOAD_PRODUCT_SUCCESS, product };
+}
+
+export const loadProductFailure = (error) => {
+    return { type: actionTypes.LOAD_PRODUCT_FAILURE, error };
 }

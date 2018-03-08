@@ -42,7 +42,7 @@ class ProductItem extends React.Component {
                         title={product.name}
                         subheader={(new Date(product.createDate)).toDateString()}
                     />
-                    <Link prefetch href="/product">
+                    <Link prefetch href={{ pathname: '/product', query: { id: product.id }}}>
                         <CardMedia
                             className={classes.media}
                             image={product.imageUrl}
