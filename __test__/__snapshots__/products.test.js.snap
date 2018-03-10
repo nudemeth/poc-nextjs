@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Products page with Snapshot Testing Should show "Products Page: Prodcuts Page" in Products page 1`] = `
+<Root
+  title="Products"
+>
+  <h1>
+    Products Page: 
+    Products Page
+  </h1>
+  <Component />
+</Root>
+`;

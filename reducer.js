@@ -3,7 +3,7 @@ import { actionTypes } from './actions';
 export const initialState = {
     greeting: '',
     error: false,
-    products: null,
+    products: [],
     product: {}
 }
 
