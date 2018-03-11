@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Product page with Snapshot Testing Should show "Product Name: Item 1" in Product page 1`] = `
+<Root
+  title="Product"
+>
+  <h1>
+    Product Name: 
+    Item 1
+  </h1>
+  <ul>
+    <li>
+      Category: 
+      Category 1
+    </li>
+    <li>
+      Create Date: 
+      2018-01-01T00:00:00.000Z
+    </li>
+    <li>
+      Image URL: 
+      https://material-ui-next.com/static/images/cards/paella.jpg
+    </li>
+  </ul>
+</Root>
+`;
