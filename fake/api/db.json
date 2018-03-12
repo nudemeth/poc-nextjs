@@ -1,16 +1,16 @@
 {
     "products": [
-        { "id": 1, "name": "Item 1", "category": "Category 1", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
-        { "id": 2, "name": "Item 2", "category": "Category 2", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
-        { "id": 3, "name": "Item 3", "category": "Category 3", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
-        { "id": 4, "name": "Item 4", "category": "Category 4", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
-        { "id": 5, "name": "Item 5", "category": "Category 5", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" }
+        { "id": 1, "name": "Item 1", "category": "Category 1", "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
+        { "id": 2, "name": "Item 2", "category": "Category 2", "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
+        { "id": 3, "name": "Item 3", "category": "Category 3", "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
+        { "id": 4, "name": "Item 4", "category": "Category 4", "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
+        { "id": 5, "name": "Item 5", "category": "Category 5", "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" }
     ],
     "product": [
-        { "id": 1, "name": "Item 1", "category": "Category 1", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
-        { "id": 2, "name": "Item 2", "category": "Category 2", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
-        { "id": 3, "name": "Item 3", "category": "Category 3", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
-        { "id": 4, "name": "Item 4", "category": "Category 4", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
-        { "id": 5, "name": "Item 5", "category": "Category 5", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" }
+        { "id": 1, "name": "Item 1", "category": "Category 1", "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
+        { "id": 2, "name": "Item 2", "category": "Category 2", "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
+        { "id": 3, "name": "Item 3", "category": "Category 3", "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
+        { "id": 4, "name": "Item 4", "category": "Category 4", "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
+        { "id": 5, "name": "Item 5", "category": "Category 5", "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" }
     ]
 }

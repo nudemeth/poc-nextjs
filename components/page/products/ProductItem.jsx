@@ -20,6 +20,13 @@ const styles = theme => ({
     },
     shoppingCart: {
         marginLeft: 'auto'
+    },
+    priceWrapper: {
+        margin: 0,
+        alignSelf: 'center'
+    },
+    price: {
+        fontSize: '1.5rem'
     }
 });
 
@@ -39,8 +46,10 @@ class ProductItem extends React.Component {
             <li>
                 <Card className={classes.card}>
                     <CardHeader
+                        action={<Typography component="span" className={classes.price}>{product.price} ฿</Typography>}
                         title={product.name}
                         subheader={(new Date(product.createDate)).toDateString()}
+                        classes={{action: classes.priceWrapper}}
                     />
                     <Link prefetch href={{ pathname: '/product', query: { id: product.id }}}>
                         <CardMedia
