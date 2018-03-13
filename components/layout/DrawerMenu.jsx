@@ -29,13 +29,13 @@ class DrawerMenu extends React.Component {
             <List key={uuidv4()}>
                 <Link prefetch href="/">
                     <ListItem button>
-                        <Icon color="primary">home</Icon>
+                        <Icon color="action">home</Icon>
                         <ListItemText primary="Home" />
                     </ListItem>
                 </Link>
                 <Link prefetch href="/products">
                     <ListItem button>
-                        <Icon color="primary">shop</Icon>
+                        <Icon color="action">shop</Icon>
                         <ListItemText primary="Products" />
                     </ListItem>
                 </Link>
