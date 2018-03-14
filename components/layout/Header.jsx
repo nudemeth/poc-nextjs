@@ -48,9 +48,9 @@ class Header extends React.Component {
                     <IconButton className={classes.menuButton} aria-label="Menu" onClick={this.props.handleDrawerToggle}>
                         <Icon>menu</Icon>
                     </IconButton>
-                    <Typography type="title" color="inherit" className={classes.flex}>
-                        Title
-                    </Typography>
+                    <div className={classes.flex}>
+                        {this.props.children}
+                    </div>
                     <Link prefetch href="/login">
                         <Button color="inherit">Login</Button>
                     </Link>

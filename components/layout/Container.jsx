@@ -58,7 +58,9 @@ class Container extends React.Component {
                     <Head>
                         <title>{this.props.title}</title>
                     </Head>
-                    <Header handleDrawerToggle={this.handleDrawerToggle} />
+                    <Header handleDrawerToggle={this.handleDrawerToggle}>
+                        {this.props.header}
+                    </Header>
                     <SideBar menuOpen={this.state.menuOpen} handleDrawerToggle={this.handleDrawerToggle} />
                     <main role="main" className={classes.content}>
                         {this.props.children}
