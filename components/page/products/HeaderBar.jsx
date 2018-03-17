@@ -11,9 +11,11 @@ const styles = theme => ({
         justifyContent: 'flex-end'
     },
     textField: {
-        border: '1px solid white',
-        color: 'white',
-        paddingLeft: '5px'
+        color: '#fff',
+        backgroundColor: 'rgba(255,255,255,0.2)'
+    },
+    adorment: {
+        marginLeft: 8
     }
 });
 
@@ -35,8 +37,9 @@ class HeaderBar extends React.Component {
                     id="search"
                     type="search"
                     className={classes.textField}
+                    disableUnderline={true}
                     startAdornment={
-                        <InputAdornment position="start">
+                        <InputAdornment position="start" className={classes.adorment}>
                             <Icon>search</Icon>
                         </InputAdornment>
                     }
