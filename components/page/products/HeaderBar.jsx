@@ -14,6 +14,21 @@ const styles = theme => ({
         color: '#fff',
         backgroundColor: 'rgba(255,255,255,0.2)'
     },
+    underline: {
+        '&:before': {
+            backgroundColor: 'rgba(255,255,255,0.42)'
+        },
+        '&:hover': {
+            '&:not(.MuiInput-disabled)': {
+                '&:before': {
+                    backgroundColor: 'rgba(255,255,255,0.6)'
+                }
+            }
+        },
+        '&:after': {
+            backgroundColor: 'rgba(255,255,255,1)'
+        }
+    },
     adorment: {
         marginLeft: 8
     }
@@ -30,16 +45,17 @@ class HeaderBar extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
         return (
-            <div className={classes.wrapper}>
+            <div className={this.props.classes.wrapper}>
                 <Input
                     id="search"
                     type="search"
-                    className={classes.textField}
-                    disableUnderline={true}
+                    classes={{
+                        root: this.props.classes.textField,
+                        underline: this.props.classes.underline
+                    }}
                     startAdornment={
-                        <InputAdornment position="start" className={classes.adorment}>
+                        <InputAdornment position="start" className={this.props.classes.adorment}>
                             <Icon>search</Icon>
                         </InputAdornment>
                     }
