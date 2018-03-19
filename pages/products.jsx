@@ -2,7 +2,7 @@ import React from 'react';
 import fetch from 'isomorphic-unfetch';
 import Container from '../components/layout/Container';
 import ProductList from '../components/page/products/ProductList';
-import Criteria from '../components/page/products/Criteria';
+import HeaderContent from '../components/page/products/HeaderContent';
 import { loadProducts } from '../actions';
 import { withReduxSaga } from '../store';
 
@@ -21,10 +21,8 @@ class Products extends React.Component {
     }
 
     render() {
-        const headerText = <span>{this.props.text}</span>
         return (
-            <Container title='Products' header={headerText}>
-                <Criteria/>
+            <Container title='Products' header={<HeaderContent/>}>
                 <ProductList/>
             </Container>
         );
