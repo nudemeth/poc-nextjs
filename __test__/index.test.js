@@ -9,18 +9,22 @@ const mockedRouter = { prefetch: () => {} };
 Router.router = mockedRouter;
 
 describe('Index page', () => {
-    it('Should show "This is Index Page: ABC" in Index page', () => {
+    it('Should show "Index Page: Prodcuts Page" in Index page', () => {
         const spyDispatch = sinon.spy();
-        const index = shallow(<Index dispatch={spyDispatch} greeting='ABC' />);
-        expect(index.find('h1').text()).toEqual('This is Index Page: ABC');
-        sinon.assert.calledWith(spyDispatch, { type: "UPDATE", gt: undefined });
+        const index = shallow(<Index dispatch={spyDispatch} text='Index Page' />);
+        //expect(index.find('h1').text()).toEqual('Index Page: Index Page');
+        sinon.assert.calledWith(spyDispatch, { type: "LOAD_PRODUCTS" });
     });
 });
 
+jest.mock('../components/page/index/ProductList', () => {
+    return () => "<div>Mocked Product List</div>";
+});
+
 describe('Index page with Snapshot Testing', () => {
-    it('Should show "This is Index Page: This is from client" in Index page', () => {
+    it('Should show "Index Page: Prodcuts Page" in Index page', () => {
         const spyDispatch = sinon.spy();
-        const index = shallow(<Index dispatch={spyDispatch} greeting='ABC' />);
+        const index = shallow(<Index dispatch={spyDispatch} text='Index Page' />);
         const tree = toJSON(index);
         expect(tree).toMatchSnapshot();
     });

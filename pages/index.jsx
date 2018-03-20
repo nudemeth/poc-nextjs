@@ -1,10 +1,9 @@
 import React from 'react';
 import fetch from 'isomorphic-unfetch';
-import { bindActionCreators } from 'redux';
-import withRedux from 'next-redux-wrapper';
-import { connect } from 'react-redux';
 import Container from '../components/layout/Container';
-import { initGreeting, updateGreeting } from '../actions';
+import ProductList from '../components/page/index/ProductList';
+import HeaderContent from '../components/page/index/HeaderContent';
+import { loadProducts } from '../actions';
 import { withReduxSaga } from '../store';
 
 class Index extends React.Component {
@@ -13,24 +12,22 @@ class Index extends React.Component {
     }
 
     static async getInitialProps({ store }) {
-        store.dispatch(initGreeting('This is from server'));
-        return {};
+        store.dispatch(loadProducts());
+        return { text: "Index Page" };
     }
 
     componentDidMount() {
-        this.props.dispatch(updateGreeting());
+        this.props.dispatch(loadProducts());
     }
 
     render() {
         return (
-            <Container title='Index'>
-                <h1>This is Index Page: {this.props.greeting}</h1>
+            <Container title='Index' header={<HeaderContent/>}>
+                <ProductList/>
             </Container>
         );
     }
 }
 
-const mapStateToProps = ({ greeting }) => ({ greeting });
-
-export default withReduxSaga(mapStateToProps)(Index);
+export default withReduxSaga()(Index);
 export { Index };
