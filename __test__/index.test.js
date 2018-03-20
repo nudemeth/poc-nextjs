@@ -12,7 +12,6 @@ describe('Index page', () => {
     it('Should show "Index Page: Prodcuts Page" in Index page', () => {
         const spyDispatch = sinon.spy();
         const index = shallow(<Index dispatch={spyDispatch} text='Index Page' />);
-        //expect(index.find('h1').text()).toEqual('Index Page: Index Page');
         sinon.assert.calledWith(spyDispatch, { type: "LOAD_PRODUCTS" });
     });
 });
