@@ -35,7 +35,7 @@ class DrawerMenu extends React.Component {
                 </Link>
                 <Link prefetch href="/category">
                     <ListItem button>
-                        <Icon color="action">view_module</Icon>
+                        <Icon color="action">label</Icon>
                         <ListItemText primary="Category" />
                     </ListItem>
                 </Link>
