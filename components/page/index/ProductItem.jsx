@@ -1,33 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
-import Card, { CardActions, CardContent, CardMedia, CardHeader } from 'material-ui/Card';
+import { GridListTile, GridListTileBar } from 'material-ui/GridList';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 
 const styles = theme => ({
-    card: {
-        width: '100%'
-    },
-    media: {
-        height: 200,
-        cursor: 'pointer'
-    },
-    actions: {
-        display: 'flex'
-    },
-    shoppingCart: {
-        marginLeft: 'auto'
-    },
-    priceWrapper: {
-        margin: 0,
-        alignSelf: 'center'
-    },
-    price: {
-        fontSize: '1.5rem'
-    }
 });
 
 class ProductItem extends React.Component {
@@ -43,34 +23,17 @@ class ProductItem extends React.Component {
     render() {
         const { classes, product } = this.props;
         return (
-            <li>
-                <Card className={classes.card}>
-                    <CardHeader
-                        action={<Typography component="span" className={classes.price}>{product.price} ฿</Typography>}
-                        title={product.name}
-                        subheader={(new Date(product.createDate)).toDateString()}
-                        classes={{action: classes.priceWrapper}}
-                    />
-                    <Link prefetch href={{ pathname: '/product', query: { id: product.id }}}>
-                        <CardMedia
-                            className={classes.media}
-                            image={product.imageUrl}
-                            title={product.imageAlt}
-                        />
-                    </Link>
-                    <CardActions className={classes.actions} disableActionSpacing>
-                        <IconButton color="primary" aria-label="Add to Favorite">
-                            <Icon>favorite_border</Icon>
-                        </IconButton>
-                        <IconButton color="primary" aria-label="Share">
-                            <Icon>share</Icon>
-                        </IconButton>
-                        <IconButton color="primary" aria-label="Add to shopping cart" className={classes.shoppingCart}>
+            <GridListTile>
+                <img src={product.imageUrl} alt={product.imageAlt} />
+                <GridListTileBar
+                    title={product.name}
+                    actionIcon={
+                        <IconButton color="default" aria-label="Add to shopping cart">
                             <Icon>add_shopping_cart</Icon>
                         </IconButton>
-                    </CardActions>
-                </Card>
-            </li>
+                    }
+                />
+            </GridListTile>
         );
     }
 }
