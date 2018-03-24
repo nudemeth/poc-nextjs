@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import GridList, { GridListTile, GridListTileBar } from 'material-ui/GridList';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
-import Typography from 'material-ui/Typography';
+import Hidden from 'material-ui/Hidden';
 import { withStyles } from 'material-ui/styles';
 import { connect } from 'react-redux';
 import { loadProducts } from '../../../actions';
@@ -21,13 +21,13 @@ const styles = theme => ({
     gridList: {
         width: '100%',
         height: '100%',
-        [theme.breakpoints.up('md')]: {
+        [theme.breakpoints.up('lg')]: {
             paddingLeft: '15%',
             paddingRight: '15%'
         }
     },
-    gridItem: {
-        padding: '10px'
+    button: {
+        color: '#fff'
     }
 });
 
@@ -43,25 +43,38 @@ class ProductList extends React.Component {
 
     render() {
         const { classes, products } = this.props;
-        return (
-            <GridList cellHeight={180} cols={3} className={classes.gridList}>
-                {products.map((product, index) => {
-                    return (
-                        <GridListTile key={product.id} className={classes.gridItem}>
-                            <img src={product.imageUrl} alt={product.imageAlt} />
-                            <GridListTileBar
-                                title={product.name}
-                                actionIcon={
-                                    <IconButton color="default" aria-label="Add to shopping cart">
-                                        <Icon>add_shopping_cart</Icon>
-                                    </IconButton>
-                                }
-                            />
-                        </GridListTile>
-                    );
-                })}
-            </GridList>
-        );
+        const item = products.map((product, index) => {
+            return (
+                <GridListTile key={product.id}>
+                    <img src={product.imageUrl} alt={product.imageAlt} />
+                    <GridListTileBar
+                        title={product.name}
+                        actionIcon={
+                            <IconButton className={classes.button} aria-label="Add to shopping cart">
+                                <Icon>add_shopping_cart</Icon>
+                            </IconButton>
+                        }
+                    />
+                </GridListTile>
+            );
+        })
+        return [
+            <Hidden mdDown>
+                <GridList cellHeight={180} cols={3} spacing={24} className={classes.gridList}>
+                    {item}
+                </GridList>
+            </Hidden>
+            ,<Hidden xsDown lgUp>
+                <GridList cellHeight={180} cols={2} className={classes.gridList}>
+                    {item}
+                </GridList>
+            </Hidden>
+            ,<Hidden smUp>
+                <GridList cellHeight={180} cols={1} className={classes.gridList}>
+                    {item}
+                </GridList>
+            </Hidden>
+        ];
     }
 }
 
