@@ -4,10 +4,10 @@ import GridList, { GridListTile, GridListTileBar } from 'material-ui/GridList';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 import Hidden from 'material-ui/Hidden';
+import uuidv4 from 'uuid/v4';
 import { withStyles } from 'material-ui/styles';
 import { connect } from 'react-redux';
 import { loadProducts } from '../../../actions';
-import ProductItem from './ProductItem';
 
 const styles = theme => ({
     listContainer: {
@@ -31,6 +31,22 @@ const styles = theme => ({
     }
 });
 
+const createProductItem = (product, classes) => {
+    return (
+        <GridListTile key={product.id}>
+            <img src={product.imageUrl} alt={product.imageAlt} />
+            <GridListTileBar
+                title={product.name}
+                actionIcon={
+                    <IconButton className={classes.button} aria-label="Add to shopping cart">
+                        <Icon>add_shopping_cart</Icon>
+                    </IconButton>
+                }
+            />
+        </GridListTile>
+    );
+}
+
 class ProductList extends React.Component {
     constructor(props) {
         super(props);
@@ -43,35 +59,21 @@ class ProductList extends React.Component {
 
     render() {
         const { classes, products } = this.props;
-        const item = products.map((product, index) => {
-            return (
-                <GridListTile key={product.id}>
-                    <img src={product.imageUrl} alt={product.imageAlt} />
-                    <GridListTileBar
-                        title={product.name}
-                        actionIcon={
-                            <IconButton className={classes.button} aria-label="Add to shopping cart">
-                                <Icon>add_shopping_cart</Icon>
-                            </IconButton>
-                        }
-                    />
-                </GridListTile>
-            );
-        })
+        const items = products.map((product, index) => createProductItem(product, classes));
         return [
-            <Hidden mdDown>
+            <Hidden mdDown key={uuidv4()}>
                 <GridList cellHeight={180} cols={3} spacing={24} className={classes.gridList}>
-                    {item}
+                    {items}
                 </GridList>
             </Hidden>
-            ,<Hidden xsDown lgUp>
-                <GridList cellHeight={180} cols={2} className={classes.gridList}>
-                    {item}
+            ,<Hidden xsDown lgUp key={uuidv4()}>
+                <GridList cellHeight={180} cols={2} spacing={16} className={classes.gridList}>
+                    {items}
                 </GridList>
             </Hidden>
-            ,<Hidden smUp>
+            ,<Hidden smUp key={uuidv4()}>
                 <GridList cellHeight={180} cols={1} className={classes.gridList}>
-                    {item}
+                    {items}
                 </GridList>
             </Hidden>
         ];
