@@ -1,4 +1,4 @@
-export const actionTypes = {
+const actionTypes = {
     INIT: 'INIT',
     UPDATE: 'UPDATE',
     RESET: 'RESET',
@@ -7,8 +7,13 @@ export const actionTypes = {
     LOAD_PRODUCTS_FAILURE: 'LOAD_PRODUCTS_FAILURE',
     LOAD_PRODUCT: 'LOAD_PRODUCT',
     LOAD_PRODUCT_SUCCESS: 'LOAD_PRODUCT_SUCCESS',
-    LOAD_PRODUCT_FAILURE: 'LOAD_PRODUCT_FAILURE'
+    LOAD_PRODUCT_FAILURE: 'LOAD_PRODUCT_FAILURE',
+    LOAD_CATEGORIES: 'LOAD_CATEGORIES',
+    LOAD_CATEGORIES_SUCCESS: 'LOAD_CATEGORIES_SUCCESS',
+    LOAD_CATEGORIES_FAILURE: 'LOAD_CATEGORIES_FAILURE'
 }
+
+export default actionTypes;
 
 //ACTIONS
 export const initGreeting = (gt) => {
@@ -41,4 +46,16 @@ export const loadProductSuccess = (product) => {
 
 export const loadProductFailure = (error) => {
     return { type: actionTypes.LOAD_PRODUCT_FAILURE, error };
+}
+
+export const loadCategories = () => {
+    return { type: actionTypes.LOAD_CATEGORIES };
+}
+
+export const loadCategoriesSuccess = (categories) => {
+    return { type: actionTypes.LOAD_CATEGORIES_SUCCESS, categories };
+}
+
+export const loadCategoriesFailure = (error) => {
+    return { type: actionTypes.LOAD_CATEGORIES_FAILURE, error };
 }

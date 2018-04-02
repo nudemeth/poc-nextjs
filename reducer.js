@@ -1,10 +1,11 @@
-import { actionTypes } from './actions';
+import actionTypes from './actions';
 
 export const initialState = {
     greeting: '',
     error: false,
     products: [],
-    product: {}
+    product: {},
+    categories: []
 }
 
 //REDUCER
@@ -36,6 +37,16 @@ const rootReducer = (state = initialState, action) => {
                 ...{ product: action.product }
             }
         case actionTypes.LOAD_PRODUCT_FAILURE:
+            return {
+                ...state,
+                ...{ error: action.error }
+            }
+        case actionTypes.LOAD_CATEGORIES_SUCCESS:
+            return {
+                ...state,
+                ...{ categories: action.categories }
+            }
+        case actionTypes.LOAD_CATEGORIES_FAILURE:
             return {
                 ...state,
                 ...{ error: action.error }

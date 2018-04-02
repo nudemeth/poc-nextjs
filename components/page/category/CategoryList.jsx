@@ -20,26 +20,25 @@ const styles = theme => ({
     },
     button: {
         color: '#fff'
+    },
+    category: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
 
-const createProductItem = (product, classes) => {
+const createCategoryItem = (category, classes) => {
     return (
-        <GridListTile key={product.id}>
-            <img src={product.imageUrl} alt={product.imageAlt} />
-            <GridListTileBar
-                title={product.name}
-                actionIcon={
-                    <IconButton className={classes.button} aria-label="Add to shopping cart">
-                        <Icon>add_shopping_cart</Icon>
-                    </IconButton>
-                }
-            />
+        <GridListTile key={category.id} classes={{tile: classes.category}} style={{background: category.color}}>
+            <IconButton>
+                <Icon>{category.image}</Icon>
+            </IconButton>
         </GridListTile>
     );
 }
 
-class ProductList extends React.Component {
+class CategoryList extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -50,16 +49,16 @@ class ProductList extends React.Component {
     }
 
     render() {
-        const { classes, products } = this.props;
-        const items = products.map((product, index) => createProductItem(product, classes));
+        const { classes, categories } = this.props;
+        const items = categories.map((category, index) => createCategoryItem(category, classes));
         return [
             <Hidden mdDown key={uuidv4()}>
-                <GridList cellHeight={180} cols={3} spacing={24} className={classes.gridList}>
+                <GridList cellHeight={180} cols={3} className={classes.gridList}>
                     {items}
                 </GridList>
             </Hidden>
             ,<Hidden xsDown lgUp key={uuidv4()}>
-                <GridList cellHeight={180} cols={2} spacing={16} className={classes.gridList}>
+                <GridList cellHeight={180} cols={2} className={classes.gridList}>
                     {items}
                 </GridList>
             </Hidden>
@@ -72,6 +71,6 @@ class ProductList extends React.Component {
     }
 }
 
-const mapStateToProps = ({ products, error }) => ({ products, error });
+const mapStateToProps = ({ categories, error }) => ({ categories, error });
 
-export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(ProductList));
+export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(CategoryList));
