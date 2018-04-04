@@ -4,6 +4,7 @@ import GridList, { GridListTile, GridListTileBar } from 'material-ui/GridList';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 import Hidden from 'material-ui/Hidden';
+import Typography from 'material-ui/Typography';
 import uuidv4 from 'uuid/v4';
 import { withStyles } from 'material-ui/styles';
 import { connect } from 'react-redux';
@@ -18,21 +19,36 @@ const styles = theme => ({
             paddingRight: '15%'
         }
     },
-    button: {
-        color: '#fff'
+    iconButtonRoot: {
+        width: '100%',
+        height: '100%'
+    },
+    iconButtonLabel: {
+        width: '100%',
+        height: 80,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-evenly'
+    },
+    icon: {
+        color: theme.palette.secondary.main
     },
     category: {
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        borderWidth: '1px',
+        borderStyle: 'solid',
+        borderColor: theme.palette.secondary.main
     }
 });
 
 const createCategoryItem = (category, classes) => {
     return (
-        <GridListTile key={category.id} classes={{tile: classes.category}} style={{background: category.color}}>
-            <IconButton>
-                <Icon>{category.image}</Icon>
+        <GridListTile key={category.id} classes={{tile: classes.category}}>
+            <IconButton disableRipple classes={{root: classes.iconButtonRoot, label: classes.iconButtonLabel}}>
+                <Icon className={classes.icon}>{category.image}</Icon>
+                <Typography component="span">{category.name}</Typography>
             </IconButton>
         </GridListTile>
     );
