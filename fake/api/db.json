@@ -14,9 +14,9 @@
         { "id": 5, "name": "Item 5", "category": "Category 5", "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" }
     ],
     "categories": [
-        { "id": 1, "name": "Languages & Frameworks", "image": "code", "color": "red" },
-        { "id": 2, "name": "Tools", "image": "build", "color": "green" },
-        { "id": 3, "name": "Techniques", "image": "device_hub", "color": "blue" },
-        { "id": 4, "name": "Platforms", "image": "developer_board", "color": "yellow" }
+        { "id": 1, "name": "Languages & Frameworks", "image": "code", "isSelected": true },
+        { "id": 2, "name": "Tools", "image": "build", "isSelected": true },
+        { "id": 3, "name": "Techniques", "image": "device_hub", "isSelected": true },
+        { "id": 4, "name": "Platforms", "image": "developer_board", "isSelected": false }
     ]
 }
