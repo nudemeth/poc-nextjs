@@ -1,5 +1,5 @@
 import { delay } from 'redux-saga';
-import { all, call, put, take, takeLatest, takeEvery } from 'redux-saga/effects';
+import { all, call, put, take, takeLatest, takeEvery, select } from 'redux-saga/effects';
 import fetch from 'isomorphic-unfetch';
 import actionTypes from './actions';
 import * as actions from './actions';
@@ -39,12 +39,26 @@ function * loadCategoriesWorker() {
     }
 }
 
+const getCategories = state => state.categories;
+
+function * updateSelectedCategory(action) {
+    const { category, isSelected } = action;
+    console.log(isSelected);
+    const categories = yield select(getCategories);
+    category.isSelected = isSelected;
+    const idx = categories.findIndex(c => c.id === category.id);
+    categories[idx] = category;
+    console.log(categories);
+    yield put(actions.loadCategoriesSuccess(categories));
+}
+
 function * rootWatcher() {
     yield all([
         call(updateGreetingSaga),
         takeLatest(actionTypes.LOAD_PRODUCTS, loadProductsWorker),
         takeEvery(actionTypes.LOAD_PRODUCT, loadProductWorker),
-        takeLatest(actionTypes.LOAD_CATEGORIES, loadCategoriesWorker)
+        takeLatest(actionTypes.LOAD_CATEGORIES, loadCategoriesWorker),
+        takeLatest(actionTypes.UPDATE_SELECTED_CATEGORY, updateSelectedCategory)
     ]);
 }
 

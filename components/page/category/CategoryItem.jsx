@@ -4,7 +4,9 @@ import GridList, { GridListTile, GridListTileBar } from 'material-ui/GridList';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
+import { updateSelectedCategory } from '../../../actions';
 import { withStyles } from 'material-ui/styles';
+import { connect } from 'react-redux';
 
 const defaultColor = theme => theme.palette.grey[500];
 const selectedColor = theme => theme.palette.secondary.main;
@@ -71,6 +73,10 @@ class CategoryItem extends React.Component {
         theme: PropTypes.object.isRequired
     }
 
+    componentDidUpdate() {
+        this.props.dispatch(updateSelectedCategory(this.props.category, this.state.isSelected));
+    }
+
     handleCategoryToggle = () => {
         this.setState({ isSelected: !this.state.isSelected });
     }
@@ -90,4 +96,6 @@ class CategoryItem extends React.Component {
     }
 }
 
-export default withStyles(styles, { withTheme: true })(CategoryItem);
+const mapStateToProps = ({ categories, error }) => ({ categories, error });
+
+export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(CategoryItem));
