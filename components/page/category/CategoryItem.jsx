@@ -73,11 +73,8 @@ class CategoryItem extends React.Component {
         theme: PropTypes.object.isRequired
     }
 
-    componentDidUpdate() {
-        this.props.dispatch(updateSelectedCategory(this.props.category, this.state.isSelected));
-    }
-
     handleCategoryToggle = () => {
+        this.props.dispatch(updateSelectedCategory(this.props.category, !this.state.isSelected));
         this.setState({ isSelected: !this.state.isSelected });
     }
 
