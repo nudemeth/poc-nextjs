@@ -13,7 +13,7 @@ function * loadProductsWorker() {
     const categories = yield call(getSelectedCategoryIds);
     const selectedCategories = categories.reduce((p, c) => p + 'categoryId=' + c + '&', '')
     try {
-        const res = yield fetch('http://localhost:5000/products?' + selectedCategories);
+        const res = yield call(fetch, 'http://localhost:5000/products?' + selectedCategories);
         const data = yield res.json();
         yield put(actions.loadProductsSuccess(data));
     } catch(err) {
@@ -23,7 +23,7 @@ function * loadProductsWorker() {
 
 function * loadProductWorker(action) {
     try {
-        const res = yield fetch('http://localhost:5000/product/' + action.id);
+        const res = yield call(fetch, 'http://localhost:5000/product/' + action.id);
         const data = yield res.json();
         yield put(actions.loadProductSuccess(data));
     } catch(err) {
@@ -33,9 +33,7 @@ function * loadProductWorker(action) {
 
 function * loadCategoriesWorker() {
     const { categories } = yield select();
-    if (categories.length > 0) {
-        yield put(actions.loadCategoriesSuccess(categories));
-    } else {
+    if (!categories || categories.length === 0) {
         try {
             const res = yield call(fetch, 'http://localhost:5000/categories');
             const data = yield res.json();
@@ -46,30 +44,15 @@ function * loadCategoriesWorker() {
     }
 }
 
-function * loadCategoriesWatcher() {
-    yield takeEvery(actionTypes.LOAD_CATEGORIES, loadCategoriesWorker);
-}
-
 function * getSelectedCategoryIds() {
+    yield call(loadCategoriesWorker);
     const { categories } = yield select();
-    if (categories.length > 0) {
-        yield put.resolve(actions.loadCategoriesSuccess(categories));
-    } else {
-        try {
-            const res = yield call(fetch, 'http://localhost:5000/categories');
-            const data = yield res.json();
-            yield put.resolve(actions.loadCategoriesSuccess(data));
-        } catch(err) {
-            yield put.resolve(actions.loadCategoriesFailure(err));
-        }
-    }
-    const selectedCategories = yield select((state) => state.categories.filter((category) => category.isSelected).map((category) => category.id));
-    return selectedCategories;
+    return categories.filter((category) => category.isSelected).map((category) => category.id);
 }
 
 function * updateSelectedCategory(action) {
     const { category, isSelected } = action;
-    const categories = yield call(getCategories);
+    const { categories } = yield select();
     category.isSelected = isSelected;
     const idx = categories.findIndex(c => c.id === category.id);
     categories[idx] = category;
@@ -81,7 +64,7 @@ function * rootWatcher() {
         call(updateGreetingSaga),
         takeEvery(actionTypes.LOAD_PRODUCTS, loadProductsWorker),
         takeEvery(actionTypes.LOAD_PRODUCT, loadProductWorker),
-        loadCategoriesWatcher(),
+        takeEvery(actionTypes.LOAD_CATEGORIES, loadCategoriesWorker),
         takeEvery(actionTypes.UPDATE_SELECTED_CATEGORY, updateSelectedCategory)
     ]);
 }
