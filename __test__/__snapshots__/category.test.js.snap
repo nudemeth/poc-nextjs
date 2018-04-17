@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Category page with Snapshot Testing Should show category list in Category page 1`] = `
+<Root
+  title="Category"
+>
+  <Component />
+</Root>
+`;
