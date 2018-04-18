@@ -3,7 +3,7 @@ import Router from 'next/router'
 import { shallow } from 'enzyme';
 import toJSON from 'enzyme-to-json';
 import sinon from 'sinon';
-import ConnectedAbout, { About } from '../pages/about';
+import ConnectedAbout, { About } from '../../pages/about';
 
 const mockedRouter = { prefetch: () => {} };
 Router.router = mockedRouter;

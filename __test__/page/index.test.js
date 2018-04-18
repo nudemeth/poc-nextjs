@@ -3,7 +3,7 @@ import Router from 'next/router'
 import { shallow } from 'enzyme';
 import toJSON from 'enzyme-to-json';
 import sinon from 'sinon';
-import ConnectedIndex, { Index } from '../pages/index';
+import ConnectedIndex, { Index } from '../../pages/index';
 
 const mockedRouter = { prefetch: () => {} };
 Router.router = mockedRouter;
@@ -16,7 +16,7 @@ describe('Index page', () => {
     });
 });
 
-jest.mock('../components/page/index/ProductList', () => {
+jest.mock('../../components/page/index/ProductList', () => {
     return () => "<div>Mocked Product List</div>";
 });
 

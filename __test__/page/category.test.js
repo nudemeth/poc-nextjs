@@ -3,7 +3,7 @@ import Router from 'next/router'
 import { shallow } from 'enzyme';
 import toJSON from 'enzyme-to-json';
 import sinon from 'sinon';
-import ConnectedCategory, { Category } from '../pages/category';
+import ConnectedCategory, { Category } from '../../pages/category';
 
 const mockedRouter = { prefetch: () => {} };
 Router.router = mockedRouter;
@@ -16,7 +16,7 @@ describe('Category page', () => {
     });
 });
 
-jest.mock('../components/page/category/CategoryList', () => {
+jest.mock('../../components/page/category/CategoryList', () => {
     return () => "<div>Mocked Category List</div>";
 });
 
