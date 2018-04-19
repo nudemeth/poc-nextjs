@@ -15,6 +15,17 @@ const theme = {}
 describe('Header component', () => {
     it('Should show child component', () => {
         const header = shallow(<Header classes={classes} theme={theme}><h1>This is child component</h1></Header>);
-        expect(header.find('h1').text()).toEqual('This is child component');
+        expect(header.find('div').children().find('h1').exists());
+        expect(header.find('div').children().text()).toEqual('This is child component');
+    });
+
+    it('Should show menu button', () => {
+        const header = shallow(<Header classes={classes} theme={theme}/>);
+        expect(header.find('WithStyles(Icon)').render().text()).toEqual('menu');
+    });
+
+    it('Should show login button', () => {
+        const header = shallow(<Header classes={classes} theme={theme}/>);
+        expect(header.find('WithStyles(Button)').render().text()).toEqual('Login');
     });
 });
