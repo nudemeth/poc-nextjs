@@ -70,7 +70,8 @@ class CategoryItem extends React.Component {
 
     static propTypes = {
         classes: PropTypes.object.isRequired,
-        theme: PropTypes.object.isRequired
+        theme: PropTypes.object.isRequired,
+        category: PropTypes.object.isRequired
     }
 
     handleCategoryToggle = () => {
@@ -96,3 +97,4 @@ class CategoryItem extends React.Component {
 const mapStateToProps = ({ categories, error }) => ({ categories, error });
 
 export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(CategoryItem));
+export { CategoryItem };

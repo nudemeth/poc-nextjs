@@ -26,32 +26,36 @@ class CategoryList extends React.Component {
 
     static propTypes = {
         classes: PropTypes.object.isRequired,
-        theme: PropTypes.object.isRequired
+        theme: PropTypes.object.isRequired,
+        categories: PropTypes.arrayOf(PropTypes.object).isRequired
     }
 
     render() {
         const { classes, categories } = this.props;
         const items = categories.map((category, index) => <CategoryItem key={uuidv4()} category={category} />);
-        return [
-            <Hidden mdDown key={uuidv4()}>
-                <GridList className={classes.gridList}>
-                    {items}
-                </GridList>
-            </Hidden>
-            ,<Hidden xsDown lgUp key={uuidv4()}>
-                <GridList className={classes.gridList}>
-                    {items}
-                </GridList>
-            </Hidden>
-            ,<Hidden smUp key={uuidv4()}>
-                <GridList className={classes.gridList}>
-                    {items}
-                </GridList>
-            </Hidden>
-        ];
+        return (
+            <React.Fragment>
+                <Hidden mdDown key={uuidv4()}>
+                    <GridList className={classes.gridList}>
+                        {items}
+                    </GridList>
+                </Hidden>
+                <Hidden xsDown lgUp key={uuidv4()}>
+                    <GridList className={classes.gridList}>
+                        {items}
+                    </GridList>
+                </Hidden>
+                <Hidden smUp key={uuidv4()}>
+                    <GridList className={classes.gridList}>
+                        {items}
+                    </GridList>
+                </Hidden>
+            </React.Fragment>
+        );
     }
 }
 
 const mapStateToProps = ({ categories, error }) => ({ categories, error });
 
 export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(CategoryList));
+export { CategoryList };
