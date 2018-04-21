@@ -34,31 +34,34 @@ class SideBar extends React.Component {
 
     render() {
         const { classes, theme } = this.props;
-        return [
-            <Hidden key={uuidv4()} mdUp>
-                <Drawer
-                    variant="temporary"
-                    open={this.props.menuOpen}
-                    classes={{paper: classes.drawerPaper, docked: classes.drawerDocked, }}
-                    onClose={this.props.handleDrawerToggle}
-                    ModalProps={{
-                        keepMounted: true, // Better open performance on mobile.
-                    }}
-                >
-                    <DrawerMenu/>
-                </Drawer>
-            </Hidden>,
-            <Hidden key={uuidv4()} smDown implementation="css">
-                <Drawer
-                    variant="permanent"
-                    open
-                    classes={{paper: classes.drawerPaper, docked: classes.drawerDocked, }}
-                >
-                    <DrawerMenu/>
-                </Drawer>
-            </Hidden>
-        ];
+        return (
+            <React.Fragment>
+                <Hidden key={uuidv4()} mdUp>
+                    <Drawer
+                        variant="temporary"
+                        open={this.props.menuOpen}
+                        classes={{paper: classes.drawerPaper, docked: classes.drawerDocked, }}
+                        onClose={this.props.handleDrawerToggle}
+                        ModalProps={{
+                            keepMounted: true, // Better open performance on mobile.
+                        }}
+                    >
+                        <DrawerMenu/>
+                    </Drawer>
+                </Hidden>
+                <Hidden key={uuidv4()} smDown implementation="css">
+                    <Drawer
+                        variant="permanent"
+                        open
+                        classes={{paper: classes.drawerPaper, docked: classes.drawerDocked, }}
+                    >
+                        <DrawerMenu/>
+                    </Drawer>
+                </Hidden>
+            </React.Fragment>
+        );
     }
 }
 
 export default  withStyles(styles, { withTheme: true })(SideBar);
+export { SideBar };

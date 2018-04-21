@@ -23,31 +23,34 @@ class DrawerMenu extends React.Component {
 
     render() {
         const { classes } = this.props;
-        return [
-            <div key={uuidv4()} className={classes.drawerHeader} />,
-            <Divider key={uuidv4()} />,
-            <List key={uuidv4()}>
-                <Link prefetch href="/">
-                    <ListItem button>
-                        <Icon color="action">home</Icon>
-                        <ListItemText primary="Home" />
-                    </ListItem>
-                </Link>
-                <Link prefetch href="/category">
-                    <ListItem button>
-                        <Icon color="action">label</Icon>
-                        <ListItemText primary="Category" />
-                    </ListItem>
-                </Link>
-                <Link prefetch href="/about">
-                    <ListItem button>
-                        <Icon color="action">info</Icon>
-                        <ListItemText primary="About" />
-                    </ListItem>
-                </Link>
-            </List>
-        ];
+        return (
+            <React.Fragment>
+                <div key={uuidv4()} className={classes.drawerHeader} />
+                <Divider key={uuidv4()} />
+                <List key={uuidv4()}>
+                    <Link prefetch href="/">
+                        <ListItem button>
+                            <Icon color="action">home</Icon>
+                            <ListItemText primary="Home" />
+                        </ListItem>
+                    </Link>
+                    <Link prefetch href="/category">
+                        <ListItem button>
+                            <Icon color="action">label</Icon>
+                            <ListItemText primary="Category" />
+                        </ListItem>
+                    </Link>
+                    <Link prefetch href="/about">
+                        <ListItem button>
+                            <Icon color="action">info</Icon>
+                            <ListItemText primary="About" />
+                        </ListItem>
+                    </Link>
+                </List>
+            </React.Fragment>
+        );
     }
 }
 
 export default withStyles(styles, { withTheme: true })(DrawerMenu);
+export { DrawerMenu };

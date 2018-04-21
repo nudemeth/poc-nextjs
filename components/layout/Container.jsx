@@ -72,3 +72,4 @@ class Container extends React.Component {
 }
 
 export default withRoot(withStyles(styles, { withTheme: true })(Container));
+export { Container };
