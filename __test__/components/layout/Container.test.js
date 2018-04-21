@@ -5,12 +5,8 @@ import toJSON from 'enzyme-to-json';
 import sinon from 'sinon';
 import { Container } from '../../../components/layout/Container';
 
-const classes = {
-    appBar: {},
-    menuButton: {},
-    flex: {}
-}
-const theme = {}
+const classes = {};
+const theme = {};
 
 describe('Container component', () => {
     it('Should show child component', () => {

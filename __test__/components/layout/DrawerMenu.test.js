@@ -5,12 +5,8 @@ import toJSON from 'enzyme-to-json';
 import sinon from 'sinon';
 import { DrawerMenu } from '../../../components/layout/DrawerMenu';
 
-const classes = {
-    appBar: {},
-    menuButton: {},
-    flex: {}
-}
-const theme = {}
+const classes = {};
+const theme = {};
 
 describe('DrawerMenu component', () => {
     it('Should have 3 Link components', () => {

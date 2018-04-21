@@ -5,12 +5,8 @@ import toJSON from 'enzyme-to-json';
 import sinon from 'sinon';
 import { SideBar } from '../../../components/layout/SideBar';
 
-const classes = {
-    appBar: {},
-    menuButton: {},
-    flex: {}
-}
-const theme = {}
+const classes = {};
+const theme = {};
 
 describe('SideBar component', () => {
     it('Should have 2 Drawer components', () => {
