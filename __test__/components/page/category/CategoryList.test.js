@@ -8,7 +8,7 @@ import { CategoryList } from '../../../../components/page/category/CategoryList'
 const classes = {};
 const theme = {};
 const categories = [
-    {}, {}, {}
+    { id: 1 }, { id: 2 }, { id: 3 }
 ]
 
 describe('CategoryList component', () => {
@@ -17,7 +17,7 @@ describe('CategoryList component', () => {
         expect(categoryList.find('WithStyles(GridList)').length).toEqual(3);
     });
 
-    it('Should have 2 CategoryItem components under each CategoryList', () => {
+    it('Should have 3 CategoryItem components under each CategoryList', () => {
         const wrapper = shallow(<CategoryList classes={classes} theme={theme} categories={categories} />);
         const categoryList = wrapper.find('WithStyles(GridList)');
         const firstCategoryList = categoryList.first();

@@ -32,7 +32,7 @@ class CategoryList extends React.Component {
 
     render() {
         const { classes, categories } = this.props;
-        const items = categories.map((category, index) => <CategoryItem key={uuidv4()} category={category} />);
+        const items = categories.map((category, index) => <CategoryItem key={category.id} category={category} />);
         return (
             <React.Fragment>
                 <Hidden mdDown key={uuidv4()}>
