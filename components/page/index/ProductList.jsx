@@ -8,6 +8,7 @@ import uuidv4 from 'uuid/v4';
 import { withStyles } from 'material-ui/styles';
 import { connect } from 'react-redux';
 import { loadProducts } from '../../../actions';
+import ProductItem from './ProductItem';
 
 const styles = theme => ({
     gridList: {
@@ -17,27 +18,8 @@ const styles = theme => ({
             paddingLeft: '15%',
             paddingRight: '15%'
         }
-    },
-    button: {
-        color: '#fff'
     }
 });
-
-const createProductItem = (product, classes) => {
-    return (
-        <GridListTile key={product.id}>
-            <img src={product.imageUrl} alt={product.imageAlt} />
-            <GridListTileBar
-                title={product.name}
-                actionIcon={
-                    <IconButton className={classes.button} aria-label="Add to shopping cart">
-                        <Icon>add_shopping_cart</Icon>
-                    </IconButton>
-                }
-            />
-        </GridListTile>
-    );
-}
 
 class ProductList extends React.Component {
     constructor(props) {
@@ -46,32 +28,36 @@ class ProductList extends React.Component {
 
     static propTypes = {
         classes: PropTypes.object.isRequired,
-        theme: PropTypes.object.isRequired
+        theme: PropTypes.object.isRequired,
+        products: PropTypes.arrayOf(PropTypes.object).isRequired
     }
 
     render() {
         const { classes, products } = this.props;
-        const items = products.map((product, index) => createProductItem(product, classes));
-        return [
-            <Hidden mdDown key={uuidv4()}>
-                <GridList cellHeight={180} cols={3} spacing={24} className={classes.gridList}>
-                    {items}
-                </GridList>
-            </Hidden>
-            ,<Hidden xsDown lgUp key={uuidv4()}>
-                <GridList cellHeight={180} cols={2} spacing={16} className={classes.gridList}>
-                    {items}
-                </GridList>
-            </Hidden>
-            ,<Hidden smUp key={uuidv4()}>
-                <GridList cellHeight={180} cols={1} className={classes.gridList}>
-                    {items}
-                </GridList>
-            </Hidden>
-        ];
+        const items = products.map((product, index) => <ProductItem key={product.id} product={product} />);
+        return (
+            <React.Fragment>
+                <Hidden mdDown key={uuidv4()}>
+                    <GridList cellHeight={180} cols={3} spacing={24} className={classes.gridList}>
+                        {items}
+                    </GridList>
+                </Hidden>
+                <Hidden xsDown lgUp key={uuidv4()}>
+                    <GridList cellHeight={180} cols={2} spacing={16} className={classes.gridList}>
+                        {items}
+                    </GridList>
+                </Hidden>
+                <Hidden smUp key={uuidv4()}>
+                    <GridList cellHeight={180} cols={1} className={classes.gridList}>
+                        {items}
+                    </GridList>
+                </Hidden>
+            </React.Fragment>
+        );
     }
 }
 
 const mapStateToProps = ({ products, error }) => ({ products, error });
 
 export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(ProductList));
+export { ProductList };

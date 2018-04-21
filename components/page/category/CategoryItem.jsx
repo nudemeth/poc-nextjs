@@ -94,7 +94,5 @@ class CategoryItem extends React.Component {
     }
 }
 
-const mapStateToProps = ({ categories, error }) => ({ categories, error });
-
-export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(CategoryItem));
+export default connect()(withStyles(styles, { withTheme: true })(CategoryItem));
 export { CategoryItem };
