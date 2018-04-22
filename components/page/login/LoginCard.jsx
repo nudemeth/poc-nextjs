@@ -34,7 +34,7 @@ const styles = theme => ({
     }
 });
 
-class Login extends React.Component {
+class LoginCard extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -86,4 +86,5 @@ class Login extends React.Component {
     }
 }
 
-export default withStyles(styles, { withTheme: true })(Login);
+export default withStyles(styles, { withTheme: true })(LoginCard);
+export { LoginCard };

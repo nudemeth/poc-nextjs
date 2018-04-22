@@ -66,3 +66,4 @@ class HeaderContent extends React.Component {
 }
 
 export default withStyles(styles, { withTheme: true })(HeaderContent);
+export { HeaderContent };

@@ -9,7 +9,7 @@ const classes = {};
 const theme = {};
 const products = [
     { id: 1 }, { id: 2 }, { id: 3 }
-]
+];
 
 describe('ProductList component', () => {
     it('Should have 3 ProductList components', () => {
