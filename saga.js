@@ -23,7 +23,7 @@ function * loadProductsWorker() {
 
 function * loadProductWorker(action) {
     try {
-        const res = yield call(fetch, 'http://localhost:5000/product/' + action.id);
+        const res = yield call(fetch, 'http://localhost:5000/product/' + action.payload.id);
         const data = yield res.json();
         yield put(actions.loadProductSuccess(data));
     } catch(err) {
@@ -51,7 +51,7 @@ function * getSelectedCategoryIds() {
 }
 
 function * updateSelectedCategory(action) {
-    const { category, isSelected } = action;
+    const { category, isSelected } = action.payload;
     const { categories } = yield select();
     category.isSelected = isSelected;
     const idx = categories.findIndex(c => c.id === category.id);

@@ -32,7 +32,7 @@ describe('Product page', () => {
         expect(elements.at(0).text()).toEqual('Category: Category 1');
         expect(elements.at(1).text()).toEqual('Create Date: 2018-01-01T00:00:00.000Z');
         expect(elements.at(2).text()).toEqual('Image URL: https://material-ui-next.com/static/images/cards/paella.jpg');
-        sinon.assert.calledWith(spyDispatch, { id: 1, type: "LOAD_PRODUCT" });
+        sinon.assert.calledWith(spyDispatch, { type: "LOAD_PRODUCT", payload: { id: 1 } });
     });
 });
 

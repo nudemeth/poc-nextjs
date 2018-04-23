@@ -1,11 +1,13 @@
 import actionTypes from './actions';
 
 export const initialState = {
-    greeting: '',
-    error: false,
-    products: [],
-    product: {},
-    categories: []
+    payload: {
+        error: false,
+        products: [],
+        product: {},
+        categories: []
+    },
+    greeting: ''
 }
 
 //REDUCER
@@ -24,32 +26,32 @@ const rootReducer = (state = initialState, action) => {
         case actionTypes.LOAD_PRODUCTS_SUCCESS:
             return {
                 ...state,
-                ...{ products: action.products }
+                ...{ products: action.payload.products }
             }
         case actionTypes.LOAD_PRODUCTS_FAILURE:
             return {
                 ...state,
-                ...{ error: action.error }
+                ...{ error: action.payload.error }
             }
         case actionTypes.LOAD_PRODUCT_SUCCESS:
             return {
                 ...state,
-                ...{ product: action.product }
+                ...{ product: action.payload.product }
             }
         case actionTypes.LOAD_PRODUCT_FAILURE:
             return {
                 ...state,
-                ...{ error: action.error }
+                ...{ error: action.payload.error }
             }
         case actionTypes.LOAD_CATEGORIES_SUCCESS:
             return {
                 ...state,
-                ...{ categories: action.categories }
+                ...{ categories: action.payload.categories }
             }
         case actionTypes.LOAD_CATEGORIES_FAILURE:
             return {
                 ...state,
-                ...{ error: action.error }
+                ...{ error: action.payload.error }
             }
         case actionTypes.RESET:
             return initialState;

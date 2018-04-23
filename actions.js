@@ -30,23 +30,23 @@ export const loadProducts = () => {
 }
 
 export const loadProductsSuccess = (products) => {
-    return { type: actionTypes.LOAD_PRODUCTS_SUCCESS, products };
+    return { type: actionTypes.LOAD_PRODUCTS_SUCCESS, payload: { products } };
 }
 
 export const loadProductsFailure = (error) => {
-    return { type: actionTypes.LOAD_PRODUCTS_FAILURE, error };
+    return { type: actionTypes.LOAD_PRODUCTS_FAILURE, payload: { error } };
 }
 
 export const loadProduct = (id) => {
-    return { type: actionTypes.LOAD_PRODUCT, id };
+    return { type: actionTypes.LOAD_PRODUCT, payload: { id } };
 }
 
 export const loadProductSuccess = (product) => {
-    return { type: actionTypes.LOAD_PRODUCT_SUCCESS, product };
+    return { type: actionTypes.LOAD_PRODUCT_SUCCESS, payload: { product } };
 }
 
 export const loadProductFailure = (error) => {
-    return { type: actionTypes.LOAD_PRODUCT_FAILURE, error };
+    return { type: actionTypes.LOAD_PRODUCT_FAILURE, payload: { error } };
 }
 
 export const loadCategories = () => {
@@ -54,13 +54,13 @@ export const loadCategories = () => {
 }
 
 export const loadCategoriesSuccess = (categories) => {
-    return { type: actionTypes.LOAD_CATEGORIES_SUCCESS, categories };
+    return { type: actionTypes.LOAD_CATEGORIES_SUCCESS, payload: { categories } };
 }
 
 export const loadCategoriesFailure = (error) => {
-    return { type: actionTypes.LOAD_CATEGORIES_FAILURE, error };
+    return { type: actionTypes.LOAD_CATEGORIES_FAILURE, payload: { error } };
 }
 
 export const updateSelectedCategory = (category, isSelected) => {
-    return { type: actionTypes.UPDATE_SELECTED_CATEGORY, category, isSelected }
+    return { type: actionTypes.UPDATE_SELECTED_CATEGORY, payload: { category, isSelected } }
 }
