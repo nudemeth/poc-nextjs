@@ -10,25 +10,27 @@ const theme = {};
 
 describe('Container component', () => {
     it('Should show child component', () => {
-        const container = shallow(<Container classes={classes} theme={theme}><h1>This is child component</h1></Container>);
-        expect(container.find('main').exists()).toBeTruthy();
-        expect(container.find('main').children().find('h1').exists()).toBeTruthy();
-        expect(container.find('main').text()).toEqual('This is child component');
+        const wrapper = shallow(<Container classes={classes} theme={theme}><h1>This is child component</h1></Container>);
+        const element = wrapper.find('main');
+        expect(element.exists()).toBeTruthy();
+        expect(element.children().find('h1').exists()).toBeTruthy();
+        expect(element.text()).toEqual('This is child component');
     });
 
     it('Should show title', () => {
-        const container = shallow(<Container classes={classes} theme={theme} title="This is title" />);
-        expect(container.find('title').exists()).toBeTruthy();
-        expect(container.find('title').text()).toEqual('This is title');
+        const wrapper = shallow(<Container classes={classes} theme={theme} title="This is title" />);
+        const element = wrapper.find('title');
+        expect(element.exists()).toBeTruthy();
+        expect(element.text()).toEqual('This is title');
     });
 
     it('Should have Header component', () => {
-        const container = shallow(<Container classes={classes} theme={theme} />);
-        expect(container.find('WithStyles(Header)').dive().find('Header').exists()).toBeTruthy();
+        const wrapper = shallow(<Container classes={classes} theme={theme} />);
+        expect(wrapper.find('WithStyles(Header)').dive().find('Header').exists()).toBeTruthy();
     });
 
     it('Should have Sidebar component', () => {
-        const container = shallow(<Container classes={classes} theme={theme} />);
-        expect(container.find('WithStyles(SideBar)').dive().find('SideBar').exists()).toBeTruthy();
+        const wrapper = shallow(<Container classes={classes} theme={theme} />);
+        expect(wrapper.find('WithStyles(SideBar)').dive().find('SideBar').exists()).toBeTruthy();
     });
 });

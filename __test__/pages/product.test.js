@@ -26,11 +26,12 @@ const url = {
 describe('Product page', () => {
     it('Should show "Product Name: Item 1" in Product page', () => {
         const spyDispatch = sinon.spy();
-        const product = shallow(<Product dispatch={spyDispatch} url={url} product={stubProduct} />);
-        expect(product.find('h1').text()).toEqual('Product Name: Item 1');
-        expect(product.find('li').at(0).text()).toEqual('Category: Category 1');
-        expect(product.find('li').at(1).text()).toEqual('Create Date: 2018-01-01T00:00:00.000Z');
-        expect(product.find('li').at(2).text()).toEqual('Image URL: https://material-ui-next.com/static/images/cards/paella.jpg');
+        const wrapper = shallow(<Product dispatch={spyDispatch} url={url} product={stubProduct} />);
+        expect(wrapper.find('h1').text()).toEqual('Product Name: Item 1');
+        const elements = wrapper.find('li');
+        expect(elements.at(0).text()).toEqual('Category: Category 1');
+        expect(elements.at(1).text()).toEqual('Create Date: 2018-01-01T00:00:00.000Z');
+        expect(elements.at(2).text()).toEqual('Image URL: https://material-ui-next.com/static/images/cards/paella.jpg');
         sinon.assert.calledWith(spyDispatch, { id: 1, type: "LOAD_PRODUCT" });
     });
 });
@@ -38,8 +39,8 @@ describe('Product page', () => {
 describe('Product page with Snapshot Testing', () => {
     it('Should show "Product Name: Item 1" in Product page', () => {
         const spyDispatch = sinon.spy();
-        const product = shallow(<Product dispatch={spyDispatch} url={url} product={stubProduct} />);
-        const tree = toJSON(product);
+        const wrapper = shallow(<Product dispatch={spyDispatch} url={url} product={stubProduct} />);
+        const tree = toJSON(wrapper);
         expect(tree).toMatchSnapshot();
     });
 });

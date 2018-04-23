@@ -11,8 +11,8 @@ Router.router = mockedRouter;
 describe('About page', () => {
     it('Should show "This is About Page: ABC" in About page', () => {
         const spyDispatch = sinon.spy();
-        const about = shallow(<About dispatch={spyDispatch} greeting='ABC' />);
-        expect(about.find('h1').text()).toEqual('This is About Page: ABC');
+        const wrapper = shallow(<About dispatch={spyDispatch} greeting='ABC' />);
+        expect(wrapper.find('h1').text()).toEqual('This is About Page: ABC');
         sinon.assert.calledWith(spyDispatch, { type: "UPDATE", gt: undefined });
     });
 });
@@ -20,8 +20,8 @@ describe('About page', () => {
 describe('About page with Snapshot Testing', () => {
     it('Should show "This is About Page: This is from client" in About page', () => {
         const spyDispatch = sinon.spy();
-        const about = shallow(<About dispatch={spyDispatch} greeting='ABC' />);
-        const tree = toJSON(about);
+        const wrapper = shallow(<About dispatch={spyDispatch} greeting='ABC' />);
+        const tree = toJSON(wrapper);
         expect(tree).toMatchSnapshot();
     });
 });

@@ -10,7 +10,7 @@ const theme = {};
 
 describe('HeaderContent component', () => {
     it('Should show Search component', () => {
-        const headerContent = shallow(<HeaderContent classes={classes} theme={theme} />);
-        expect(headerContent.find('WithStyles(Input)').prop('type')).toEqual('search');
+        const wrapper = shallow(<HeaderContent classes={classes} theme={theme} />);
+        expect(wrapper.find('WithStyles(Input)').prop('type')).toEqual('search');
     });
 });

@@ -11,7 +11,7 @@ Router.router = mockedRouter;
 describe('Category page', () => {
     it('Should show category list in Category page', () => {
         const spyDispatch = sinon.spy();
-        const category = shallow(<Category dispatch={spyDispatch} title="Category" />);
+        const wrapper = shallow(<Category dispatch={spyDispatch} title="Category" />);
         sinon.assert.calledWith(spyDispatch, { type: "LOAD_CATEGORIES" });
     });
 });
@@ -23,8 +23,8 @@ jest.mock('../../components/page/category/CategoryList', () => {
 describe('Category page with Snapshot Testing', () => {
     it('Should show category list in Category page', () => {
         const spyDispatch = sinon.spy();
-        const category = shallow(<Category dispatch={spyDispatch} />);
-        const tree = toJSON(category);
+        const wrapper = shallow(<Category dispatch={spyDispatch} />);
+        const tree = toJSON(wrapper);
         expect(tree).toMatchSnapshot();
     });
 });

@@ -16,9 +16,9 @@ const product = {
 
 describe('ProductItem component', () => {
     it('Should show ProductItem component', () => {
-        const productItem = shallow(<ProductItem classes={classes} theme={theme} product={product} />);
-        expect(productItem.find('img').prop('src')).toEqual('ProductImageUrl');
-        expect(productItem.find('img').prop('alt')).toEqual('ProductImageAlt');
-        expect(productItem.find('WithStyles(GridListTileBar)').prop('title')).toEqual('Product Name');
+        const wrapper = shallow(<ProductItem classes={classes} theme={theme} product={product} />);
+        expect(wrapper.find('img').prop('src')).toEqual('ProductImageUrl');
+        expect(wrapper.find('img').prop('alt')).toEqual('ProductImageAlt');
+        expect(wrapper.find('WithStyles(GridListTileBar)').prop('title')).toEqual('Product Name');
     });
 });

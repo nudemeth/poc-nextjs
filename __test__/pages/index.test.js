@@ -11,7 +11,7 @@ Router.router = mockedRouter;
 describe('Index page', () => {
     it('Should show "Index Page: Prodcuts Page" in Index page', () => {
         const spyDispatch = sinon.spy();
-        const index = shallow(<Index dispatch={spyDispatch} title='Home' />);
+        const wrapper = shallow(<Index dispatch={spyDispatch} title='Home' />);
         sinon.assert.calledWith(spyDispatch, { type: "LOAD_PRODUCTS" });
     });
 });
@@ -23,8 +23,8 @@ jest.mock('../../components/page/index/ProductList', () => {
 describe('Index page with Snapshot Testing', () => {
     it('Should show "Index Page: Prodcuts Page" in Index page', () => {
         const spyDispatch = sinon.spy();
-        const index = shallow(<Index dispatch={spyDispatch} title='Home' />);
-        const tree = toJSON(index);
+        const wrapper = shallow(<Index dispatch={spyDispatch} title='Home' />);
+        const tree = toJSON(wrapper);
         expect(tree).toMatchSnapshot();
     });
 });

@@ -10,8 +10,8 @@ const theme = {};
 
 describe('SideBar component', () => {
     it('Should have 2 Drawer components', () => {
-        const sidebar = shallow(<SideBar classes={classes} theme={theme} />);
-        expect(sidebar.find('WithStyles(Drawer)').length).toEqual(2);
-        expect(sidebar.find('WithStyles(Drawer)').first().dive().find('Drawer').exists()).toBeTruthy();
+        const wrapper = shallow(<SideBar classes={classes} theme={theme} />);
+        expect(wrapper.find('WithStyles(Drawer)').length).toEqual(2);
+        expect(wrapper.find('WithStyles(Drawer)').first().dive().find('Drawer').exists()).toBeTruthy();
     });
 });

@@ -13,18 +13,15 @@ const products = [
 
 describe('ProductList component', () => {
     it('Should have 3 ProductList components', () => {
-        const productList = shallow(<ProductList classes={classes} theme={theme} products={products} />);
-        expect(productList.find('WithStyles(GridList)').length).toEqual(3);
+        const wrapper = shallow(<ProductList classes={classes} theme={theme} products={products} />);
+        expect(wrapper.find('WithStyles(GridList)').length).toEqual(3);
     });
 
     it('Should have 3 ProductItem components under each ProductList', () => {
         const wrapper = shallow(<ProductList classes={classes} theme={theme} products={products} />);
-        const productList = wrapper.find('WithStyles(GridList)');
-        const firstProductList = productList.first();
-        const secondProductList = productList.at(1);
-        const thirdProductList = productList.last();
-        expect(firstProductList.find('WithStyles(ProductItem)').length).toEqual(3);
-        expect(secondProductList.find('WithStyles(ProductItem)').length).toEqual(3);
-        expect(thirdProductList.find('WithStyles(ProductItem)').length).toEqual(3);
+        const elements = wrapper.find('WithStyles(GridList)');
+        expect(elements.first().find('WithStyles(ProductItem)').length).toEqual(3);
+        expect(elements.at(1).find('WithStyles(ProductItem)').length).toEqual(3);
+        expect(elements.last().find('WithStyles(ProductItem)').length).toEqual(3);
     });
 });
