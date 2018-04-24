@@ -1,8 +1,8 @@
 import { delay } from 'redux-saga';
 import { all, call, put, take, takeLatest, takeEvery, select } from 'redux-saga/effects';
 import fetch from 'isomorphic-unfetch';
-import actionTypes from './actions';
-import * as actions from './actions';
+import actionTypes from '../actions/actions';
+import * as actions from '../actions/actions';
 
 function * updateGreetingSaga() {
     yield take(actionTypes.UPDATE);

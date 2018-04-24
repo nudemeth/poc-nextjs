@@ -7,7 +7,7 @@ import Hidden from 'material-ui/Hidden';
 import uuidv4 from 'uuid/v4';
 import { withStyles } from 'material-ui/styles';
 import { connect } from 'react-redux';
-import { loadProducts } from '../../../actions';
+import { loadProducts } from '../../../actions/actions';
 import ProductItem from './ProductItem';
 
 const styles = theme => ({
