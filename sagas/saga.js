@@ -3,6 +3,7 @@ import { all, call, put, take, takeLatest, takeEvery, select } from 'redux-saga/
 import fetch from 'isomorphic-unfetch';
 import actionTypes from '../actions/actions';
 import * as actions from '../actions/actions';
+import { ProductApi } from '../api/product.api';
 
 function * updateGreetingSaga() {
     yield take(actionTypes.UPDATE);
@@ -23,7 +24,8 @@ function * loadProductsWorker() {
 
 function * loadProductWorker(action) {
     try {
-        const res = yield call(fetch, 'http://localhost:5000/product/' + action.payload.id);
+        const api = new ProductApi();
+        const res = yield call(api.getProduct(action.payload.id));
         const data = yield res.json();
         yield put(actions.loadProductSuccess(data));
     } catch(err) {
