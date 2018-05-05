@@ -2,9 +2,9 @@ import * as effects from 'redux-saga/effects';
 import sinon from 'sinon';
 import * as actions from '../../actions/actions';
 import * as saga from '../../sagas/saga';
-import { ProductApi } from '../../api/product.api';
+import ProductApi from '../../api/product.api';
 
-const api = new ProductApi();
+const api = new ProductApi('http://localhost:5000/');
 
 describe('Load Product Worker saga', () => {
     it('Should call fetching product by id', () => {       
@@ -70,5 +70,4 @@ describe('Load Product Worker saga', () => {
         const result = generator.next();
         expect(result.done).toBeTruthy();
     });
-
 });

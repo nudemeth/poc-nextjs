@@ -1,9 +1,14 @@
 import fetch from 'isomorphic-unfetch';
+import Api from './api';
 
-class ProductApi {
+class ProductApi extends Api {
+    constructor(host) {
+        super(host);
+    }
+
     async getProduct(id) {
-        return await fetch('http://localhost:5000/product/' + id);
+        return await fetch(this.host + 'product/' + id);
     }
 }
 
-export { ProductApi };
+export default ProductApi;

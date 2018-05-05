@@ -3,7 +3,9 @@ import { all, call, put, take, takeLatest, takeEvery, select } from 'redux-saga/
 import fetch from 'isomorphic-unfetch';
 import actionTypes from '../actions/actions';
 import * as actions from '../actions/actions';
-import { ProductApi } from '../api/product.api';
+import ProductApi from '../api/product.api';
+
+const host = 'http://localhost:5000/';
 
 function * updateGreetingSaga() {
     yield take(actionTypes.UPDATE);
@@ -14,7 +16,7 @@ function * loadProductsWorker() {
     const categories = yield call(getSelectedCategoryIds);
     const selectedCategories = categories.reduce((p, c) => p + 'categoryId=' + c + '&', '')
     try {
-        const res = yield call(fetch, 'http://localhost:5000/products?' + selectedCategories);
+        const res = yield call(fetch, host + 'products?' + selectedCategories);
         const data = yield res.json();
         yield put(actions.loadProductsSuccess(data));
     } catch(err) {
@@ -24,7 +26,7 @@ function * loadProductsWorker() {
 
 function * loadProductWorker(action) {
     try {
-        const api = new ProductApi();
+        const api = new ProductApi(host);
         const res = yield call(api.getProduct, action.payload.id);
         const data = yield res.json();
         yield put(actions.loadProductSuccess(data));
@@ -37,7 +39,7 @@ function * loadCategoriesWorker() {
     const { categories } = yield select();
     if (!categories || categories.length === 0) {
         try {
-            const res = yield call(fetch, 'http://localhost:5000/categories');
+            const res = yield call(fetch, host + 'categories');
             const data = yield res.json();
             yield put(actions.loadCategoriesSuccess(data));
         } catch(err) {
