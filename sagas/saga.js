@@ -25,7 +25,7 @@ function * loadProductsWorker() {
 function * loadProductWorker(action) {
     try {
         const api = new ProductApi();
-        const res = yield call(api.getProduct(action.payload.id));
+        const res = yield call(api.getProduct, action.payload.id);
         const data = yield res.json();
         yield put(actions.loadProductSuccess(data));
     } catch(err) {
