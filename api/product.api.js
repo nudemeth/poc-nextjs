@@ -6,9 +6,14 @@ class ProductApi extends Api {
         super(host);
     }
 
-    async getProduct(id) {
+    getProduct = async (id) => {
         return await fetch(this.host + 'product/' + id);
+    }
+
+    getProducts = async (categories) => {
+        const query = categories.reduce((p, c) => p + 'categoryId=' + c + '&', '');
+        return await fetch(this.host + 'products?' + query);
     }
 }
 
-export default ProductApi;
+export default new ProductApi('http://localhost:5000/');

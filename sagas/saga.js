@@ -3,7 +3,7 @@ import { all, call, put, take, takeLatest, takeEvery, select } from 'redux-saga/
 import fetch from 'isomorphic-unfetch';
 import actionTypes from '../actions/actions';
 import * as actions from '../actions/actions';
-import ProductApi from '../api/product.api';
+import productApi from '../api/product.api';
 
 const host = 'http://localhost:5000/';
 
@@ -14,20 +14,19 @@ function * updateGreetingSaga() {
 
 function * loadProductsWorker() {
     const categories = yield call(getSelectedCategoryIds);
-    const selectedCategories = categories.reduce((p, c) => p + 'categoryId=' + c + '&', '')
     try {
-        const res = yield call(fetch, host + 'products?' + selectedCategories);
+        const res = yield call(productApi.getProducts, categories);
         const data = yield res.json();
         yield put(actions.loadProductsSuccess(data));
     } catch(err) {
+        console.log(err);
         yield put(actions.loadProductsFailure(err));
     }
 }
 
 function * loadProductWorker(action) {
     try {
-        const api = new ProductApi(host);
-        const res = yield call(api.getProduct, action.payload.id);
+        const res = yield call(productApi.getProduct, action.payload.id);
         const data = yield res.json();
         yield put(actions.loadProductSuccess(data));
     } catch(err) {
