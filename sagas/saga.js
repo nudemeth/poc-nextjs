@@ -4,8 +4,7 @@ import fetch from 'isomorphic-unfetch';
 import actionTypes from '../actions/actions';
 import * as actions from '../actions/actions';
 import productApi from '../api/product.api';
-
-const host = 'http://localhost:5000/';
+import categoryApi from '../api/category.api';
 
 function * updateGreetingSaga() {
     yield take(actionTypes.UPDATE);
@@ -38,7 +37,7 @@ function * loadCategoriesWorker() {
     const { categories } = yield select();
     if (!categories || categories.length === 0) {
         try {
-            const res = yield call(fetch, host + 'categories');
+            const res = yield call(categoryApi.getCategories);
             const data = yield res.json();
             yield put(actions.loadCategoriesSuccess(data));
         } catch(err) {
