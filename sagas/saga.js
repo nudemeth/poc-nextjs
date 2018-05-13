@@ -74,3 +74,4 @@ function * rootWatcher() {
 export default rootWatcher;
 export { loadProductsWorker };
 export { loadProductWorker };
+export { getSelectedCategoryIds };
