@@ -1,11 +1,10 @@
 import * as effects from 'redux-saga/effects';
-import sinon from 'sinon';
 import * as actions from '../../actions/actions';
 import * as saga from '../../sagas/saga';
 import productApi from '../../api/product.api';
 
 describe('Load Product Worker saga', () => {
-    it('Should call fetching product by id', () => {       
+    it('Should call fetching product by id', () => {
         const params = { payload: { id: 1 } };
         const data = { "id": 1, "name": "Item 1", "categoryId": 1 };
         const generator = saga.loadProductWorker(params);

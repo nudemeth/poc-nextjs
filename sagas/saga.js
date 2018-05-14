@@ -75,3 +75,4 @@ export default rootWatcher;
 export { loadProductsWorker };
 export { loadProductWorker };
 export { getSelectedCategoryIds };
+export { loadCategoriesWorker };
