@@ -30,7 +30,7 @@ describe('Load Product Worker saga', () => {
     it('Should put action to loadProductFailure when an error occurs on fetching product by id', () => {
         const params = { payload: { id: 1 } };
         const err = new Error();
-        const res = { json: () => { throw err }};
+        const res = { json: () => { throw err; }};
         const generator = saga.loadProductWorker(params);
         
         generator.next();
@@ -43,7 +43,7 @@ describe('Load Product Worker saga', () => {
     it('Should end the generator after putting to loadProductFailure action', () => {
         const params = { payload: { id: 1 } };
         const err = new Error();
-        const res = { json: () => { throw err }};
+        const res = { json: () => { throw err; }};
         const generator = saga.loadProductWorker(params);
         
         generator.next();
@@ -102,7 +102,6 @@ describe('Load Products Worker saga', () => {
     });
 
     it('Should put action to loadProductsFailure after failed to fetch products by category ids', () => {
-        const data = { payload: [{ id: 1 }, { id: 2 }] };
         const err = new Error();
         const res = { json: () => { throw err; } };
         const generator = saga.loadProductsWorker();
@@ -130,9 +129,8 @@ describe('Load Products Worker saga', () => {
     });
 
     it('Should end the generator after putting to loadProductsFailure action', () => {
-        const data = { payload: [{ id: 1 }, { id: 2 }] };
         const err = new Error();
-        const res = { json: () => { throw err; } };
+        const res = { json: () => { throw err; }};
         const generator = saga.loadProductsWorker();
         
         generator.next();

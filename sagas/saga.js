@@ -12,13 +12,12 @@ function * updateGreetingSaga() {
 }
 
 function * loadProductsWorker() {
-    const categories = yield call(getSelectedCategoryIds);
     try {
+        const categories = yield call(getSelectedCategoryIds);
         const res = yield call(productApi.getProducts, categories);
         const data = yield res.json();
         yield put(actions.loadProductsSuccess(data));
     } catch(err) {
-        console.log(err);
         yield put(actions.loadProductsFailure(err));
     }
 }
