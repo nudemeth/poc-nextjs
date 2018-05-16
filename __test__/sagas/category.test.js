@@ -90,3 +90,49 @@ describe('Load Categories Worker saga', () => {
         expect(result.done).toBeTruthy();
     });
 });
+
+describe('Get Selected Categories Id Worker saga', () => {
+    it('Should get selected categories id', () => {
+        const store = { categories: [{ id: 1, isSelected: true }, { id: 2, isSelected: false }] };
+        const generator = saga.getSelectedCategoryIds();
+
+        generator.next();
+        generator.next();
+        
+        const result = generator.next(store);
+        expect(result.value.length).toBe(1);
+        expect(result.value).toEqual([1]);
+    });
+
+    it('Should end the generator after getting selected categories id', () => {
+        const store = { categories: [{ id: 1, isSelected: true }, { id: 2, isSelected: false }] };
+        const generator = saga.getSelectedCategoryIds();
+
+        generator.next();
+        generator.next();
+
+        const result =generator.next(store);
+        expect(result.done).toBeTruthy();
+    });
+});
+
+describe('Update Selected Categories Worker saga', () => {
+    it('Should get categories from the store', () => {
+        const action = { payload: { category: { id: 1 }, isSelected: true } };
+        const generator = saga.updateSelectedCategory(action);
+        const result = generator.next();
+        expect(result.value).toEqual(effects.select());
+        expect(result.done).toBeFalsy();
+    });
+
+    it('Should put action to loadCategoriesSuccess after updated selected category', () => {
+        const action = { payload: { category: { id: 2 }, isSelected: true } };
+        const store = { categories: [{ id: 1, isSelected: true }, { id: 2, isSelected: false }] };
+        const generator = saga.updateSelectedCategory(action);
+
+        generator.next();
+        
+        const result = generator.next(store);
+        expect(result.value).toEqual(effects.put(actions.loadCategoriesSuccess(store.categories)));
+    });
+});

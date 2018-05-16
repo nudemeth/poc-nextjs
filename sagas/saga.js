@@ -75,3 +75,4 @@ export { loadProductsWorker };
 export { loadProductWorker };
 export { getSelectedCategoryIds };
 export { loadCategoriesWorker };
+export { updateSelectedCategory };
