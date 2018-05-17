@@ -1,13 +1,14 @@
 import * as effects from 'redux-saga/effects';
 import * as actions from '../../actions/actions';
-import * as saga from '../../sagas/saga';
+import * as productSaga from '../../sagas/product.saga';
+import * as categorySaga from '../../sagas/category.saga';
 import productApi from '../../api/product.api';
 
 describe('Load Product Worker saga', () => {
     it('Should call fetching product by id', () => {
         const params = { payload: { id: 1 } };
         const data = { "id": 1, "name": "Item 1", "categoryId": 1 };
-        const generator = saga.loadProductWorker(params);
+        const generator = productSaga.loadProductWorker(params);
         const result = generator.next();
         expect(result.value).toEqual(effects.call(productApi.getProduct, params.payload.id));
         expect(result.done).toBeFalsy();
@@ -17,7 +18,7 @@ describe('Load Product Worker saga', () => {
         const params = { payload: { id: 1 } };
         const data = { "id": 1, "name": "Item 1", "categoryId": 1 };
         const res = { json: () => data };
-        const generator = saga.loadProductWorker(params);
+        const generator = productSaga.loadProductWorker(params);
         
         generator.next();
         generator.next(res);
@@ -31,7 +32,7 @@ describe('Load Product Worker saga', () => {
         const params = { payload: { id: 1 } };
         const err = new Error();
         const res = { json: () => { throw err; }};
-        const generator = saga.loadProductWorker(params);
+        const generator = productSaga.loadProductWorker(params);
         
         generator.next();
         
@@ -44,7 +45,7 @@ describe('Load Product Worker saga', () => {
         const params = { payload: { id: 1 } };
         const err = new Error();
         const res = { json: () => { throw err; }};
-        const generator = saga.loadProductWorker(params);
+        const generator = productSaga.loadProductWorker(params);
         
         generator.next();
         generator.next(res);
@@ -57,7 +58,7 @@ describe('Load Product Worker saga', () => {
         const params = { payload: { id: 1 } };
         const data = { "id": 1, "name": "Item 1", "categoryId": 1 };
         const res = { json: () => data };
-        const generator = saga.loadProductWorker(params);
+        const generator = productSaga.loadProductWorker(params);
         
         generator.next();
         generator.next(res);
@@ -70,15 +71,15 @@ describe('Load Product Worker saga', () => {
 
 describe('Load Products Worker saga', () => {
     it('Should call getSelectedCategoryIds', () => {
-        const generator = saga.loadProductsWorker();
+        const generator = productSaga.loadProductsWorker();
         const result = generator.next();
-        expect(result.value).toEqual(effects.call(saga.getSelectedCategoryIds));
+        expect(result.value).toEqual(effects.call(categorySaga.getSelectedCategoryIds));
         expect(result.done).toBeFalsy();
     });
 
     it('Should call getProducts from product api', () => {
         const categoryIds = [1];
-        const generator = saga.loadProductsWorker();
+        const generator = productSaga.loadProductsWorker();
 
         generator.next();
 
@@ -90,7 +91,7 @@ describe('Load Products Worker saga', () => {
     it('Should put action to loadProductsSuccess after successfully fetch products by category ids', () => {
         const data = { payload: [{ id: 1 }, { id: 2 }] };
         const res = { json: () => data };
-        const generator = saga.loadProductsWorker();
+        const generator = productSaga.loadProductsWorker();
         
         generator.next();
         generator.next();
@@ -104,7 +105,7 @@ describe('Load Products Worker saga', () => {
     it('Should put action to loadProductsFailure after failed to fetch products by category ids', () => {
         const err = new Error();
         const res = { json: () => { throw err; } };
-        const generator = saga.loadProductsWorker();
+        const generator = productSaga.loadProductsWorker();
         
         generator.next();
         generator.next();
@@ -117,7 +118,7 @@ describe('Load Products Worker saga', () => {
     it('Should end the generator after putting to loadProductsSuccess action', () => {
         const data = { payload: [{ id: 1 }, { id: 2 }] };
         const res = { json: () => data };
-        const generator = saga.loadProductsWorker();
+        const generator = productSaga.loadProductsWorker();
         
         generator.next();
         generator.next();
@@ -131,7 +132,7 @@ describe('Load Products Worker saga', () => {
     it('Should end the generator after putting to loadProductsFailure action', () => {
         const err = new Error();
         const res = { json: () => { throw err; }};
-        const generator = saga.loadProductsWorker();
+        const generator = productSaga.loadProductsWorker();
         
         generator.next();
         generator.next();

@@ -1,11 +1,11 @@
 import * as effects from 'redux-saga/effects';
 import * as actions from '../../actions/actions';
-import * as saga from '../../sagas/saga';
+import * as categorySaga from '../../sagas/category.saga';
 import categoryApi from '../../api/category.api';
 
 describe('Load Categories Worker saga', () => {
     it('Should get categories from the store ', () => {
-        const generator = saga.loadCategoriesWorker();
+        const generator = categorySaga.loadCategoriesWorker();
         const result = generator.next();
         expect(result.value).toEqual(effects.select());
         expect(result.done).toBeFalsy();
@@ -13,7 +13,7 @@ describe('Load Categories Worker saga', () => {
 
     it('Should end the generator if categories exist in the store', () => {
         const store = { categories: [{ id: 1 }] };
-        const generator = saga.loadCategoriesWorker();
+        const generator = categorySaga.loadCategoriesWorker();
         
         generator.next();
 
@@ -23,7 +23,7 @@ describe('Load Categories Worker saga', () => {
 
     it('Should call fetching categories api', () => {
         const store = {};
-        const generator = saga.loadCategoriesWorker();
+        const generator = categorySaga.loadCategoriesWorker();
         
         generator.next();
 
@@ -36,7 +36,7 @@ describe('Load Categories Worker saga', () => {
         const store = {};
         const data = { "id": 1 };
         const res = { json: () => data };
-        const generator = saga.loadCategoriesWorker();
+        const generator = categorySaga.loadCategoriesWorker();
         
         generator.next();
         generator.next(store);
@@ -51,7 +51,7 @@ describe('Load Categories Worker saga', () => {
         const store = {};
         const err = new Error();
         const res = { json: () => { throw err; } };
-        const generator = saga.loadCategoriesWorker();
+        const generator = categorySaga.loadCategoriesWorker();
         
         generator.next();
         generator.next(store);
@@ -65,7 +65,7 @@ describe('Load Categories Worker saga', () => {
         const store = {};
         const data = { "id": 1 };
         const res = { json: () => data };
-        const generator = saga.loadCategoriesWorker();
+        const generator = categorySaga.loadCategoriesWorker();
         
         generator.next();
         generator.next(store);
@@ -80,7 +80,7 @@ describe('Load Categories Worker saga', () => {
         const store = {};
         const err = new Error();
         const res = { json: () => { throw err; } };
-        const generator = saga.loadCategoriesWorker();
+        const generator = categorySaga.loadCategoriesWorker();
         
         generator.next();
         generator.next(store);
@@ -94,7 +94,7 @@ describe('Load Categories Worker saga', () => {
 describe('Get Selected Categories Id Worker saga', () => {
     it('Should get selected categories id', () => {
         const store = { categories: [{ id: 1, isSelected: true }, { id: 2, isSelected: false }] };
-        const generator = saga.getSelectedCategoryIds();
+        const generator = categorySaga.getSelectedCategoryIds();
 
         generator.next();
         generator.next();
@@ -106,7 +106,7 @@ describe('Get Selected Categories Id Worker saga', () => {
 
     it('Should end the generator after getting selected categories id', () => {
         const store = { categories: [{ id: 1, isSelected: true }, { id: 2, isSelected: false }] };
-        const generator = saga.getSelectedCategoryIds();
+        const generator = categorySaga.getSelectedCategoryIds();
 
         generator.next();
         generator.next();
@@ -119,7 +119,7 @@ describe('Get Selected Categories Id Worker saga', () => {
 describe('Update Selected Categories Worker saga', () => {
     it('Should get categories from the store', () => {
         const action = { payload: { category: { id: 1 }, isSelected: true } };
-        const generator = saga.updateSelectedCategory(action);
+        const generator = categorySaga.updateSelectedCategory(action);
         const result = generator.next();
         expect(result.value).toEqual(effects.select());
         expect(result.done).toBeFalsy();
@@ -128,7 +128,7 @@ describe('Update Selected Categories Worker saga', () => {
     it('Should put action to loadCategoriesSuccess after updated selected category', () => {
         const action = { payload: { category: { id: 2 }, isSelected: true } };
         const store = { categories: [{ id: 1, isSelected: true }, { id: 2, isSelected: false }] };
-        const generator = saga.updateSelectedCategory(action);
+        const generator = categorySaga.updateSelectedCategory(action);
 
         generator.next();
         
