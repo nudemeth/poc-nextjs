@@ -1,5 +1,5 @@
 import * as effects from 'redux-saga/effects';
-import * as actions from '../../actions/actions';
+import * as actions from '../../actions/category.actions';
 import * as categorySaga from '../../sagas/category.saga';
 import categoryApi from '../../api/category.api';
 

@@ -4,7 +4,7 @@ import GridList, { GridListTile, GridListTileBar } from 'material-ui/GridList';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
-import { updateSelectedCategory } from '../../../actions/actions';
+import { updateSelectedCategory } from '../../../actions/category.actions';
 import { withStyles } from 'material-ui/styles';
 import { connect } from 'react-redux';
 

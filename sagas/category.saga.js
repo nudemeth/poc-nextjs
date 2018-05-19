@@ -1,8 +1,8 @@
 import { delay } from 'redux-saga';
 import { all, call, put, take, takeLatest, takeEvery, select } from 'redux-saga/effects';
 import fetch from 'isomorphic-unfetch';
-import actionTypes from '../actions/actions';
-import * as actions from '../actions/actions';
+import actionTypes from '../actions/actionTypes';
+import * as actions from '../actions/category.actions';
 import categoryApi from '../api/category.api';
 
 function * loadCategoriesWorker() {

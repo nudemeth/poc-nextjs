@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import withRedux from 'next-redux-wrapper';
 import { connect } from 'react-redux';
 import Container from '../components/layout/Container';
-import { initGreeting, updateGreeting } from '../actions/actions';
+import { initGreeting, updateGreeting } from '../actions/about.actions';
 import { withReduxSaga } from '../store/store';
 
 class About extends React.Component {

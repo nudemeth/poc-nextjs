@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import withRedux from 'next-redux-wrapper';
 import { connect } from 'react-redux';
 import Container from '../components/layout/Container';
-import { loadCategories } from '../actions/actions';
+import { loadCategories } from '../actions/category.actions';
 import { withReduxSaga } from '../store/store';
 import CategoryList from '../components/page/category/CategoryList';
 

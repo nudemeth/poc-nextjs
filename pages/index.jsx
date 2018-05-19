@@ -3,7 +3,7 @@ import fetch from 'isomorphic-unfetch';
 import Container from '../components/layout/Container';
 import ProductList from '../components/page/index/ProductList';
 import HeaderContent from '../components/page/index/HeaderContent';
-import { loadProducts } from '../actions/actions';
+import { loadProducts } from '../actions/product.actions';
 import { withReduxSaga } from '../store/store';
 
 class Index extends React.Component {

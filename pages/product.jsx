@@ -1,7 +1,7 @@
 import React from 'react';
 import Container from '../components/layout/Container';
 import { withReduxSaga } from '../store/store';
-import { loadProduct } from '../actions/actions';
+import { loadProduct } from '../actions/product.actions';
 
 class Product extends React.Component {
     constructor(props) {
