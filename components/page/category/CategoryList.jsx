@@ -55,7 +55,7 @@ class CategoryList extends React.Component {
     }
 }
 
-const mapStateToProps = ({ categories, error }) => ({ categories, error });
+const mapStateToProps = ({ categoryReducer: { categories, error }}) => ({ categories, error });
 
 export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(CategoryList));
 export { CategoryList };

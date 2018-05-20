@@ -57,7 +57,7 @@ class ProductList extends React.Component {
     }
 }
 
-const mapStateToProps = ({ products, error }) => ({ products, error });
+const mapStateToProps = ({ productReducer: { products, error }}) => ({ products, error });
 
 export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(ProductList));
 export { ProductList };

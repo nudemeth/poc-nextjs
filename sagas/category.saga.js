@@ -6,7 +6,7 @@ import * as actions from '../actions/category.actions';
 import categoryApi from '../api/category.api';
 
 function * loadCategoriesWorker() {
-    const { categories } = yield select();
+    const { categoryReducer: { categories } } = yield select();
     if (!categories || categories.length === 0) {
         try {
             const res = yield call(categoryApi.getCategories);
@@ -20,13 +20,13 @@ function * loadCategoriesWorker() {
 
 function * getSelectedCategoryIds() {
     yield call(loadCategoriesWorker);
-    const { categories } = yield select();
+    const { categoryReducer: { categories } } = yield select();
     return categories.filter((category) => category.isSelected).map((category) => category.id);
 }
 
 function * updateSelectedCategory(action) {
     const { category, isSelected } = action.payload;
-    const { categories } = yield select();
+    const { categoryReducer: { categories } } = yield select();
     category.isSelected = isSelected;
     const idx = categories.findIndex(c => c.id === category.id);
     categories[idx] = category;

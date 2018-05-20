@@ -30,7 +30,7 @@ class About extends React.Component {
     }
 }
 
-const mapStateToProps = ({ greeting }) => ({ greeting });
+const mapStateToProps = ({ aboutReducer: { greeting }}) => ({ greeting });
 
 export default withReduxSaga(mapStateToProps)(About);
 export { About };

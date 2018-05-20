@@ -33,7 +33,7 @@ class Product extends React.Component {
     }
 }
 
-const mapStateToProps = ({ product }) => ({ product });
+const mapStateToProps = ({ productReducer: { product }}) => ({ product });
 
 export default withReduxSaga(mapStateToProps)(Product);
 export { Product };
