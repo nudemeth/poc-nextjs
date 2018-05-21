@@ -12,7 +12,7 @@ describe('Load Categories Worker saga', () => {
     });
 
     it('Should end the generator if categories exist in the store', () => {
-        const store = { categories: [{ id: 1 }] };
+        const store = { categoryReducer: { categories: [{ id: 1 }] }};
         const generator = categorySaga.loadCategoriesWorker();
         
         generator.next();
@@ -22,7 +22,7 @@ describe('Load Categories Worker saga', () => {
     });
 
     it('Should call fetching categories api', () => {
-        const store = {};
+        const store = { categoryReducer: {} };
         const generator = categorySaga.loadCategoriesWorker();
         
         generator.next();
@@ -33,7 +33,7 @@ describe('Load Categories Worker saga', () => {
     });
 
     it('Should put action to loadCategoriesSuccess after successfully fetching categories', () => {
-        const store = {};
+        const store = { categoryReducer: {} };
         const data = { "id": 1 };
         const res = { json: () => data };
         const generator = categorySaga.loadCategoriesWorker();
@@ -48,7 +48,7 @@ describe('Load Categories Worker saga', () => {
     });
 
     it('Should put action to loadCategoriesFailure after failed to fetch categories', () => {
-        const store = {};
+        const store = { categoryReducer: {} };
         const err = new Error();
         const res = { json: () => { throw err; } };
         const generator = categorySaga.loadCategoriesWorker();
@@ -62,7 +62,7 @@ describe('Load Categories Worker saga', () => {
     });
 
     it('Should end the generator after putting to loadCategoriesSuccess action', () => {
-        const store = {};
+        const store = { categoryReducer: {} };
         const data = { "id": 1 };
         const res = { json: () => data };
         const generator = categorySaga.loadCategoriesWorker();
@@ -77,7 +77,7 @@ describe('Load Categories Worker saga', () => {
     });
 
     it('Should end the generator after putting to loadCategoriesFailure action', () => {
-        const store = {};
+        const store = { categoryReducer: {} };
         const err = new Error();
         const res = { json: () => { throw err; } };
         const generator = categorySaga.loadCategoriesWorker();
@@ -93,7 +93,7 @@ describe('Load Categories Worker saga', () => {
 
 describe('Get Selected Categories Id Worker saga', () => {
     it('Should get selected categories id', () => {
-        const store = { categories: [{ id: 1, isSelected: true }, { id: 2, isSelected: false }] };
+        const store = { categoryReducer: { categories: [{ id: 1, isSelected: true }, { id: 2, isSelected: false }] }};
         const generator = categorySaga.getSelectedCategoryIds();
 
         generator.next();
@@ -105,7 +105,7 @@ describe('Get Selected Categories Id Worker saga', () => {
     });
 
     it('Should end the generator after getting selected categories id', () => {
-        const store = { categories: [{ id: 1, isSelected: true }, { id: 2, isSelected: false }] };
+        const store = { categoryReducer: { categories: [{ id: 1, isSelected: true }, { id: 2, isSelected: false }] }};
         const generator = categorySaga.getSelectedCategoryIds();
 
         generator.next();
@@ -127,12 +127,12 @@ describe('Update Selected Categories Worker saga', () => {
 
     it('Should put action to loadCategoriesSuccess after updated selected category', () => {
         const action = { payload: { category: { id: 2 }, isSelected: true } };
-        const store = { categories: [{ id: 1, isSelected: true }, { id: 2, isSelected: false }] };
+        const store = { categoryReducer: { categories: [{ id: 1, isSelected: true }, { id: 2, isSelected: false }] }};
         const generator = categorySaga.updateSelectedCategory(action);
 
         generator.next();
         
         const result = generator.next(store);
-        expect(result.value).toEqual(effects.put(actions.loadCategoriesSuccess(store.categories)));
+        expect(result.value).toEqual(effects.put(actions.loadCategoriesSuccess(store.categoryReducer.categories)));
     });
 });
