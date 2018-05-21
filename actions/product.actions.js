@@ -1,4 +1,13 @@
-import actionTypes from './actionTypes';
+const actionTypes = {
+    LOAD_PRODUCTS: 'LOAD_PRODUCTS',
+    LOAD_PRODUCTS_SUCCESS: 'LOAD_PRODUCTS_SUCCESS',
+    LOAD_PRODUCTS_FAILURE: 'LOAD_PRODUCTS_FAILURE',
+    LOAD_PRODUCT: 'LOAD_PRODUCT',
+    LOAD_PRODUCT_SUCCESS: 'LOAD_PRODUCT_SUCCESS',
+    LOAD_PRODUCT_FAILURE: 'LOAD_PRODUCT_FAILURE'
+}
+
+export default actionTypes;
 
 export const loadProducts = () => {
     return { type: actionTypes.LOAD_PRODUCTS };

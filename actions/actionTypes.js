@@ -1,15 +1,9 @@
+import aboutActionTypes from './about.actions'
+import productActionTypes from './product.actions'
+import categoryActionTypes from './category.actions'
+
 export default {
-    INIT: 'INIT',
-    UPDATE: 'UPDATE',
-    RESET: 'RESET',
-    LOAD_PRODUCTS: 'LOAD_PRODUCTS',
-    LOAD_PRODUCTS_SUCCESS: 'LOAD_PRODUCTS_SUCCESS',
-    LOAD_PRODUCTS_FAILURE: 'LOAD_PRODUCTS_FAILURE',
-    LOAD_PRODUCT: 'LOAD_PRODUCT',
-    LOAD_PRODUCT_SUCCESS: 'LOAD_PRODUCT_SUCCESS',
-    LOAD_PRODUCT_FAILURE: 'LOAD_PRODUCT_FAILURE',
-    LOAD_CATEGORIES: 'LOAD_CATEGORIES',
-    LOAD_CATEGORIES_SUCCESS: 'LOAD_CATEGORIES_SUCCESS',
-    LOAD_CATEGORIES_FAILURE: 'LOAD_CATEGORIES_FAILURE',
-    UPDATE_SELECTED_CATEGORY: 'UPDATE_SELECTED_CATEGORY'
+    ...aboutActionTypes,
+    ...productActionTypes,
+    ...categoryActionTypes
 };

@@ -1,4 +1,11 @@
-import actionTypes from './actionTypes';
+const actionTypes = {
+    LOAD_CATEGORIES: 'LOAD_CATEGORIES',
+    LOAD_CATEGORIES_SUCCESS: 'LOAD_CATEGORIES_SUCCESS',
+    LOAD_CATEGORIES_FAILURE: 'LOAD_CATEGORIES_FAILURE',
+    UPDATE_SELECTED_CATEGORY: 'UPDATE_SELECTED_CATEGORY'
+}
+
+export default actionTypes;
 
 export const loadCategories = () => {
     return { type: actionTypes.LOAD_CATEGORIES };

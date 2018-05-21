@@ -1,4 +1,10 @@
-import actionTypes from './actionTypes';
+const actionTypes = {
+    INIT: 'INIT',
+    UPDATE: 'UPDATE',
+    RESET: 'RESET'
+}
+
+export default actionTypes;
 
 export const initGreeting = (gt) => {
     return { type: actionTypes.INIT, gt: gt};
