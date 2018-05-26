@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import GridList from 'material-ui/GridList';
-import Hidden from 'material-ui/Hidden';
+import GridList from '@material-ui/core/GridList';
+import Hidden from '@material-ui/core/Hidden';
 import uuidv4 from 'uuid/v4';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { loadProducts } from '../../../actions/product.actions';
 import CategoryItem from './CategoryItem';

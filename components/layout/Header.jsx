@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AppBar from 'material-ui/AppBar';
-import ToolBar from 'material-ui/Toolbar';
-import IconButton from 'material-ui/IconButton';
-import Icon from 'material-ui/Icon';
-import Button from 'material-ui/Button';
+import AppBar from '@material-ui/core/AppBar';
+import ToolBar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import Icon from '@material-ui/core/Icon';
+import Button from '@material-ui/core/Button';
 import Link from 'next/link';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
 const drawerWidth = 240;
 const styles = theme => ({

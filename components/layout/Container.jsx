@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Header from './Header'
 import SideBar from './SideBar'
 import withRoot from '../common/withRoot';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
     root: {

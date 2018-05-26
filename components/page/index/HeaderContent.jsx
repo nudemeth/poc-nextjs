@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Input, { InputAdornment  } from 'material-ui/Input';
-import MenuItem from 'material-ui/Menu/MenuItem';
-import Icon from 'material-ui/Icon';
-import { withStyles } from 'material-ui/styles';
+import Input from '@material-ui/core/Input';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import MenuItem from '@material-ui/core/MenuItem';
+import Icon from '@material-ui/core/Icon';
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
     wrapper: {

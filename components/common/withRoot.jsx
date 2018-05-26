@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { MuiThemeProvider } from 'material-ui/styles';
-import Reboot from 'material-ui/Reboot';
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import getCssContext from './getCssContext';
 
 function withRoot(Page) {
@@ -39,8 +39,8 @@ function withRoot(Page) {
                     theme={this.cssContext.theme}
                     sheetsManager={this.cssContext.sheetsManager}
                 >
-                    {/* Reboot kickstart an elegant, consistent, and simple baseline to build upon. */}
-                    <Reboot />
+                    {/* CssBaseline  kickstart an elegant, consistent, and simple baseline to build upon. */}
+                    <CssBaseline />
                     <Page {...this.props} />
                 </MuiThemeProvider>
             );
