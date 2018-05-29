@@ -12,6 +12,7 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
     card: {
         maxWidth: 345,
+        height: 320,
         margin: 'auto'
     },
     cardActions: {
