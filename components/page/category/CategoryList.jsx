@@ -5,13 +5,11 @@ import Hidden from '@material-ui/core/Hidden';
 import uuidv4 from 'uuid/v4';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import { loadProducts } from '../../../actions/product.actions';
 import CategoryItem from './CategoryItem';
 
 const styles = theme => ({
     gridList: {
         width: '100%',
-        height: '100%',
         [theme.breakpoints.up('lg')]: {
             paddingLeft: '15%',
             paddingRight: '15%'
