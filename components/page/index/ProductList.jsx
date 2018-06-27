@@ -1,13 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import GridList, { GridListTile, GridListTileBar } from '@material-ui/core/GridList';
-import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
+import GridList from '@material-ui/core/GridList';
 import Hidden from '@material-ui/core/Hidden';
 import uuidv4 from 'uuid/v4';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import { loadProducts } from '../../../actions/product.actions';
 import ProductItem from './ProductItem';
 
 const styles = theme => ({

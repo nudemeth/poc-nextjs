@@ -1,7 +1,4 @@
 import React from 'react';
-import fetch from 'isomorphic-unfetch';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import Container from '../components/layout/Container';
 import { loadCategories } from '../actions/category.actions';
 import { withReduxSaga } from '../store/store';

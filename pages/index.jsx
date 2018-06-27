@@ -1,5 +1,4 @@
 import React from 'react';
-import fetch from 'isomorphic-unfetch';
 import Container from '../components/layout/Container';
 import ProductList from '../components/page/index/ProductList';
 import HeaderContent from '../components/page/index/HeaderContent';

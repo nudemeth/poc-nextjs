@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import actionTypes from '../actions/actionTypes';
 import productReducer from './product.reducer';
 import categoryReducer from './category.reducer';
 import aboutReducer from './about.reducer';
