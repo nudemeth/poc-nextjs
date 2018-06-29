@@ -10,7 +10,6 @@ import ProductItem from './ProductItem';
 const styles = theme => ({
     gridList: {
         width: '100%',
-        height: '100%',
         [theme.breakpoints.up('lg')]: {
             paddingLeft: '15%',
             paddingRight: '15%'
