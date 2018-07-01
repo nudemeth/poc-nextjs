@@ -1,8 +1,5 @@
 import React from 'react';
-import Router from 'next/router'
 import { shallow } from 'enzyme';
-import toJSON from 'enzyme-to-json';
-import sinon from 'sinon';
 import { Container } from '../../../components/layout/Container';
 
 const classes = {};
