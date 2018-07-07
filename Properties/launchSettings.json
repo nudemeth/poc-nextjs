@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "poc_dotnetcore": {
+    "catalog_api": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/catalogs",
