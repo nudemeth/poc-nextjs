@@ -1,20 +1,20 @@
 import { combineReducers } from 'redux';
-import productReducer from './product.reducer';
+import itemReducer from './item.reducer';
 import categoryReducer from './category.reducer';
 import aboutReducer from './about.reducer';
 
 export const initialState = {
     payload: {
         error: false,
-        products: [],
-        product: {},
+        items: [],
+        item: {},
         categories: []
     },
     greeting: ''
 }
 
 export default combineReducers({
-    productReducer,
+    itemReducer,
     categoryReducer,
     aboutReducer
 });

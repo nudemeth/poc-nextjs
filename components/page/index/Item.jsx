@@ -7,13 +7,13 @@ import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
-    productTile: {
+    itemTile: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#fff'
     },
-    productRoot: {
+    itemRoot: {
         height: 184,
         [theme.breakpoints.up('lg')]: {
             width: '33.3333%',
@@ -33,7 +33,7 @@ const styles = theme => ({
     }
 });
 
-class ProductItem extends React.Component {
+class Item extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -41,16 +41,16 @@ class ProductItem extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
         theme: PropTypes.object.isRequired,
-        product: PropTypes.object.isRequired
+        item: PropTypes.object.isRequired
     }
 
     render() {
-        const { classes, product } = this.props;
+        const { classes, item } = this.props;
         return (
-            <GridListTile classes={{root: classes.productRoot, tile: classes.productTile}}>
-                <img src={product.imageUrl} alt={product.imageAlt} />
+            <GridListTile classes={{root: classes.itemRoot, tile: classes.itemTile}}>
+                <img src={item.imageUrl} alt={item.imageAlt} />
                 <GridListTileBar
-                    title={product.name}
+                    title={item.name}
                     actionIcon={
                         <IconButton className={classes.button} aria-label="Add to shopping cart">
                             <Icon>add_shopping_cart</Icon>
@@ -62,5 +62,5 @@ class ProductItem extends React.Component {
     }
 }
 
-export default withStyles(styles, { withTheme: true })(ProductItem);
-export { ProductItem };
+export default withStyles(styles, { withTheme: true })(Item);
+export { Item };

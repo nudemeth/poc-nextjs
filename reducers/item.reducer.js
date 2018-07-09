@@ -1,24 +1,24 @@
 import { initialState } from './root.reducer';
 import actionTypes from '../actions/actionTypes';
 
-export default function getProductReducer(state = initialState, action) {
+export default function getItemReducer(state = initialState, action) {
     switch (action.type) {
-        case actionTypes.LOAD_PRODUCTS_SUCCESS:
+        case actionTypes.LOAD_ITEMS_SUCCESS:
             return {
                 ...state,
-                ...{ products: action.payload.products }
+                ...{ items: action.payload.items }
             };
-        case actionTypes.LOAD_PRODUCTS_FAILURE:
+        case actionTypes.LOAD_ITEMS_FAILURE:
             return {
                 ...state,
                 ...{ error: action.payload.error }
             };
-        case actionTypes.LOAD_PRODUCT_SUCCESS:
+        case actionTypes.LOAD_ITEM_SUCCESS:
             return {
                 ...state,
-                ...{ product: action.payload.product }
+                ...{ item: action.payload.item }
             };
-        case actionTypes.LOAD_PRODUCT_FAILURE:
+        case actionTypes.LOAD_ITEM_FAILURE:
             return {
                 ...state,
                 ...{ error: action.payload.error }

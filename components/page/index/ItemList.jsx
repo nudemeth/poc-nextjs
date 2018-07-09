@@ -5,7 +5,7 @@ import Hidden from '@material-ui/core/Hidden';
 import uuidv4 from 'uuid/v4';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import ProductItem from './ProductItem';
+import Item from './Item';
 
 const styles = theme => ({
     gridList: {
@@ -17,7 +17,7 @@ const styles = theme => ({
     }
 });
 
-class ProductList extends React.Component {
+class ItemList extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -25,27 +25,27 @@ class ProductList extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
         theme: PropTypes.object.isRequired,
-        products: PropTypes.arrayOf(PropTypes.object).isRequired
+        items: PropTypes.arrayOf(PropTypes.object).isRequired
     }
 
     render() {
-        const { classes, products } = this.props;
-        const items = products.map((product, index) => <ProductItem key={product.id} product={product} />);
+        const { classes, items } = this.props;
+        const list = items.map((item, index) => <Item key={item.id} item={item} />);
         return (
             <React.Fragment>
                 <Hidden mdDown key={uuidv4()}>
                     <GridList cellHeight={180} cols={3} spacing={24} className={classes.gridList}>
-                        {items}
+                        {list}
                     </GridList>
                 </Hidden>
                 <Hidden xsDown lgUp key={uuidv4()}>
                     <GridList cellHeight={180} cols={2} spacing={16} className={classes.gridList}>
-                        {items}
+                        {list}
                     </GridList>
                 </Hidden>
                 <Hidden smUp key={uuidv4()}>
                     <GridList cellHeight={180} cols={1} className={classes.gridList}>
-                        {items}
+                        {list}
                     </GridList>
                 </Hidden>
             </React.Fragment>
@@ -53,7 +53,7 @@ class ProductList extends React.Component {
     }
 }
 
-const mapStateToProps = ({ productReducer: { products, error }}) => ({ products, error });
+const mapStateToProps = ({ itemReducer: { items, error }}) => ({ items, error });
 
-export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(ProductList));
-export { ProductList };
+export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(ItemList));
+export { ItemList };

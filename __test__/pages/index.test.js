@@ -12,12 +12,12 @@ describe('Index page', () => {
     it('Should show "Index Page: Prodcuts Page" in Index page', () => {
         const spyDispatch = sinon.spy();
         const wrapper = shallow(<Index dispatch={spyDispatch} title='Home' />);
-        sinon.assert.calledWith(spyDispatch, { type: "LOAD_PRODUCTS" });
+        sinon.assert.calledWith(spyDispatch, { type: "LOAD_ITEMS" });
     });
 });
 
-jest.mock('../../components/page/index/ProductList', () => {
-    return () => "<div>Mocked Product List</div>";
+jest.mock('../../components/page/index/ItemList', () => {
+    return () => "<div>Mocked Item List</div>";
 });
 
 describe('Index page with Snapshot Testing', () => {

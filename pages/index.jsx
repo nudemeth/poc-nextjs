@@ -1,8 +1,8 @@
 import React from 'react';
 import Container from '../components/layout/Container';
-import ProductList from '../components/page/index/ProductList';
+import ItemList from '../components/page/index/ItemList';
 import HeaderContent from '../components/page/index/HeaderContent';
-import { loadProducts } from '../actions/product.actions';
+import { loadItems } from '../actions/item.actions';
 import { withReduxSaga } from '../store/store';
 
 class Index extends React.Component {
@@ -11,18 +11,18 @@ class Index extends React.Component {
     }
 
     static async getInitialProps({ store }) {
-        store.dispatch(loadProducts());
+        store.dispatch(loadItems());
         return { text: "Index Page" };
     }
 
     componentDidMount() {
-        this.props.dispatch(loadProducts());
+        this.props.dispatch(loadItems());
     }
 
     render() {
         return (
             <Container title='Index' header={<HeaderContent/>}>
-                <ProductList/>
+                <ItemList/>
             </Container>
         );
     }
