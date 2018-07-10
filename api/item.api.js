@@ -6,8 +6,8 @@ class ItemApi extends Api {
         super(host);
     }
 
-    getItem = async (id) => {
-        return await fetch(this.host + 'item/' + id);
+    getItemById = async (id) => {
+        return await fetch(this.host + 'items/' + id);
     }
 
     getItems = async (categories) => {

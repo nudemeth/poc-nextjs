@@ -10,7 +10,7 @@ describe('Load Item Worker saga', () => {
         const data = { "id": 1, "name": "Item 1", "categoryId": 1 };
         const generator = itemSaga.loadItemWorker(params);
         const result = generator.next();
-        expect(result.value).toEqual(effects.call(itemApi.getItem, params.payload.id));
+        expect(result.value).toEqual(effects.call(itemApi.getItemById, params.payload.id));
         expect(result.done).toBeFalsy();
     });
 

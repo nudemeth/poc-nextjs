@@ -16,7 +16,7 @@ function * loadItemsWorker() {
 
 function * loadItemWorker(action) {
     try {
-        const res = yield effects.call(itemApi.getItem, action.payload.id);
+        const res = yield effects.call(itemApi.getItemById, action.payload.id);
         const data = yield res.json();
         yield effects.put(actions.loadItemSuccess(data));
     } catch(err) {
