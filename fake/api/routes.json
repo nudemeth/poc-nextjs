@@ -1,3 +1,8 @@
 {
-    "/api/v1/": "/"
+    "/api/v1/catalog/*": "/$1",
+    "/catalog/*": "/$1",
+    "/items/withname/:name": "/items?name=:name",
+    "/items/type/:catalogTypeId": "/items?catalogTypeId=:catalogTypeId",
+    "/items/brand/:catalogBrandId": "/items?catalogTypeId=:catalogBrandId",
+    "/items/type/:catalogTypeId/brand/:catalogBrandId": "/items?catalogTypeId=:catalogTypeId&catalogTypeId=:catalogBrandId"
 }

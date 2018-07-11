@@ -1,12 +1,24 @@
 {
     "items": [
-        { "id": 1, "name": "Item 1", "categoryId": 1, "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
-        { "id": 2, "name": "Item 2", "categoryId": 2, "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
-        { "id": 3, "name": "Item 3", "categoryId": 3, "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
-        { "id": 4, "name": "Item 4", "categoryId": 4, "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
-        { "id": 5, "name": "Item 5", "categoryId": 1, "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" }
+        { "id": 1, "name": "Item 1", "catalogTypeId": 1, "catalogBrandId": 1, "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
+        { "id": 2, "name": "Item 2", "catalogTypeId": 2, "catalogBrandId": 2, "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
+        { "id": 3, "name": "Item 3", "catalogTypeId": 3, "catalogBrandId": 3, "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
+        { "id": 4, "name": "Item 4", "catalogTypeId": 4, "catalogBrandId": 4, "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
+        { "id": 5, "name": "Item 5", "catalogTypeId": 1, "catalogBrandId": 1, "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" }
     ],
     "categories": [
+        { "id": 1, "name": "Languages & Frameworks", "image": "code", "isSelected": true },
+        { "id": 2, "name": "Tools", "image": "build", "isSelected": true },
+        { "id": 3, "name": "Techniques", "image": "device_hub", "isSelected": true },
+        { "id": 4, "name": "Platforms", "image": "developer_board", "isSelected": false }
+    ],
+    "catalogTypes": [
+        { "id": 1, "name": "Languages & Frameworks", "image": "code", "isSelected": true },
+        { "id": 2, "name": "Tools", "image": "build", "isSelected": true },
+        { "id": 3, "name": "Techniques", "image": "device_hub", "isSelected": true },
+        { "id": 4, "name": "Platforms", "image": "developer_board", "isSelected": false }
+    ],
+    "catalogBrands": [
         { "id": 1, "name": "Languages & Frameworks", "image": "code", "isSelected": true },
         { "id": 2, "name": "Tools", "image": "build", "isSelected": true },
         { "id": 3, "name": "Techniques", "image": "device_hub", "isSelected": true },
