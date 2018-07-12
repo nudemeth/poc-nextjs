@@ -1,6 +1,6 @@
 import React from 'react';
 import Container from '../components/layout/Container';
-import ItemList from '../components/page/index/ItemList';
+import Catalog from '../components/page/index/Catalog';
 import HeaderContent from '../components/page/index/HeaderContent';
 import { loadItems } from '../actions/catalog.actions';
 import { withReduxSaga } from '../store/store';
@@ -22,7 +22,7 @@ class Index extends React.Component {
     render() {
         return (
             <Container title='Index' header={<HeaderContent/>}>
-                <ItemList/>
+                <Catalog/>
             </Container>
         );
     }

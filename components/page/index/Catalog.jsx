@@ -17,7 +17,7 @@ const styles = theme => ({
     }
 });
 
-class ItemList extends React.Component {
+class Catalog extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -55,5 +55,5 @@ class ItemList extends React.Component {
 
 const mapStateToProps = ({ itemReducer: { items, error }}) => ({ items, error });
 
-export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(ItemList));
-export { ItemList };
+export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(Catalog));
+export { Catalog };

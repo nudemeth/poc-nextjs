@@ -16,8 +16,8 @@ describe('Index page', () => {
     });
 });
 
-jest.mock('../../components/page/index/ItemList', () => {
-    return () => "<div>Mocked Item List</div>";
+jest.mock('../../components/page/index/Catalog', () => {
+    return () => "<div>Mocked Catalog</div>";
 });
 
 describe('Index page with Snapshot Testing', () => {

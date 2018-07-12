@@ -3,7 +3,7 @@ import Container from '../components/layout/Container';
 import { withReduxSaga } from '../store/store';
 import { loadItem } from '../actions/catalog.actions';
 
-class Catalog extends React.Component {
+class Item extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -35,5 +35,5 @@ class Catalog extends React.Component {
 
 const mapStateToProps = ({ itemReducer: { item }}) => ({ item });
 
-export default withReduxSaga(mapStateToProps)(Catalog);
-export { Catalog };
+export default withReduxSaga(mapStateToProps)(Item);
+export { Item };
