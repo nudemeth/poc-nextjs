@@ -11,7 +11,7 @@ describe('DrawerMenu component', () => {
         const elements = wrapper.find('Link');
         expect(elements.length).toEqual(3);
         expect(elements.first().prop('href')).toEqual('/');
-        expect(elements.at(1).prop('href')).toEqual("/category");
+        expect(elements.at(1).prop('href')).toEqual("/catalogType");
         expect(elements.last().prop('href')).toEqual("/about");
     });
 

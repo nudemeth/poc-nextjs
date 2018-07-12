@@ -10,8 +10,8 @@ exports[`Item page with Snapshot Testing Should show "Item Name: Item 1" in Item
   </h1>
   <ul>
     <li>
-      Category: 
-      Category 1
+      CatalogType: 
+      CatalogType 1
     </li>
     <li>
       Create Date: 

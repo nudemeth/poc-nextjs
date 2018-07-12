@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import catalogReducer from './catalog.reducer';
-import categoryReducer from './category.reducer';
+import catalogTypeReducer from './catalogType.reducer';
 import aboutReducer from './about.reducer';
 
 export const initialState = {
@@ -8,13 +8,13 @@ export const initialState = {
         error: false,
         items: [],
         item: {},
-        categories: []
+        catalogTypes: []
     },
     greeting: ''
 }
 
 export default combineReducers({
     catalogReducer,
-    categoryReducer,
+    catalogTypeReducer,
     aboutReducer
 });

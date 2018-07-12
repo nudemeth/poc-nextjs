@@ -6,12 +6,6 @@
         { "id": 4, "name": "Item 4", "catalogTypeId": 4, "catalogBrandId": 4, "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" },
         { "id": 5, "name": "Item 5", "catalogTypeId": 1, "catalogBrandId": 1, "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" }
     ],
-    "categories": [
-        { "id": 1, "name": "Languages & Frameworks", "image": "code", "isSelected": true },
-        { "id": 2, "name": "Tools", "image": "build", "isSelected": true },
-        { "id": 3, "name": "Techniques", "image": "device_hub", "isSelected": true },
-        { "id": 4, "name": "Platforms", "image": "developer_board", "isSelected": false }
-    ],
     "catalogTypes": [
         { "id": 1, "name": "Languages & Frameworks", "image": "code", "isSelected": true },
         { "id": 2, "name": "Tools", "image": "build", "isSelected": true },

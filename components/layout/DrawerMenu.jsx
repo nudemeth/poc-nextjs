@@ -36,10 +36,10 @@ class DrawerMenu extends React.Component {
                             <ListItemText primary="Home" />
                         </ListItem>
                     </Link>
-                    <Link prefetch href="/category">
+                    <Link prefetch href="/catalogType">
                         <ListItem button>
                             <Icon color="action">label</Icon>
-                            <ListItemText primary="Category" />
+                            <ListItemText primary="CatalogType" />
                         </ListItem>
                     </Link>
                     <Link prefetch href="/about">

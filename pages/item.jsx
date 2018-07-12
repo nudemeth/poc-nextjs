@@ -24,7 +24,7 @@ class Item extends React.Component {
             <Container title='Item'>
                 <h1>Item Name: {item.name}</h1>
                 <ul>
-                    <li>Category: {item.category}</li>
+                    <li>CatalogType: {item.catalogType}</li>
                     <li>Create Date: {item.createDate}</li>
                     <li>Image URL: {item.imageUrl}</li>
                 </ul>

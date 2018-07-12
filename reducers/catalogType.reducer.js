@@ -1,14 +1,14 @@
 import { initialState } from './root.reducer';
 import actionTypes from '../actions/actionTypes';
 
-export default function getCategoryReducer(state = initialState, action) {
+export default function getCatalogTypeReducer(state = initialState, action) {
     switch (action.type) {
-        case actionTypes.LOAD_CATEGORIES_SUCCESS:
+        case actionTypes.LOAD_CATALOG_TYPES_SUCCESS:
             return {
                 ...state,
-                ...{ categories: action.payload.categories }
+                ...{ catalogTypes: action.payload.catalogTypes }
             };
-        case actionTypes.LOAD_CATEGORIES_FAILURE:
+        case actionTypes.LOAD_CATALOG_TYPES_FAILURE:
             return {
                 ...state,
                 ...{ error: action.payload.error }

@@ -10,8 +10,8 @@ class CatalogApi extends Api {
         return await fetch(this.host + 'items/' + id);
     }
 
-    getItems = async (categories) => {
-        const query = categories.reduce((p, c) => p + 'categoryId=' + c + '&', '');
+    getItems = async (catalogTypes) => {
+        const query = catalogTypes.reduce((p, c) => p + 'catalogTypeId=' + c + '&', '');
         return await fetch(this.host + 'items?' + query);
     }
 }

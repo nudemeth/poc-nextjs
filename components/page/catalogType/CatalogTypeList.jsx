@@ -5,7 +5,7 @@ import Hidden from '@material-ui/core/Hidden';
 import uuidv4 from 'uuid/v4';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import CategoryItem from './CategoryItem';
+import CatalogTypeItem from './CatalogTypeItem';
 
 const styles = theme => ({
     gridList: {
@@ -17,7 +17,7 @@ const styles = theme => ({
     }
 });
 
-class CategoryList extends React.Component {
+class CatalogTypeList extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -25,12 +25,12 @@ class CategoryList extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
         theme: PropTypes.object.isRequired,
-        categories: PropTypes.arrayOf(PropTypes.object).isRequired
+        catalogTypes: PropTypes.arrayOf(PropTypes.object).isRequired
     }
 
     render() {
-        const { classes, categories } = this.props;
-        const items = categories.map((category, index) => <CategoryItem key={category.id} category={category} />);
+        const { classes, catalogTypes } = this.props;
+        const items = catalogTypes.map((catalogType, index) => <CatalogTypeItem key={catalogType.id} catalogType={catalogType} />);
         return (
             <React.Fragment>
                 <Hidden mdDown key={uuidv4()}>
@@ -53,7 +53,7 @@ class CategoryList extends React.Component {
     }
 }
 
-const mapStateToProps = ({ categoryReducer: { categories, error }}) => ({ categories, error });
+const mapStateToProps = ({ catalogTypeReducer: { catalogTypes, error }}) => ({ catalogTypes, error });
 
-export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(CategoryList));
-export { CategoryList };
+export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(CatalogTypeList));
+export { CatalogTypeList };

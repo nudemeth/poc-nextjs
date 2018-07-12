@@ -2,7 +2,7 @@ import { initialState } from '../../reducers/root.reducer';
 import reducer from '../../reducers/about.reducer';
 import actionTypes from '../../actions/actionTypes';
 
-describe('Categories reducers tests', () => {
+describe('CatalogTypes reducers tests', () => {
     it('Should return the initial state when no matched action type', () => {
         const result = initialState;
         expect(reducer(undefined, {})).toEqual(result);

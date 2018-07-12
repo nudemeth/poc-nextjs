@@ -4,13 +4,13 @@ import GridListTile from '@material-ui/core/GridListTile';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import { updateSelectedCategory } from '../../../actions/category.actions';
+import { updateSelectedCatalogType } from '../../../actions/catalogType.actions';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 
 const defaultColor = theme => theme.palette.grey[500];
 const selectedColor = theme => theme.palette.secondary.main;
-const categoryStyle = {
+const catalogTypeStyle = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -40,15 +40,15 @@ const styles = theme => ({
     selectedIcon: {
         color: selectedColor(theme)
     },
-    categoryTile: {
-        ...categoryStyle,
+    catalogTypeTile: {
+        ...catalogTypeStyle,
         borderColor: defaultColor(theme)
     },
-    selectedCategoryTile: {
-        ...categoryStyle,
+    selectedCatalogTypeTile: {
+        ...catalogTypeStyle,
         borderColor: selectedColor(theme)
     },
-    categoryRoot: {
+    catalogTypeRoot: {
         height: 184,
         padding: 2,
         [theme.breakpoints.up('lg')]: {
@@ -63,39 +63,39 @@ const styles = theme => ({
     }
 });
 
-class CategoryItem extends React.Component {
+class CatalogTypeItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isSelected: this.props.category.isSelected
+            isSelected: this.props.catalogType.isSelected
         }
     }
 
     static propTypes = {
         classes: PropTypes.object.isRequired,
         theme: PropTypes.object.isRequired,
-        category: PropTypes.object.isRequired
+        catalogType: PropTypes.object.isRequired
     }
 
-    handleCategoryToggle = () => {
-        this.props.dispatch(updateSelectedCategory(this.props.category, !this.state.isSelected));
+    handleCatalogTypeToggle = () => {
+        this.props.dispatch(updateSelectedCatalogType(this.props.catalogType, !this.state.isSelected));
         this.setState({ isSelected: !this.state.isSelected });
     }
 
     render() {
-        const { classes, category } = this.props;
+        const { classes, catalogType } = this.props;
         const iconClass = this.state.isSelected ? classes.selectedIcon : classes.icon;
-        const categoryTileClass = this.state.isSelected ? classes.selectedCategoryTile : classes.categoryTile;
+        const catalogTypeTileClass = this.state.isSelected ? classes.selectedCatalogTypeTile : classes.catalogTypeTile;
         return (
-            <GridListTile classes={{root: classes.categoryRoot, tile: categoryTileClass}}>
-                <IconButton disableRipple classes={{root: classes.iconButtonRoot, label: classes.iconButtonLabel}} onClick={this.handleCategoryToggle}>
-                    <Icon className={iconClass} >{category.image}</Icon>
-                    <Typography component="span">{category.name}</Typography>
+            <GridListTile classes={{root: classes.catalogTypeRoot, tile: catalogTypeTileClass}}>
+                <IconButton disableRipple classes={{root: classes.iconButtonRoot, label: classes.iconButtonLabel}} onClick={this.handleCatalogTypeToggle}>
+                    <Icon className={iconClass} >{catalogType.image}</Icon>
+                    <Typography component="span">{catalogType.name}</Typography>
                 </IconButton>
             </GridListTile>
         );
     }
 }
 
-export default connect()(withStyles(styles, { withTheme: true })(CategoryItem));
-export { CategoryItem };
+export default connect()(withStyles(styles, { withTheme: true })(CatalogTypeItem));
+export { CatalogTypeItem };

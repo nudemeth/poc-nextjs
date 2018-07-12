@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CatalogType page with Snapshot Testing Should show catalogType list in CatalogType page 1`] = `
+<Root
+  title="Catalog Type"
+>
+  <Component />
+</Root>
+`;
