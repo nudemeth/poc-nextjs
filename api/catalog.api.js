@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-unfetch';
 import Api from './api';
 
-class ItemApi extends Api {
+class CatalogApi extends Api {
     constructor(host) {
         super(host);
     }
@@ -16,4 +16,4 @@ class ItemApi extends Api {
     }
 }
 
-export default new ItemApi('http://localhost:5000/');
+export default new CatalogApi('http://localhost:5000/');

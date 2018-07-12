@@ -3,7 +3,7 @@ import Router from 'next/router'
 import { shallow } from 'enzyme';
 import toJSON from 'enzyme-to-json';
 import sinon from 'sinon';
-import ConnectedItem, { Item } from '../../pages/item';
+import ConnectedCatalog, { Catalog } from '../../pages/catalog';
 
 const mockedRouter = { prefetch: () => {} };
 Router.router = mockedRouter;
@@ -26,7 +26,7 @@ const url = {
 describe('Item page', () => {
     it('Should show "Item Name: Item 1" in Item page', () => {
         const spyDispatch = sinon.spy();
-        const wrapper = shallow(<Item dispatch={spyDispatch} url={url} item={stubItem} />);
+        const wrapper = shallow(<Catalog dispatch={spyDispatch} url={url} item={stubItem} />);
         expect(wrapper.find('h1').text()).toEqual('Item Name: Item 1');
         const elements = wrapper.find('li');
         expect(elements.at(0).text()).toEqual('Category: Category 1');
@@ -39,7 +39,7 @@ describe('Item page', () => {
 describe('Item page with Snapshot Testing', () => {
     it('Should show "Item Name: Item 1" in Item page', () => {
         const spyDispatch = sinon.spy();
-        const wrapper = shallow(<Item dispatch={spyDispatch} url={url} item={stubItem} />);
+        const wrapper = shallow(<Catalog dispatch={spyDispatch} url={url} item={stubItem} />);
         const tree = toJSON(wrapper);
         expect(tree).toMatchSnapshot();
     });

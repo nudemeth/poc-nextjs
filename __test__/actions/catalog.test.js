@@ -1,4 +1,4 @@
-import * as actions from '../../actions/item.actions';
+import * as actions from '../../actions/catalog.actions';
 import actionTypes from '../../actions/actionTypes';
 
 describe('Items actions creator', () => {

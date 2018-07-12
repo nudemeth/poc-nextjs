@@ -1,16 +1,16 @@
 import * as effects from 'redux-saga/effects';
-import * as actions from '../../actions/item.actions';
-import * as itemSaga from '../../sagas/item.saga';
+import * as actions from '../../actions/catalog.actions';
+import * as catalogSaga from '../../sagas/catalog.saga';
 import * as categorySaga from '../../sagas/category.saga';
-import itemApi from '../../api/item.api';
+import catalogApi from '../../api/catalog.api';
 
 describe('Load Item Worker saga', () => {
     it('Should call fetching item by id', () => {
         const params = { payload: { id: 1 } };
         const data = { "id": 1, "name": "Item 1", "categoryId": 1 };
-        const generator = itemSaga.loadItemWorker(params);
+        const generator = catalogSaga.loadItemWorker(params);
         const result = generator.next();
-        expect(result.value).toEqual(effects.call(itemApi.getItemById, params.payload.id));
+        expect(result.value).toEqual(effects.call(catalogApi.getItemById, params.payload.id));
         expect(result.done).toBeFalsy();
     });
 
@@ -18,7 +18,7 @@ describe('Load Item Worker saga', () => {
         const params = { payload: { id: 1 } };
         const data = { "id": 1, "name": "Item 1", "categoryId": 1 };
         const res = { json: () => data };
-        const generator = itemSaga.loadItemWorker(params);
+        const generator = catalogSaga.loadItemWorker(params);
         
         generator.next();
         generator.next(res);
@@ -32,7 +32,7 @@ describe('Load Item Worker saga', () => {
         const params = { payload: { id: 1 } };
         const err = new Error();
         const res = { json: () => { throw err; }};
-        const generator = itemSaga.loadItemWorker(params);
+        const generator = catalogSaga.loadItemWorker(params);
         
         generator.next();
         
@@ -45,7 +45,7 @@ describe('Load Item Worker saga', () => {
         const params = { payload: { id: 1 } };
         const err = new Error();
         const res = { json: () => { throw err; }};
-        const generator = itemSaga.loadItemWorker(params);
+        const generator = catalogSaga.loadItemWorker(params);
         
         generator.next();
         generator.next(res);
@@ -58,7 +58,7 @@ describe('Load Item Worker saga', () => {
         const params = { payload: { id: 1 } };
         const data = { "id": 1, "name": "Item 1", "categoryId": 1 };
         const res = { json: () => data };
-        const generator = itemSaga.loadItemWorker(params);
+        const generator = catalogSaga.loadItemWorker(params);
         
         generator.next();
         generator.next(res);
@@ -71,7 +71,7 @@ describe('Load Item Worker saga', () => {
 
 describe('Load Items Worker saga', () => {
     it('Should call getSelectedCategoryIds', () => {
-        const generator = itemSaga.loadItemsWorker();
+        const generator = catalogSaga.loadItemsWorker();
         const result = generator.next();
         expect(result.value).toEqual(effects.call(categorySaga.getSelectedCategoryIds));
         expect(result.done).toBeFalsy();
@@ -79,19 +79,19 @@ describe('Load Items Worker saga', () => {
 
     it('Should call getItems from item api', () => {
         const categoryIds = [1];
-        const generator = itemSaga.loadItemsWorker();
+        const generator = catalogSaga.loadItemsWorker();
 
         generator.next();
 
         const result = generator.next(categoryIds);
-        expect(result.value).toEqual(effects.call(itemApi.getItems, categoryIds));
+        expect(result.value).toEqual(effects.call(catalogApi.getItems, categoryIds));
         expect(result.done).toBeFalsy();
     });
 
     it('Should put action to loadItemsSuccess after successfully fetch items by category ids', () => {
         const data = { payload: [{ id: 1 }, { id: 2 }] };
         const res = { json: () => data };
-        const generator = itemSaga.loadItemsWorker();
+        const generator = catalogSaga.loadItemsWorker();
         
         generator.next();
         generator.next();
@@ -105,7 +105,7 @@ describe('Load Items Worker saga', () => {
     it('Should put action to loadItemsFailure after failed to fetch items by category ids', () => {
         const err = new Error();
         const res = { json: () => { throw err; } };
-        const generator = itemSaga.loadItemsWorker();
+        const generator = catalogSaga.loadItemsWorker();
         
         generator.next();
         generator.next();
@@ -118,7 +118,7 @@ describe('Load Items Worker saga', () => {
     it('Should end the generator after putting to loadItemsSuccess action', () => {
         const data = { payload: [{ id: 1 }, { id: 2 }] };
         const res = { json: () => data };
-        const generator = itemSaga.loadItemsWorker();
+        const generator = catalogSaga.loadItemsWorker();
         
         generator.next();
         generator.next();
@@ -132,7 +132,7 @@ describe('Load Items Worker saga', () => {
     it('Should end the generator after putting to loadItemsFailure action', () => {
         const err = new Error();
         const res = { json: () => { throw err; }};
-        const generator = itemSaga.loadItemsWorker();
+        const generator = catalogSaga.loadItemsWorker();
         
         generator.next();
         generator.next();

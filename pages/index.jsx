@@ -2,7 +2,7 @@ import React from 'react';
 import Container from '../components/layout/Container';
 import ItemList from '../components/page/index/ItemList';
 import HeaderContent from '../components/page/index/HeaderContent';
-import { loadItems } from '../actions/item.actions';
+import { loadItems } from '../actions/catalog.actions';
 import { withReduxSaga } from '../store/store';
 
 class Index extends React.Component {

@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import itemReducer from './item.reducer';
+import catalogReducer from './catalog.reducer';
 import categoryReducer from './category.reducer';
 import aboutReducer from './about.reducer';
 
@@ -14,7 +14,7 @@ export const initialState = {
 }
 
 export default combineReducers({
-    itemReducer,
+    catalogReducer,
     categoryReducer,
     aboutReducer
 });

@@ -1,9 +1,9 @@
 import React from 'react';
 import Container from '../components/layout/Container';
 import { withReduxSaga } from '../store/store';
-import { loadItem } from '../actions/item.actions';
+import { loadItem } from '../actions/catalog.actions';
 
-class Item extends React.Component {
+class Catalog extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -35,5 +35,5 @@ class Item extends React.Component {
 
 const mapStateToProps = ({ itemReducer: { item }}) => ({ item });
 
-export default withReduxSaga(mapStateToProps)(Item);
-export { Item };
+export default withReduxSaga(mapStateToProps)(Catalog);
+export { Catalog };

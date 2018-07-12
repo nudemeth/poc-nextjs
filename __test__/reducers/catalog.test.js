@@ -1,5 +1,5 @@
 import { initialState } from '../../reducers/root.reducer';
-import reducer from '../../reducers/item.reducer';
+import reducer from '../../reducers/catalog.reducer';
 import actionTypes from '../../actions/actionTypes';
 
 describe('Items reducers', () => {
