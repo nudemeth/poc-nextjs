@@ -2,7 +2,9 @@
     "/api/v1/catalog/*": "/$1",
     "/catalog/*": "/$1",
     "/items/withname/:name": "/items?name=:name",
+    "/items/type/": "/items",
+    "/items/brand/": "/items",
     "/items/type/:catalogTypeId": "/items?catalogTypeId=:catalogTypeId",
     "/items/brand/:catalogBrandId": "/items?catalogTypeId=:catalogBrandId",
-    "/items/type/:catalogTypeId/brand/:catalogBrandId": "/items?catalogTypeId=:catalogTypeId&catalogTypeId=:catalogBrandId"
+    "/items/type/:catalogTypeId/brand/:catalogBrandId": "/items?catalogTypeId=:catalogTypeId&catalogBrandId=:catalogBrandId"
 }
