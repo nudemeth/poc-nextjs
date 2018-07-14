@@ -1,12 +1,12 @@
 import * as effects from 'redux-saga/effects';
 import * as actions from '../actions/catalogType.actions';
-import catalogTypeApi from '../api/catalogType.api';
+import catalogApi from '../api/catalog.api';
 
 function * loadCatalogTypesWorker() {
     const { catalogTypeReducer: { catalogTypes } } = yield effects.select();
     if (!catalogTypes || catalogTypes.length === 0) {
         try {
-            const res = yield effects.call(catalogTypeApi.getCatalogTypes);
+            const res = yield effects.call(catalogApi.getCatalogTypes);
             const data = yield res.json();
             yield effects.put(actions.loadCatalogTypesSuccess(data));
         } catch(err) {

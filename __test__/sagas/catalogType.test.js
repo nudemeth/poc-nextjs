@@ -1,7 +1,7 @@
 import * as effects from 'redux-saga/effects';
 import * as actions from '../../actions/catalogType.actions';
 import * as catalogTypeSaga from '../../sagas/catalogType.saga';
-import catalogTypeApi from '../../api/catalogType.api';
+import catalogApi from '../../api/catalog.api';
 
 describe('Load CatalogTypes Worker saga', () => {
     it('Should get catalogTypes from the store ', () => {
@@ -21,14 +21,14 @@ describe('Load CatalogTypes Worker saga', () => {
         expect(result.done).toBeTruthy();
     });
 
-    it('Should call fetching catalogTypes api', () => {
+    it('Should call fetching catalog api', () => {
         const store = { catalogTypeReducer: {} };
         const generator = catalogTypeSaga.loadCatalogTypesWorker();
         
         generator.next();
 
         const result = generator.next(store);
-        expect(result.value).toEqual(effects.call(catalogTypeApi.getCatalogTypes));
+        expect(result.value).toEqual(effects.call(catalogApi.getCatalogTypes));
         expect(result.done).toBeFalsy();
     });
 
