@@ -53,7 +53,7 @@ class Catalog extends React.Component {
     }
 }
 
-const mapStateToProps = ({ itemReducer: { items, error }}) => ({ items, error });
+const mapStateToProps = ({ catalogReducer: { items, error }}) => ({ items, error });
 
 export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(Catalog));
 export { Catalog };

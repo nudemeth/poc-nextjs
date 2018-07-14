@@ -1,7 +1,7 @@
 import { initialState } from './root.reducer';
 import actionTypes from '../actions/actionTypes';
 
-export default function getItemReducer(state = initialState, action) {
+export default function getCatalogReducer(state = initialState, action) {
     switch (action.type) {
         case actionTypes.LOAD_ITEMS_SUCCESS:
             return {
