@@ -18,7 +18,8 @@ function * loadCatalogTypesWorker() {
 function * getSelectedCatalogTypeIds() {
     yield effects.call(loadCatalogTypesWorker);
     const { catalogTypeReducer: { catalogTypes } } = yield effects.select();
-    return catalogTypes.filter((catalogType) => catalogType.isSelected).map((catalogType) => catalogType.id);
+    const catalogTypeIds = catalogTypes.filter((catalogType) => catalogType.isSelected).map((catalogType) => catalogType.id);
+    return catalogTypes.length == catalogTypeIds.length ? [] : catalogTypeIds;
 }
 
 function * updateSelectedCatalogType(action) {

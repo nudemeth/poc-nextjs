@@ -18,7 +18,8 @@ function * loadCatalogBrandsWorker() {
 function * getSelectedCatalogBrandIds() {
     yield effects.call(loadCatalogBrandsWorker);
     const { catalogBrandReducer: { catalogBrands } } = yield effects.select();
-    return catalogBrands.filter((catalogBrand) => catalogBrand.isSelected).map((catalogBrand) => catalogBrand.id);
+    const catalogBrandIds = catalogBrands.filter((catalogBrand) => catalogBrand.isSelected).map((catalogBrand) => catalogBrand.id);
+    return catalogBrands.length == catalogBrandIds.length ? [] : catalogBrandIds;
 }
 
 function * updateSelectedCatalogBrand(action) {

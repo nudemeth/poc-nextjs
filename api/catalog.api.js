@@ -10,9 +10,23 @@ class CatalogApi extends Api {
         return await fetch(this.host + 'items/' + id);
     }
 
-    getItems = async (catalogTypes = [], catalogBrands = []) => {
-        const query = catalogTypes.reduce((p, c) => p + 'catalogTypeId=' + c + '&', '');
-        return await fetch(this.host + 'items?' + query);
+    getItems = async (catalogTypeIds = [], catalogBrandIds = []) => {
+        const catalogTypesParam = catalogTypeIds.join();
+        const catalogBrandsParam = catalogBrandIds.join();
+
+        if (catalogTypesParam !== "" && catalogBrandsParam !== "") {
+            return await fetch(this.host + 'items/types/' + catalogTypesParam + '/brands/' + catalogBrandsParam);
+        }
+
+        if (catalogTypesParam !== "") {
+            return await fetch(this.host + 'items/types/' + catalogTypesParam);
+        }
+
+        if (catalogBrandsParam !== "") {
+            return await fetch(this.host + 'items/brands/' + catalogBrandsParam);
+        }
+
+        return await fetch(this.host + 'items');
     }
 
     getCatalogTypes = async () => {
@@ -24,4 +38,4 @@ class CatalogApi extends Api {
     }
 }
 
-export default new CatalogApi('http://localhost:5000/');
+export default new CatalogApi('http://localhost:5000/catalog/');
