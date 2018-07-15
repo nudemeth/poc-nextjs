@@ -2,6 +2,7 @@ import * as effects from 'redux-saga/effects';
 import * as actions from '../../actions/catalog.actions';
 import * as catalogSaga from '../../sagas/catalog.saga';
 import * as catalogTypeSaga from '../../sagas/catalogType.saga';
+import * as catalogBrandSaga from '../../sagas/catalogBrand.saga';
 import catalogApi from '../../api/catalog.api';
 
 describe('Load Item Worker saga', () => {
@@ -77,14 +78,26 @@ describe('Load Items Worker saga', () => {
         expect(result.done).toBeFalsy();
     });
 
-    it('Should call getItems from item api', () => {
-        const catalogTypeIds = [1];
+    it('Should call getSelectedCatalogBrandIds', () => {
         const generator = catalogSaga.loadItemsWorker();
 
         generator.next();
 
-        const result = generator.next(catalogTypeIds);
-        expect(result.value).toEqual(effects.call(catalogApi.getItems, catalogTypeIds));
+        const result = generator.next();
+        expect(result.value).toEqual(effects.call(catalogBrandSaga.getSelectedCatalogBrandIds));
+        expect(result.done).toBeFalsy();
+    });
+
+    it('Should call getItems from item api', () => {
+        const catalogTypeIds = [1];
+        const catalogBrandIds = [1];
+        const generator = catalogSaga.loadItemsWorker();
+
+        generator.next();
+        generator.next(catalogTypeIds);
+
+        const result = generator.next(catalogBrandIds);
+        expect(result.value).toEqual(effects.call(catalogApi.getItems, catalogTypeIds, catalogBrandIds));
         expect(result.done).toBeFalsy();
     });
 
@@ -93,6 +106,7 @@ describe('Load Items Worker saga', () => {
         const res = { json: () => data };
         const generator = catalogSaga.loadItemsWorker();
         
+        generator.next();
         generator.next();
         generator.next();
         generator.next(res);
@@ -109,6 +123,7 @@ describe('Load Items Worker saga', () => {
         
         generator.next();
         generator.next();
+        generator.next();
 
         const result = generator.next(res);
         expect(result.value).toEqual(effects.put(actions.loadItemsFailure(err)));
@@ -120,6 +135,7 @@ describe('Load Items Worker saga', () => {
         const res = { json: () => data };
         const generator = catalogSaga.loadItemsWorker();
         
+        generator.next();
         generator.next();
         generator.next();
         generator.next(res);
@@ -134,6 +150,7 @@ describe('Load Items Worker saga', () => {
         const res = { json: () => { throw err; }};
         const generator = catalogSaga.loadItemsWorker();
         
+        generator.next();
         generator.next();
         generator.next();
         generator.next(res);
