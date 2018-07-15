@@ -1,9 +1,10 @@
 {
     "/api/v1/catalog/*": "/$1",
     "/catalog/*": "/$1",
+    "/items/:itemId1,:itemId2,:itemId3,:itemId4": "/items?id=:itemId1&id=:itemId2&id=:itemId3&id=:itemId4",
+    "/items/:itemId1,:itemId2,:itemId3": "/items?id=:itemId1&id=:itemId2&id=:itemId3",
+    "/items/:itemId1,:itemId2": "/items?id=:itemId1&id=:itemId2",
     "/items/withname/:name": "/items?name=:name",
-    "/items/types/": "/items",
-    "/items/brands/": "/items",
     "/items/types/:catalogTypeId1,:catalogTypeId2,:catalogTypeId3,:catalogTypeId4": "/items?catalogTypeId=:catalogTypeId1&catalogTypeId=:catalogTypeId2&catalogTypeId=:catalogTypeId3&catalogTypeId=:catalogTypeId4",
     "/items/types/:catalogTypeId1,:catalogTypeId2,:catalogTypeId3": "/items?catalogTypeId=:catalogTypeId1&catalogTypeId=:catalogTypeId2&catalogTypeId=:catalogTypeId3",
     "/items/types/:catalogTypeId1,:catalogTypeId2": "/items?catalogTypeId=:catalogTypeId1&catalogTypeId=:catalogTypeId2",
