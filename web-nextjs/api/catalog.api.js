@@ -7,7 +7,7 @@ class CatalogApi extends Api {
     }
 
     getItemById = async (id) => {
-        return await fetch(this.host + 'items/' + id);
+        return await fetch(`${this.host}items/${id}`);
     }
 
     getItems = async (catalogTypeIds = [], catalogBrandIds = []) => {
@@ -15,27 +15,27 @@ class CatalogApi extends Api {
         const catalogBrandsParam = catalogBrandIds.join();
 
         if (catalogTypesParam !== "" && catalogBrandsParam !== "") {
-            return await fetch(this.host + 'items/types/' + catalogTypesParam + '/brands/' + catalogBrandsParam);
+            return await fetch(`${this.host}items/types/${catalogTypesParam}/brands/${catalogBrandsParam}`);
         }
 
         if (catalogTypesParam !== "") {
-            return await fetch(this.host + 'items/types/' + catalogTypesParam);
+            return await fetch(`${this.host}items/types/${catalogTypesParam}`);
         }
 
         if (catalogBrandsParam !== "") {
-            return await fetch(this.host + 'items/brands/' + catalogBrandsParam);
+            return await fetch(`${this.host}items/brands/${catalogBrandsParam}`);
         }
 
-        return await fetch(this.host + 'items');
+        return await fetch(`${this.host}items`);
     }
 
     getCatalogTypes = async () => {
-        return await fetch(this.host + 'catalogTypes');
+        return await fetch(`${this.host}catalogTypes`);
     }
 
     getCatalogBrands = async () => {
-        return await fetch(this.host + 'catalogBrands');
+        return await fetch(`${this.host}catalogBrands`);
     }
 }
 
-export default new CatalogApi('http://localhost:5000/catalog/');
+export default new CatalogApi('http://localhost:5000/api/v1/catalog/');

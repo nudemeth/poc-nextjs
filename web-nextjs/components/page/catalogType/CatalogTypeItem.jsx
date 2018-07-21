@@ -89,8 +89,8 @@ class CatalogTypeItem extends React.Component {
         return (
             <GridListTile classes={{root: classes.catalogTypeRoot, tile: catalogTypeTileClass}}>
                 <IconButton disableRipple classes={{root: classes.iconButtonRoot, label: classes.iconButtonLabel}} onClick={this.handleCatalogTypeToggle}>
-                    <Icon className={iconClass} >{catalogType.image}</Icon>
-                    <Typography component="span">{catalogType.name}</Typography>
+                    <Icon className={iconClass} >{catalogType.icon}</Icon>
+                    <Typography component="span">{catalogType.type}</Typography>
                 </IconButton>
             </GridListTile>
         );

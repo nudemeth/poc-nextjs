@@ -13,8 +13,8 @@ const classes = {
 }
 const theme = {}
 const catalogBrand = {
-    image: 'CatalogBrandIcon',
-    name: 'CatalogBrandName',
+    icon: 'CatalogBrandIcon',
+    brand: 'CatalogBrandName',
     isSelected: true
 }
 

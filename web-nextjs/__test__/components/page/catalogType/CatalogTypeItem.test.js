@@ -13,8 +13,8 @@ const classes = {
 }
 const theme = {}
 const catalogType = {
-    image: 'CatalogTypeIcon',
-    name: 'CatalogTypeName',
+    icon: 'CatalogTypeIcon',
+    type: 'CatalogTypeName',
     isSelected: true
 }
 

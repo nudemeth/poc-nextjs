@@ -7,15 +7,15 @@
         { "id": 5, "name": "Item 5", "catalogTypeId": 1, "catalogBrandId": 2, "price": "800", "createDate":"2018-01-01T00:00:00.000Z", "imageUrl": "https://material-ui-next.com/static/images/cards/paella.jpg", "imageAlt":"Contemplative Reptile" }
     ],
     "catalogTypes": [
-        { "id": 1, "name": "Languages & Frameworks", "image": "code", "isSelected": true },
-        { "id": 2, "name": "Tools", "image": "build", "isSelected": true },
-        { "id": 3, "name": "Techniques", "image": "device_hub", "isSelected": true },
-        { "id": 4, "name": "Platforms", "image": "developer_board", "isSelected": false }
+        { "id": 1, "type": "Languages & Frameworks", "icon": "code", "isSelected": true },
+        { "id": 2, "type": "Tools", "icon": "build", "isSelected": true },
+        { "id": 3, "type": "Techniques", "icon": "device_hub", "isSelected": true },
+        { "id": 4, "type": "Platforms", "icon": "developer_board", "isSelected": false }
     ],
     "catalogBrands": [
-        { "id": 1, "name": "Microsoft", "image": "code", "isSelected": true },
-        { "id": 2, "name": "Google", "image": "build", "isSelected": true },
-        { "id": 3, "name": "Apple", "image": "device_hub", "isSelected": true },
-        { "id": 4, "name": "Facebook", "image": "developer_board", "isSelected": false }
+        { "id": 1, "brand": "Microsoft", "icon": "code", "isSelected": true },
+        { "id": 2, "brand": "Google", "icon": "build", "isSelected": true },
+        { "id": 3, "brand": "Apple", "icon": "device_hub", "isSelected": true },
+        { "id": 4, "brand": "Facebook", "icon": "developer_board", "isSelected": false }
     ]
 }
