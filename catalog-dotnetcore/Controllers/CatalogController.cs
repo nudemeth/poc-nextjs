@@ -3,28 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors;
 using Catalog.API.Models;
 
 namespace Catalog.API.Controllers
 {
     [Route("api/v1/[controller]")]
+    [EnableCors("APIGateway")]
+    [ResponseCache(Location = ResponseCacheLocation.None, Duration = 0, VaryByHeader = "Origins, Accept-Encoding")]
     [ApiController]
     public class CatalogController : ControllerBase
     {
         private IList<CatalogType> types = new List<CatalogType>()
         {
-            new CatalogType() { Id = 1, Type = "Languages & Frameworks" },
-            new CatalogType() { Id = 2, Type = "Tools" },
-            new CatalogType() { Id = 3, Type = "Techniques" },
-            new CatalogType() { Id = 4, Type = "Platforms" }
+            new CatalogType() { Id = 1, Type = "Languages & Frameworks", Icon = "code", IsSelected = true },
+            new CatalogType() { Id = 2, Type = "Tools", Icon = "build", IsSelected = true },
+            new CatalogType() { Id = 3, Type = "Techniques", Icon = "device_hub", IsSelected = true },
+            new CatalogType() { Id = 4, Type = "Platforms", Icon = "developer_board", IsSelected = false }
         };
 
         private IList<CatalogBrand> brands = new List<CatalogBrand>()
         {
-            new CatalogBrand() { Id = 1, Brand = "Microsoft" },
-            new CatalogBrand() { Id = 2, Brand = "Google" },
-            new CatalogBrand() { Id = 3, Brand = "Apple" },
-            new CatalogBrand() { Id = 4, Brand = "Facebook" }
+            new CatalogBrand() { Id = 1, Brand = "Microsoft", Icon = "code", IsSelected = true },
+            new CatalogBrand() { Id = 2, Brand = "Google", Icon = "build", IsSelected = true },
+            new CatalogBrand() { Id = 3, Brand = "Apple", Icon = "device_hub", IsSelected = true },
+            new CatalogBrand() { Id = 4, Brand = "Facebook", Icon = "developer_board", IsSelected = false }
         };
 
         private IList<CatalogItem> items = new List<CatalogItem>()
@@ -49,8 +52,9 @@ namespace Catalog.API.Controllers
         [Route("items/{ids:minlength(1)}")]
         public async Task<IActionResult> GetItems(string ids = null)
         {
-            var items = ids.Split(',').ToArray();
-            return await Task.FromResult(Ok(items));
+            var itemIds = ids.Split(',').Select(i => Int32.Parse(i)).ToArray();
+            var result = items.Where(i => itemIds.Contains(i.Id)).ToList();
+            return await Task.FromResult(Ok(result));
         }
 
         // GET api/[controller]/items/1
@@ -58,21 +62,44 @@ namespace Catalog.API.Controllers
         [Route("items/{id:int}")]
         public async Task<IActionResult> GetItemById(int id)
         {
-            return await Task.FromResult(Ok("GetItemById: " + id));
+            var result = items.Where(i => i.Id == id).ToList();
+            return await Task.FromResult(Ok(result));
         }
 
         [HttpGet]
         [Route("items/withname/{name:minlength(1)}")]
         public async Task<IActionResult> GetItemByName(string name)
         {
-            return await Task.FromResult(Ok("GetItemByName: " + name));
+            var result = items.Where(i => i.Name == name).ToList();
+            return await Task.FromResult(Ok(result));
         }
 
         [HttpGet]
         [Route("items/types/{catalogTypeIds:minlength(1)}/brands/{catalogBrandIds:minlength(1)}")]
-        public async Task<IActionResult> GetItems(string catalogTypeIds, string catalogBrandIds)
+        public async Task<IActionResult> GetItemsByTypesAndBrands(string catalogTypeIds, string catalogBrandIds)
         {
-            return await Task.FromResult(Ok("GetItems: typeIds=" + catalogTypeIds + ", brandIds=" + catalogBrandIds));
+            var typeIds = catalogTypeIds.Split(',').Select(i => Int32.Parse(i)).ToArray();
+            var brandIds = catalogBrandIds.Split(',').Select(i => Int32.Parse(i)).ToArray();
+            var result = items.Where(i => typeIds.Contains(i.CatalogTypeId) && brandIds.Contains(i.CatalogBrandId)).ToList();
+            return await Task.FromResult(Ok(result));
+        }
+
+        [HttpGet]
+        [Route("items/types/{catalogTypeIds:minlength(1)}")]
+        public async Task<IActionResult> GetItemsByTypes(string catalogTypeIds)
+        {
+            var typeIds = catalogTypeIds.Split(',').Select(i => Int32.Parse(i)).ToArray();
+            var result = items.Where(i => typeIds.Contains(i.CatalogTypeId)).ToList();
+            return await Task.FromResult(Ok(result));
+        }
+
+        [HttpGet]
+        [Route("items/brands/{catalogBrandIds:minlength(1)}")]
+        public async Task<IActionResult> GetItemsByBrands(string catalogBrandIds)
+        {
+            var brandIds = catalogBrandIds.Split(',').Select(i => Int32.Parse(i)).ToArray();
+            var result = items.Where(i => brandIds.Contains(i.CatalogBrandId)).ToList();
+            return await Task.FromResult(Ok(result));
         }
 
         [HttpGet]
