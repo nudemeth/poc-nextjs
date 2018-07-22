@@ -1,13 +1,24 @@
-function validateHostAndPort(host, port) {
+import fetch from 'isomorphic-unfetch';
+
+function validateHostAndPort(host) {
     if (typeof host === 'string')
         return;
-    throw new Error('Host or Port are not valid.');
+    throw new Error('Host is not valid.');
 }
 
 class Api {
     constructor(host) {
         validateHostAndPort(host);
         this.host = host;
+    }
+
+    tryFetch = async (url, opts) => {
+        try {
+            return await fetch(url, opts);
+        } catch (err) {
+            console.error(err);
+            return await Promise.reject(err);
+        }
     }
 }
 

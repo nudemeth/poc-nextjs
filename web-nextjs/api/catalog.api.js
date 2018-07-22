@@ -15,26 +15,26 @@ class CatalogApi extends Api {
         const catalogBrandsParam = catalogBrandIds.join();
 
         if (catalogTypesParam !== "" && catalogBrandsParam !== "") {
-            return await fetch(`${this.host}items/types/${catalogTypesParam}/brands/${catalogBrandsParam}`);
+            return await this.tryFetch(`${this.host}items/types/${catalogTypesParam}/brands/${catalogBrandsParam}`);
         }
 
         if (catalogTypesParam !== "") {
-            return await fetch(`${this.host}items/types/${catalogTypesParam}`);
+            return await this.tryFetch(`${this.host}items/types/${catalogTypesParam}`);
         }
 
         if (catalogBrandsParam !== "") {
-            return await fetch(`${this.host}items/brands/${catalogBrandsParam}`);
+            return await this.tryFetch(`${this.host}items/brands/${catalogBrandsParam}`);
         }
 
-        return await fetch(`${this.host}items`);
+        return await this.tryFetch(`${this.host}items`);
     }
 
     getCatalogTypes = async () => {
-        return await fetch(`${this.host}catalogTypes`);
+        return await this.tryFetch(`${this.host}catalogTypes`);
     }
 
     getCatalogBrands = async () => {
-        return await fetch(`${this.host}catalogBrands`);
+        return await this.tryFetch(`${this.host}catalogBrands`);
     }
 }
 
