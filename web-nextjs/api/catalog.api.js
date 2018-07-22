@@ -38,4 +38,4 @@ class CatalogApi extends Api {
     }
 }
 
-export default new CatalogApi('http://localhost:5000/api/v1/catalog/');
+export default new CatalogApi('https://localhost:5000/api/v1/catalog/');
