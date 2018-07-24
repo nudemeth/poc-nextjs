@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-unfetch';
 import Api from './api';
+import config from '../config';
 
 class CatalogApi extends Api {
     constructor(host) {
@@ -38,4 +39,4 @@ class CatalogApi extends Api {
     }
 }
 
-export default new CatalogApi('https://localhost:5000/api/v1/catalog/');
+export default new CatalogApi(config.api.catalog.url);
