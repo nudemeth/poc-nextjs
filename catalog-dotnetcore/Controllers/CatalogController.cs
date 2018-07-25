@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
 using Catalog.API.Models;
+using Catalog.API.Fakes;
 
 namespace Catalog.API.Controllers
 {
@@ -14,31 +15,9 @@ namespace Catalog.API.Controllers
     [ApiController]
     public class CatalogController : ControllerBase
     {
-        private IList<CatalogType> types = new List<CatalogType>()
-        {
-            new CatalogType() { Id = 1, Type = "Languages & Frameworks", Icon = "code", IsSelected = true },
-            new CatalogType() { Id = 2, Type = "Tools", Icon = "build", IsSelected = true },
-            new CatalogType() { Id = 3, Type = "Techniques", Icon = "device_hub", IsSelected = true },
-            new CatalogType() { Id = 4, Type = "Platforms", Icon = "developer_board", IsSelected = false }
-        };
-
-        private IList<CatalogBrand> brands = new List<CatalogBrand>()
-        {
-            new CatalogBrand() { Id = 1, Brand = "Microsoft", Icon = "code", IsSelected = true },
-            new CatalogBrand() { Id = 2, Brand = "Google", Icon = "build", IsSelected = true },
-            new CatalogBrand() { Id = 3, Brand = "Apple", Icon = "device_hub", IsSelected = true },
-            new CatalogBrand() { Id = 4, Brand = "Facebook", Icon = "developer_board", IsSelected = false }
-        };
-
-        private IList<CatalogItem> items = new List<CatalogItem>()
-        {
-            new CatalogItem() { Id = 1, CatalogTypeId = 1, CatalogBrandId = 1, Name = "Item 1", Price = 800, CreateDate = DateTime.Today, Description = "", ImageUrl = "https://material-ui-next.com/static/images/cards/paella.jpg", ImageAlt = "Contemplative Reptile" },
-            new CatalogItem() { Id = 2, CatalogTypeId = 2, CatalogBrandId = 3, Name = "Item 2", Price = 800, CreateDate = DateTime.Today, Description = "", ImageUrl = "https://material-ui-next.com/static/images/cards/paella.jpg", ImageAlt = "Contemplative Reptile" },
-            new CatalogItem() { Id = 3, CatalogTypeId = 3, CatalogBrandId = 3, Name = "Item 3", Price = 800, CreateDate = DateTime.Today, Description = "", ImageUrl = "https://material-ui-next.com/static/images/cards/paella.jpg", ImageAlt = "Contemplative Reptile" },
-            new CatalogItem() { Id = 4, CatalogTypeId = 4, CatalogBrandId = 4, Name = "Item 4", Price = 800, CreateDate = DateTime.Today, Description = "", ImageUrl = "https://material-ui-next.com/static/images/cards/paella.jpg", ImageAlt = "Contemplative Reptile" },
-            new CatalogItem() { Id = 5, CatalogTypeId = 1, CatalogBrandId = 2, Name = "Item 5", Price = 800, CreateDate = DateTime.Today, Description = "", ImageUrl = "https://material-ui-next.com/static/images/cards/paella.jpg", ImageAlt = "Contemplative Reptile" }
-        };
-
+        private IList<CatalogItem> items = FakeCatalogItem.items;
+        private IList<CatalogBrand> brands = FakeCatalogItem.brands;
+        private IList<CatalogType> types = FakeCatalogItem.types;
         // GET api/[controller]/items
         [HttpGet]
         [Route("items")]
