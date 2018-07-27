@@ -46,9 +46,10 @@ class Item extends React.Component {
 
     render() {
         const { classes, item } = this.props;
+        const imageUrl = `https://localhost:5000/api/v1/catalog/items/${item.id}/img`;
         return (
             <GridListTile classes={{root: classes.itemRoot, tile: classes.itemTile}}>
-                <img src={item.imageUrl} alt={item.imageAlt} />
+                <img src={imageUrl} alt={item.name} ref={this.setItemImageRef} onLoad={this.handleImageLoad} />
                 <GridListTileBar
                     title={item.name}
                     actionIcon={

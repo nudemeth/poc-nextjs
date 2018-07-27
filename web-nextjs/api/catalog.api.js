@@ -37,6 +37,10 @@ class CatalogApi extends Api {
     getCatalogBrands = async () => {
         return await this.tryFetch(`${this.host}catalogBrands`);
     }
+
+    getItemImage = async (catalogItemId) => {
+        return await this.tryFetch(`${this.host}items/${catalogItemId}/img`);
+    }
 }
 
 export default new CatalogApi(config.api.catalog.url);
