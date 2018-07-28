@@ -14,7 +14,6 @@ const styles = theme => ({
         backgroundColor: '#fff'
     },
     itemRoot: {
-        height: 184,
         [theme.breakpoints.up('lg')]: {
             width: '33.3333%',
             padding: 12

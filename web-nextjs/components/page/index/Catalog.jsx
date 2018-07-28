@@ -34,17 +34,17 @@ class Catalog extends React.Component {
         return (
             <React.Fragment>
                 <Hidden mdDown key={uuidv4()}>
-                    <GridList cellHeight={180} cols={3} spacing={24} className={classes.gridList}>
+                    <GridList cols={3} spacing={24} className={classes.gridList}>
                         {list}
                     </GridList>
                 </Hidden>
                 <Hidden xsDown lgUp key={uuidv4()}>
-                    <GridList cellHeight={180} cols={2} spacing={16} className={classes.gridList}>
+                    <GridList cols={2} spacing={16} className={classes.gridList}>
                         {list}
                     </GridList>
                 </Hidden>
                 <Hidden smUp key={uuidv4()}>
-                    <GridList cellHeight={180} cols={1} className={classes.gridList}>
+                    <GridList cols={1} className={classes.gridList}>
                         {list}
                     </GridList>
                 </Hidden>
