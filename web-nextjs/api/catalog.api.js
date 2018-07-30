@@ -43,4 +43,4 @@ class CatalogApi extends Api {
     }
 }
 
-export default new CatalogApi(config.api.catalog.url);
+export default new CatalogApi(config.api.catalog.uri);
