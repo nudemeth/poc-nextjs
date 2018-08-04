@@ -7,12 +7,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Cors;
-using Catalog.API.Fakes;
+using Catalog.API.Services;
 
 namespace Catalog.API.Controllers
 {
     public class ImageController : Controller
     {   
+        private ICatalogService catalogService;
+        public ImageController(ICatalogService catalogService)
+        {
+            this.catalogService = catalogService;
+        }
+
         [HttpGet]
         [Route("api/v1/catalog/items/{catalogItemId:int}/img")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
@@ -24,7 +30,7 @@ namespace Catalog.API.Controllers
                 return await Task.FromResult(BadRequest());
             }
 
-            var item = FakeCatalogItem.items.SingleOrDefault(i => i.Id == catalogItemId);
+            var item = catalogService.GetItems().SingleOrDefault(i => i.Id == catalogItemId);
 
             if (item == null)
             {
