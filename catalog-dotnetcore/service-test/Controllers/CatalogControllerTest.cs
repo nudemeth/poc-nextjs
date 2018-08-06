@@ -144,6 +144,63 @@ namespace ServiceTest.Controller
             Assert.Equal(expected, result.Value);
         }
 
+        [Fact]
+        public async void WhenCallGetItemsByName_ShouldGetItemFilteredByName()
+        {
+            var name = "Item 2";
+            var result = await controller.GetItemByName(name) as OkObjectResult;
+            var expected = mockItems.Where(i => i.Name == name).ToList();
+            AssertResultOk(result);
+            Assert.Equal(expected, result.Value);
+        }
+
+        [Fact]
+        public async void WhenCallGetItemsByTypes_ShouldGetItemFilteredByTypes()
+        {
+            var ids = new int[] { 1, 3, 4 };
+            var result = await controller.GetItemsByTypes(String.Join(',', ids)) as OkObjectResult;
+            var expected = mockItems.Where(i => ids.Contains(i.CatalogTypeId)).ToList();
+            AssertResultOk(result);
+            Assert.Equal(expected, result.Value);
+        }
+
+        [Fact]
+        public async void WhenCallGetItemsByBrands_ShouldGetItemFilteredByTypes()
+        {
+            var ids = new int[] { 1, 3, 4 };
+            var result = await controller.GetItemsByBrands(String.Join(',', ids)) as OkObjectResult;
+            var expected = mockItems.Where(i => ids.Contains(i.CatalogBrandId)).ToList();
+            AssertResultOk(result);
+            Assert.Equal(expected, result.Value);
+        }
+
+        [Fact]
+        public async void WhenCallGetItemsByTypesAndBrands_ShouldGetItemFilteredByTypesAndBrands()
+        {
+            var typeIds = new int[] { 1, 2 };
+            var brandIds = new int[] { 2, 3 };
+            var result = await controller.GetItemsByTypesAndBrands(String.Join(',', typeIds), String.Join(',', brandIds)) as OkObjectResult;
+            var expected = mockItems.Where(i => typeIds.Contains(i.CatalogTypeId) && brandIds.Contains(i.CatalogBrandId)).ToList();
+            AssertResultOk(result);
+            Assert.Equal(expected, result.Value);
+        }
+
+        [Fact]
+        public async void WhenCallGetCatalogTypes_ShouldGetCatalogTypes()
+        {
+            var result = await controller.GetCatalogTypes() as OkObjectResult;
+            AssertResultOk(result);
+            Assert.Equal(mockTypes, result.Value);
+        }
+
+        [Fact]
+        public async void WhenCallGetCatalogBrands_ShouldGetCatalogBrands()
+        {
+            var result = await controller.GetCatalogBrands() as OkObjectResult;
+            AssertResultOk(result);
+            Assert.Equal(mockBrands, result.Value);
+        }
+
         private void AssertResultOk(OkObjectResult result)
         {
             Assert.NotNull(result);
