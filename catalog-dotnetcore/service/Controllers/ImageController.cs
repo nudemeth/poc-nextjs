@@ -14,9 +14,11 @@ namespace Catalog.API.Controllers
     public class ImageController : Controller
     {   
         private ICatalogService catalogService;
-        public ImageController(ICatalogService catalogService)
+        private IDictionary<string, string> config;
+        public ImageController(ICatalogService catalogService, IDictionary<string, string> config)
         {
             this.catalogService = catalogService;
+            this.config = config;
         }
 
         [HttpGet]
@@ -37,9 +39,9 @@ namespace Catalog.API.Controllers
                 return await Task.FromResult(NotFound());
             }
 
-            var path = Path.Combine("./Images/", item.FileName);
-            string imageFileExtension = Path.GetExtension(item.FileName);
-            string mimetype = GetImageMimeTypeFromImageFileExtension(imageFileExtension);
+            var path = Path.Combine(config["image-path"], item.FileName);
+            var imageFileExtension = Path.GetExtension(item.FileName);
+            var mimetype = GetImageMimeTypeFromImageFileExtension(imageFileExtension);
             var buffer = System.IO.File.ReadAllBytes(path);
 
             return await Task.FromResult(File(buffer, mimetype));
