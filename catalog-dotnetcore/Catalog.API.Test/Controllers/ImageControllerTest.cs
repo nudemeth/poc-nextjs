@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.IO;
 
-namespace ServiceTest.Controller
+namespace Catalog.API.Test.Controller
 {
     public class ImageControllerTest
     {
@@ -38,7 +38,7 @@ namespace ServiceTest.Controller
             SetUpMock();
             config = new Dictionary<string, string>()
             {
-                { "image-path", "../../../../service/Images" }
+                { "image-path", "../../../Images" }
             };
             controller = new ImageController(mockCatalogService.Object, config);
         }
