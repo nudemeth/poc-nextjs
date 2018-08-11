@@ -3,16 +3,17 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "npm-run-all --parallel fake-json prod",
+    "start": "cross-env NODE_ENV=production node server.js",
     "test": "cross-env NODE_ENV=test jest",
     "jest-update": "cross-env NODE_ENV=test jest --updateSnapshot",
-    "prod": "cross-env NODE_ENV=production node server.js",
-    "dev": "npm-run-all --parallel fake-json dev-server",
+    "prod": "npm-run-all --parallel fake-api-gateway prod-server",
+    "prod-server": "cross-env NODE_ENV=production node server.js",
+    "dev": "npm-run-all --parallel fake-api-gateway dev-server",
     "dev-server": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 node server.js",
     "build": "next build",
     "export": "next export",
     "analyze": "cross-env ANALYZE=1 next build",
-    "fake-json": "json-server --watch fake/api/db.json --routes fake/api/routes.json --host 0.0.0.0 --port 5500"
+    "fake-api-gateway": "node ./fake/api-gateway/server.js"
   },
   "dependencies": {
     "@material-ui/core": "^1.0.0",
