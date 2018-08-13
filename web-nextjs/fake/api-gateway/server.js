@@ -14,5 +14,5 @@ server.get('/api/v1/catalog/items/:id/img', (req, res) => {
 server.use(jsonServer.rewriter(routes))
 server.use(router)
 server.listen(5000, "0.0.0.0", () => {
-    console.log('Fake api gateway server is running')
+    console.log('Fake api gateway server is running at 0.0.0.0:5000')
 })
