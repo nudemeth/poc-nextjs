@@ -14,8 +14,10 @@ app
     const http = require('http');
     const https = require('https');
     const fs = require('fs');
-    const privateKey = fs.readFileSync('./cert.pfx');
-    const credentials = { pfx: privateKey, passphrase: 'passw0rd!' };
+    
+    //Self-Signed SSL: https://www.petri.com/create-self-signed-certificate-using-powershell
+    const pfx = fs.readFileSync('./cert.pfx');
+    const credentials = { pfx: pfx, passphrase: '7ANZNx^BVd12' };
 
     server.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
 
