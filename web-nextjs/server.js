@@ -11,6 +11,11 @@ app
 .prepare()
 .then(() => {
     const server = express();
+    const http = require('http');
+    const https = require('https');
+    const fs = require('fs');
+    const privateKey = fs.readFileSync('./cert.pfx');
+    const credentials = { pfx: privateKey, passphrase: 'passw0rd!' };
 
     server.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
 
@@ -24,9 +29,14 @@ app
         return handle(req, res);
     });
 
-    server.listen(3000, (err) => {
+    http.createServer(server).listen(3000, (err) => {
         if (err) throw err
         console.log('> Ready on http://localhost:3000');
+    });
+
+    https.createServer(credentials, server).listen(3001, (err) => {
+        if (err) throw err
+        console.log('> Ready on https://localhost:3001');
     });
 })
 .catch((ex) => {
