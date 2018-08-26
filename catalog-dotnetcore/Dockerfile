@@ -14,4 +14,5 @@ RUN dotnet publish --no-restore -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
+EXPOSE 5000 5001
 ENTRYPOINT ["dotnet", "Catalog.API.dll"]

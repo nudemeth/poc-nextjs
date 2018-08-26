@@ -25,7 +25,7 @@ namespace Catalog.API
                 .UseStartup<Startup>()
                 .UseKestrel(o =>
                 {
-                    o.Listen(IPAddress.Loopback, 5000, lo =>
+                    o.ListenAnyIP(5000, lo =>
                     {
                         lo.UseHttps("./cert.pfx", "7ANZNx^BVd12");
                     });

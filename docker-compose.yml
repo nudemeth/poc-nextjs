@@ -1,0 +1,25 @@
+version: "3"
+services:
+  web-nextjs:
+    build:
+      context: ./web-nextjs
+    ports:
+      - 3000:3000
+      - 3001:3001
+    networks:
+      - microservices-net
+    depends_on:
+      - catalog-dotnetcore
+    
+  catalog-dotnetcore:
+    build:
+      context: ./catalog-dotnetcore
+    ports:
+      - 5000:5000
+      - 5001:5001
+    networks:
+      - microservices-net
+
+networks: 
+  microservices-net: 
+    driver: bridge
