@@ -22,13 +22,6 @@ namespace Catalog.API
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureServices(s => s.AddAutofac())
-                .UseStartup<Startup>()
-                .UseKestrel(o =>
-                {
-                    o.ListenAnyIP(5000, lo =>
-                    {
-                        lo.UseHttps("./cert.pfx", "7ANZNx^BVd12");
-                    });
-                });
+                .UseStartup<Startup>();
     }
 }

@@ -11,13 +11,6 @@ app
 .prepare()
 .then(() => {
     const server = express();
-    const http = require('http');
-    const https = require('https');
-    const fs = require('fs');
-    
-    //Self-Signed SSL: https://www.petri.com/create-self-signed-certificate-using-powershell
-    const pfx = fs.readFileSync('./cert.pfx');
-    const credentials = { pfx: pfx, passphrase: '7ANZNx^BVd12' };
 
     server.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
 
@@ -31,14 +24,9 @@ app
         return handle(req, res);
     });
 
-    http.createServer(server).listen(3000, (err) => {
+    server.listen(3000, (err) => {
         if (err) throw err
         console.log('> Ready on http://localhost:3000');
-    });
-
-    https.createServer(credentials, server).listen(3001, (err) => {
-        if (err) throw err
-        console.log('> Ready on https://localhost:3001');
     });
 })
 .catch((ex) => {
