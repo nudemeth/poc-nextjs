@@ -1,6 +1,7 @@
 version: "3"
 services:
   web-nextjs:
+    container_name: web-nextjs
     build:
       context: ./web-nextjs
     ports:
@@ -12,6 +13,7 @@ services:
       - catalog-dotnetcore
     
   catalog-dotnetcore:
+    container_name: catalog-dotnetcore
     build:
       context: ./catalog-dotnetcore
     ports:
@@ -19,6 +21,14 @@ services:
       - 5001:5001
     networks:
       - microservices-net
+
+    nginx:
+      container_name: nginx
+      build:
+        context: ./nginx
+      ports:
+        - 80:80
+        - 443:443
 
 networks: 
   microservices-net: 
