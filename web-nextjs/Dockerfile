@@ -20,5 +20,5 @@ RUN npm run build
 
 # If you are building your code for production
 # EXPOST 3000
-EXPOSE 3000 3001
+EXPOSE 80 3000
 CMD [ "npm", "start" ]

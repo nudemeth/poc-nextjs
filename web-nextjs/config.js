@@ -1,7 +1,8 @@
+const port = process.env.NODE_ENV !== 'production' ? ":5000" : "";
 const config = {
     api: {
         catalog: {
-            uri: "http://localhost:5000/api/v1/catalog/"
+            uri: `http://catalog-csharp${port}/api/v1/catalog/`
         }
     }
 }

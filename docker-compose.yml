@@ -4,31 +4,30 @@ services:
     container_name: web-nextjs
     build:
       context: ./web-nextjs
-    ports:
-      - 3000:3000
-      - 3001:3001
     networks:
       - microservices-net
     depends_on:
-      - catalog-dotnetcore
+      - catalog-csharp
     
-  catalog-dotnetcore:
-    container_name: catalog-dotnetcore
+  catalog-csharp:
+    container_name: catalog-csharp
     build:
-      context: ./catalog-dotnetcore
-    ports:
-      - 5000:5000
-      - 5001:5001
+      context: ./catalog-csharp
     networks:
       - microservices-net
 
-    nginx:
-      container_name: nginx
-      build:
-        context: ./nginx
-      ports:
-        - 80:80
-        - 443:443
+  nginx:
+    container_name: nginx
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    networks: 
+      - microservices-net
+    depends_on: 
+      - catalog-csharp
+      - web-nextjs
 
 networks: 
   microservices-net: 

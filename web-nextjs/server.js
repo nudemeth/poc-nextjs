@@ -11,6 +11,7 @@ app
 .prepare()
 .then(() => {
     const server = express();
+    const port = dev ? 3000 : 80;
 
     server.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
 
@@ -24,9 +25,9 @@ app
         return handle(req, res);
     });
 
-    server.listen(3000, (err) => {
+    server.listen(port, (err) => {
         if (err) throw err
-        console.log('> Ready on http://localhost:3000');
+        console.log(`> Ready on http://localhost:${port}`);
     });
 })
 .catch((ex) => {
