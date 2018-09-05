@@ -1,10 +1,11 @@
 const isDev = process.env.NODE_ENV !== 'production';
-const port = isDev ? 5000 : 80;
+const port = isDev ? ":5000" : "";
 const dns = isDev ? "localhost" : "catalog-csharp";
+const protocal = typeof window === 'undefined' ? "http" : "https";
 const config = {
     api: {
         catalog: {
-            uri: `http://${dns}:${port}/api/v1/catalog/`
+            uri: `${protocal}://${dns}${port}/api/v1/catalog/`
         }
     }
 }
