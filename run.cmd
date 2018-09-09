@@ -1,0 +1,1 @@
+docker-compose up -d && docker cp nginx:/data/localhost.crt ./nginx

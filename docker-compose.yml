@@ -1,7 +1,7 @@
 version: "3"
 services:
   web-nextjs:
-    container_name: web-nextjs
+    container_name: web-nextjs.localhost
     build:
       context: ./web-nextjs
     networks:
@@ -10,7 +10,7 @@ services:
       - catalog-csharp
     
   catalog-csharp:
-    container_name: catalog-csharp
+    container_name: catalog-csharp.localhost
     build:
       context: ./catalog-csharp
     networks:
@@ -23,8 +23,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    volumes: 
-      - "d:/development/opensource/poc-microservices/nginx/shared:/data"
     networks: 
       - microservices-net
     depends_on: 

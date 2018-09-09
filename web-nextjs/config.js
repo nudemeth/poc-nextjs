@@ -1,6 +1,6 @@
 const isDev = process.env.NODE_ENV !== 'production';
 const port = isDev ? ":5000" : "";
-const dns = isDev ? "localhost" : "catalog-csharp";
+const dns = isDev ? "localhost" : "catalog-csharp.localhost";
 const protocal = typeof window === 'undefined' ? "http" : "https";
 const config = {
     api: {

@@ -34,7 +34,7 @@ namespace Catalog.API
         {
             services.AddCors(o => 
             {
-                o.AddPolicy("APIGateway", b => b.WithOrigins("http://localhost:3000", "http://web-nextjs", "https://web-nextjs").AllowCredentials());
+                o.AddPolicy("APIGateway", b => b.WithOrigins("http://localhost:3000", "http://web-nextjs.localhost", "https://web-nextjs.localhost").AllowCredentials());
             });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
