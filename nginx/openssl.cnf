@@ -4,6 +4,7 @@
 #default_keyfile        = privkey.pem
 distinguished_name      = req_distinguished_name
 attributes              = req_attributes
+req_extensions          = x509_ext
 
 [ req_distinguished_name ]
 countryName             = Country Name (2 letter code)
@@ -27,4 +28,9 @@ challengePassword_max   = 20
 basicConstraints        = critical,CA:true
 subjectKeyIdentifier    = hash
 authorityKeyIdentifier  = keyid:always,issuer
-subjectAltName          = DNS:localhost
+subjectAltName          = @alt_names
+
+[ alt_names ]
+DNS.1                   = localhost
+DNS.2                   = web-nextjs.localhost
+DNS.3                   = catalog-csharp.localhost
