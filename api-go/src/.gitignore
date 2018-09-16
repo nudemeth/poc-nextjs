@@ -1,0 +1,6 @@
+# Go
+/*
+!.gitignore
+
+/api-go/*.exe
+!/api-go

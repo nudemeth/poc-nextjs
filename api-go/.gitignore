@@ -1,7 +1,0 @@
-# Go
-/bin
-/pkg
-/src/*
-*.exe
-
-!/src/api-go
