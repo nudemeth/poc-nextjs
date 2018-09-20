@@ -8,6 +8,7 @@ services:
       - microservices-net
     depends_on:
       - catalog-csharp
+      - api-go
 
   catalog-csharp:
     container_name: catalog-csharp.localhost
@@ -15,6 +16,15 @@ services:
       context: ./catalog-csharp
     networks:
       - microservices-net
+
+  api-go:
+    container_name: api-go.localhost
+    build:
+      context: ./api-go
+    networks: 
+      - microservices-net
+    depends_on: 
+      - catalog-csharp
 
   nginx:
     container_name: nginx
@@ -28,6 +38,7 @@ services:
     depends_on: 
       - catalog-csharp
       - web-nextjs
+      - api-go
 
 networks: 
   microservices-net: 
