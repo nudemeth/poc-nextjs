@@ -9,7 +9,7 @@ import (
 
 func TestCatalog(t *testing.T) {
 	w := httptest.NewRecorder()
-	catalog(w, nil)
+	catalog(w, nil, nil)
 
 	resp := w.Result()
 	if actual, expected := resp.StatusCode, http.StatusOK; actual != expected {
