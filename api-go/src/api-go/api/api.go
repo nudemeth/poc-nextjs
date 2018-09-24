@@ -30,11 +30,12 @@ type CatalogService interface {
 }
 
 type Service struct {
-	Client *http.Client
+	Client  *http.Client
+	BaseURL string
 }
 
 func (service *Service) GetCatalog(url string, userAgent string) ([]byte, error) {
-	req, err := http.NewRequest("GET", "http://localhost:5000"+url, nil)
+	req, err := http.NewRequest("GET", service.BaseURL+url, nil)
 	req.Header.Add("User-Agent", userAgent)
 	req.Header.Add("Accept", "application/json")
 

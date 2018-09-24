@@ -9,7 +9,8 @@ import (
 
 func Router() *mux.Router {
 	r := mux.NewRouter()
-	service := api.Service{Client: &http.Client{}}
+	service := api.Service{Client: &http.Client{}, BaseURL: "http://localhost:5000"}
+
 	r.PathPrefix("/api/v1/catalog").HandlerFunc(wrapper(&service, catalog))
 	r.HandleFunc("/healthz", healthz)
 	return r
