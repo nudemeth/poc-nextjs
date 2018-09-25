@@ -1,14 +1,13 @@
 package main
 
 import (
+	"api-go/handlers"
 	"context"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
-
-	"api-go/handlers"
 )
 
 func main() {
@@ -23,8 +22,8 @@ func main() {
 
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
-
-	router := handlers.Router()
+	handler := handlers.Config{CatalogBaseURL: "http://localhost:5000"}
+	router := handler.CreateRouter()
 	srv := &http.Server{
 		Addr:    ":" + port,
 		Handler: router,

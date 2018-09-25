@@ -7,9 +7,13 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func Router() *mux.Router {
+type Config struct {
+	CatalogBaseURL string
+}
+
+func (config *Config) CreateRouter() *mux.Router {
 	r := mux.NewRouter()
-	service := api.Service{Client: &http.Client{}, BaseURL: "http://localhost:5000"}
+	service := api.Service{Client: &http.Client{}, BaseURL: config.CatalogBaseURL}
 
 	r.PathPrefix("/api/v1/catalog").HandlerFunc(wrapper(&service, catalog))
 	r.HandleFunc("/healthz", healthz)
