@@ -6,25 +6,6 @@ import (
 	"net/http"
 )
 
-/*type API struct {
-	Client *http.Client
-	Req    *http.Request
-}
-
-func (api *API) Request() ([]byte, error) {
-	resp, err := api.Client.Do(api.Req)
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-
-	return body, err
-}*/
-
 type CatalogService interface {
 	GetCatalog(url string, userAgent string) ([]byte, error)
 }

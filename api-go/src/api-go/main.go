@@ -13,16 +13,13 @@ import (
 func main() {
 	log.Print("Starting the server")
 
-	port := os.Getenv("SERVICE_PORT")
-
-	if port == "" {
-		port = "8000"
-		log.Printf("SERVICE_PORT is not set in environment variable. Default to: %s", port)
-	}
+	port := getEnvValue("SERVICE_PORT", "8000")
+	catalogBaseURL := getEnvValue("CATALOG_BASE_URL", "http://localhost:5000")
 
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
-	handler := handlers.Config{CatalogBaseURL: "http://localhost:5000"}
+
+	handler := handlers.Config{CatalogBaseURL: catalogBaseURL}
 	router := handler.CreateRouter()
 	srv := &http.Server{
 		Addr:    ":" + port,
@@ -46,4 +43,13 @@ func main() {
 	log.Print("The service is shutting down...")
 	srv.Shutdown(context.Background())
 	log.Print("The service has been gracefully shut down.")
+}
+
+func getEnvValue(key string, defaultValue string) string {
+	value := os.Getenv(key)
+	if len(value) == 0 {
+		log.Printf("%s is not set in environment variable. Default to: %s", key, defaultValue)
+		return defaultValue
+	}
+	return value
 }
