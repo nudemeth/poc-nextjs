@@ -33,4 +33,4 @@ subjectAltName          = @alt_names
 [ alt_names ]
 DNS.1                   = localhost
 DNS.2                   = web-nextjs.localhost
-DNS.3                   = catalog-csharp.localhost
+DNS.3                   = api-go.localhost

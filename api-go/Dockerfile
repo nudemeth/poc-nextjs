@@ -12,4 +12,6 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /root/
 COPY --from=builder /go/src/api-gateway ./api-gateway
 
+EXPOSE 80 8000
+
 CMD ["./api-gateway"]

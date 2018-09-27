@@ -18,7 +18,6 @@ type Service struct {
 func (service *Service) GetCatalog(url string, userAgent string) ([]byte, error) {
 	req, err := http.NewRequest("GET", service.BaseURL+url, nil)
 	req.Header.Add("User-Agent", userAgent)
-	req.Header.Add("Accept", "application/json")
 
 	if err != nil {
 		log.Printf("Error occur when creating request: service=%s, URI=%s\n%s", "Catalog", url, err.Error())

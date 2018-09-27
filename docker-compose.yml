@@ -21,6 +21,9 @@ services:
     container_name: api-go.localhost
     build:
       context: ./api-go
+    environment: 
+      - "SERVICE_PORT=80"
+      - "CATALOG_BASE_URL=http://catalog-csharp"
     networks: 
       - microservices-net
     depends_on: 
