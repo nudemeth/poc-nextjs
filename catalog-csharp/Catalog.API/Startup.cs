@@ -32,9 +32,11 @@ namespace Catalog.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var apiCORSConfig = GetAPIGatewayCORSConfig();
+            
             services.AddCors(o => 
             {
-                o.AddPolicy("APIGateway", b => b.WithOrigins("http://localhost:3000", "http://api-go.localhost", "https://api-go.localhost").AllowCredentials());
+                o.AddPolicy("APIGateway", b => b.WithOrigins(apiCORSConfig).AllowCredentials());
             });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -54,6 +56,27 @@ namespace Catalog.API
             app.UseHttpsRedirection();
             app.UseCors();
             app.UseMvc();
+        }
+
+        private string[] GetAPIGatewayCORSConfig()
+        {
+            var url = Configuration["Default_API_URL:HTTP"];
+            var urlTLS = Configuration["Default_API_URL:HTTPS"];
+            var apiURL = Configuration["API_BASE_URL"];
+            var apiURLTLS = Configuration["API_BASE_URL_TLS"];
+
+            Console.WriteLine("API Gateway URL: " + apiURL);
+            
+            if (!string.IsNullOrEmpty(apiURL))
+                url = apiURL;
+            
+            if (!string.IsNullOrEmpty(apiURLTLS))
+                urlTLS = apiURLTLS;
+
+            if (string.IsNullOrEmpty(url) || string.IsNullOrEmpty(urlTLS))
+                throw new Exception("No valid configuration found for api gateway.");
+
+            return new string[] { url, urlTLS };
         }
     }
 }

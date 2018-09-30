@@ -19,9 +19,12 @@ namespace Catalog.API
             CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) {
+            var config = new ConfigurationBuilder().AddEnvironmentVariables().Build();
+            return WebHost.CreateDefaultBuilder(args)
                 .ConfigureServices(s => s.AddAutofac())
+                .UseConfiguration(config)
                 .UseStartup<Startup>();
+        }
     }
 }
