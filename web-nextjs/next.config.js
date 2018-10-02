@@ -17,6 +17,11 @@ module.exports = {
                 openAnalyzer: true
             }))
         }
+        config.module.rules.push({
+            test: /\.js$/,
+            exclude: /node_modules/,
+            loader: "eslint-loader",
+        })
         return config
     }
 }

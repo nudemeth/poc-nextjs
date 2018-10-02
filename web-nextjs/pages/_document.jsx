@@ -1,7 +1,7 @@
-import React from 'react';
-import Document, { Head, Main, NextScript } from 'next/document';
-import { JssProvider }  from 'react-jss';
-import getCssContext from '../components/common/getCssContext';
+import React from "react"
+import Document, { Head, Main, NextScript } from "next/document"
+import { JssProvider }  from "react-jss"
+import getCssContext from "../components/common/getCssContext"
 
 class DefaultDocument extends Document {
     static getInitialProps({ renderPage }) {
@@ -23,7 +23,7 @@ class DefaultDocument extends Document {
         // 3. page.render
 
         // Get the context of the page to collected side effects.
-        const cssContext = getCssContext();
+        const cssContext = getCssContext()
         const page = (Page) => (props) => (
             <JssProvider
                 registry={cssContext.sheetsRegistry}
@@ -31,8 +31,8 @@ class DefaultDocument extends Document {
             >
                 <Page cssContext={cssContext} {...props} />
             </JssProvider>
-        );
-        const renderedPage = renderPage(page);
+        )
+        const renderedPage = renderPage(page)
 
         return {
             ...renderedPage,
@@ -40,7 +40,7 @@ class DefaultDocument extends Document {
             styles: (
                 <style id="jss-server-side" dangerouslySetInnerHTML={{ __html: cssContext.sheetsRegistry.toString() }} />
             )
-        };
+        }
     }
 
     render() {
@@ -48,28 +48,28 @@ class DefaultDocument extends Document {
             <html>
                 <Head>
                     <meta charSet="utf-8" />
-                    <meta name='author' content='nudemeth' />
+                    <meta name="author" content="nudemeth" />
                     {/* Use minimum-scale=1 to enable GPU rasterization */}
                     <meta
                         name="viewport"
                         content={
-                            'user-scalable=0, initial-scale=1, ' +
-                            'minimum-scale=1, width=device-width, height=device-height'
+                            "user-scalable=0, initial-scale=1, " +
+                            "minimum-scale=1, width=device-width, height=device-height"
                         }
                     />
                     {/* PWA primary color */}
                     <meta name="theme-color" content={this.props.cssContext.theme.palette.primary[500]} />
-                    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500' rel='stylesheet' type='text/css' />
-                    <link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet' type='text/css' />
-                    <link href='./static/css/style.css' rel='stylesheet' type='text/css' />
+                    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet" type="text/css" />
+                    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css" />
+                    <link href="./static/css/style.css" rel="stylesheet" type="text/css" />
                 </Head>
                 <body>
                     <Main />
                     <NextScript />
                 </body>
             </html>
-        );
+        )
     }
 }
 
-export default DefaultDocument;
+export default DefaultDocument
