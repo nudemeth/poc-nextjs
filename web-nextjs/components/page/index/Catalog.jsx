@@ -1,25 +1,25 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import GridList from '@material-ui/core/GridList';
-import Hidden from '@material-ui/core/Hidden';
-import uuidv4 from 'uuid/v4';
-import { withStyles } from '@material-ui/core/styles';
-import { connect } from 'react-redux';
-import Item from './Item';
+import React from "react"
+import PropTypes from "prop-types"
+import GridList from "@material-ui/core/GridList"
+import Hidden from "@material-ui/core/Hidden"
+import uuidv4 from "uuid/v4"
+import { withStyles } from "@material-ui/core/styles"
+import { connect } from "react-redux"
+import Item from "./Item"
 
 const styles = theme => ({
     gridList: {
-        width: '100%',
-        [theme.breakpoints.up('lg')]: {
-            paddingLeft: '15%',
-            paddingRight: '15%'
+        width: "100%",
+        [theme.breakpoints.up("lg")]: {
+            paddingLeft: "15%",
+            paddingRight: "15%"
         }
     }
-});
+})
 
 class Catalog extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
     }
 
     static propTypes = {
@@ -29,8 +29,8 @@ class Catalog extends React.Component {
     }
 
     render() {
-        const { classes, items } = this.props;
-        const list = items.map((item, index) => <Item key={item.id} item={item} />);
+        const { classes, items } = this.props
+        const list = items.map((item) => <Item key={item.id} item={item} />)
         return (
             <React.Fragment>
                 <Hidden mdDown key={uuidv4()}>
@@ -49,11 +49,11 @@ class Catalog extends React.Component {
                     </GridList>
                 </Hidden>
             </React.Fragment>
-        );
+        )
     }
 }
 
-const mapStateToProps = ({ catalogReducer: { items, error }}) => ({ items, error });
+const mapStateToProps = ({ catalogReducer: { items, error }}) => ({ items, error })
 
-export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(Catalog));
-export { Catalog };
+export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(Catalog))
+export { Catalog }

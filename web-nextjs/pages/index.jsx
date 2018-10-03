@@ -1,32 +1,37 @@
-import React from 'react';
-import Container from '../components/layout/Container';
-import Catalog from '../components/page/index/Catalog';
-import HeaderContent from '../components/page/index/HeaderContent';
-import { loadItems } from '../actions/catalog.actions';
-import { withReduxSaga } from '../store/store';
+import React from "react"
+import PropTypes from "prop-types"
+import Container from "../components/layout/Container"
+import Catalog from "../components/page/index/Catalog"
+import HeaderContent from "../components/page/index/HeaderContent"
+import { loadItems } from "../actions/catalog.actions"
+import { withReduxSaga } from "../store/store"
 
 class Index extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
     }
 
     static async getInitialProps({ store }) {
-        store.dispatch(loadItems());
-        return { text: "Index Page" };
+        store.dispatch(loadItems())
+        return { text: "Index Page" }
+    }
+
+    static propTypes = {
+        dispatch: PropTypes.func.isRequired
     }
 
     componentDidMount() {
-        this.props.dispatch(loadItems());
+        this.props.dispatch(loadItems())
     }
 
     render() {
         return (
-            <Container title='Index' header={<HeaderContent/>}>
+            <Container title="Index" header={<HeaderContent/>}>
                 <Catalog/>
             </Container>
-        );
+        )
     }
 }
 
-export default withReduxSaga()(Index);
-export { Index };
+export default withReduxSaga()(Index)
+export { Index }

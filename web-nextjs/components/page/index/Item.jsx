@@ -1,42 +1,41 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
-import { withStyles } from '@material-ui/core/styles';
-import config from '../../../config';
+import React from "react"
+import PropTypes from "prop-types"
+import GridListTile from "@material-ui/core/GridListTile"
+import GridListTileBar from "@material-ui/core/GridListTileBar"
+import Icon from "@material-ui/core/Icon"
+import IconButton from "@material-ui/core/IconButton"
+import { withStyles } from "@material-ui/core/styles"
+import config from "../../../config"
 
 const styles = theme => ({
     itemTile: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#fff'
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#fff"
     },
     itemRoot: {
-        [theme.breakpoints.up('lg')]: {
-            width: '33.3333%',
+        [theme.breakpoints.up("lg")]: {
+            width: "33.3333%",
             padding: 12
         },
-        [theme.breakpoints.down('md')]: {
-            width: '50%',
+        [theme.breakpoints.down("md")]: {
+            width: "50%",
             padding: 8
         },
-        [theme.breakpoints.down('xs')]: {
-            width: '100%',
+        [theme.breakpoints.down("xs")]: {
+            width: "100%",
             padding: 2
         }
     },
     button: {
-        color: '#fff'
+        color: "#fff"
     }
-});
+})
 
 class Item extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
     }
 
     static propTypes = {
@@ -46,8 +45,8 @@ class Item extends React.Component {
     }
 
     render() {
-        const { classes, item } = this.props;
-        const imageUrl = `${config.api.catalog.uri}items/${item.id}/img`;
+        const { classes, item } = this.props
+        const imageUrl = `${config.api.catalog.uri}items/${item.id}/img`
         return (
             <GridListTile classes={{root: classes.itemRoot, tile: classes.itemTile}}>
                 <img src={imageUrl} alt={item.name} />
@@ -60,9 +59,9 @@ class Item extends React.Component {
                     }
                 />
             </GridListTile>
-        );
+        )
     }
 }
 
-export default withStyles(styles, { withTheme: true })(Item);
-export { Item };
+export default withStyles(styles, { withTheme: true })(Item)
+export { Item }

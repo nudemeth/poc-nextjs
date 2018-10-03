@@ -1,43 +1,43 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Input from '@material-ui/core/Input';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Icon from '@material-ui/core/Icon';
-import { withStyles } from '@material-ui/core/styles';
+import React from "react"
+import PropTypes from "prop-types"
+import Input from "@material-ui/core/Input"
+import InputAdornment from "@material-ui/core/InputAdornment"
+import Icon from "@material-ui/core/Icon"
+import { withStyles } from "@material-ui/core/styles"
 
-const styles = theme => ({
+const styles = () => ({
     wrapper: {
-        display: 'flex',
-        justifyContent: 'flex-end'
+        display: "flex",
+        justifyContent: "flex-end"
     },
     textField: {
-        color: '#fff',
-        backgroundColor: 'rgba(255,255,255,0.2)'
+        color: "#fff",
+        backgroundColor: "rgba(255,255,255,0.2)"
     },
     underline: {
-        '&:before': {
-            height: '100%',
-            backgroundColor: 'rgba(255,255,255,0.42)'
+        "&:before": {
+            height: "100%",
+            backgroundColor: "rgba(255,255,255,0.42)"
         },
-        '&:hover': {
-            '&:not(.MuiInput-disabled)': {
-                '&:before': {
-                    backgroundColor: 'rgba(255,255,255,0.6)'
+        "&:hover": {
+            "&:not(.MuiInput-disabled)": {
+                "&:before": {
+                    backgroundColor: "rgba(255,255,255,0.6)"
                 }
             }
         },
-        '&:after': {
-            backgroundColor: 'rgba(255,255,255,1)'
+        "&:after": {
+            backgroundColor: "rgba(255,255,255,1)"
         }
     },
     adorment: {
         marginLeft: 8
     }
-});
+})
 
 class HeaderContent extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
     }
 
     static propTypes = {
@@ -62,9 +62,9 @@ class HeaderContent extends React.Component {
                     }
                 />
             </div>
-        );
+        )
     }
 }
 
-export default withStyles(styles, { withTheme: true })(HeaderContent);
-export { HeaderContent };
+export default withStyles(styles, { withTheme: true })(HeaderContent)
+export { HeaderContent }

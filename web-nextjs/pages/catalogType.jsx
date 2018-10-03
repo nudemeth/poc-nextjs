@@ -1,30 +1,35 @@
-import React from 'react';
-import Container from '../components/layout/Container';
-import { loadCatalogTypes } from '../actions/catalogType.actions';
-import { withReduxSaga } from '../store/store';
-import CatalogTypeList from '../components/page/catalogType/CatalogTypeList';
+import React from "react"
+import PropTypes from "prop-types"
+import Container from "../components/layout/Container"
+import { loadCatalogTypes } from "../actions/catalogType.actions"
+import { withReduxSaga } from "../store/store"
+import CatalogTypeList from "../components/page/catalogType/CatalogTypeList"
 
 class CatalogType extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
     }
 
     static async getInitialProps({ store }) {
-        store.dispatch(loadCatalogTypes());
+        store.dispatch(loadCatalogTypes())
+    }
+
+    static propTypes = {
+        dispatch: PropTypes.func.isRequired
     }
 
     componentDidMount() {
-        this.props.dispatch(loadCatalogTypes());
+        this.props.dispatch(loadCatalogTypes())
     }
 
     render() {
         return (
-            <Container title='Catalog Type'>
+            <Container title="Catalog Type">
                 <CatalogTypeList/>
             </Container>
-        );
+        )
     }
 }
 
-export default withReduxSaga()(CatalogType);
-export { CatalogType };
+export default withReduxSaga()(CatalogType)
+export { CatalogType }

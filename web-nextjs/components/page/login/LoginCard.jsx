@@ -1,45 +1,45 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import Divider from '@material-ui/core/Divider';
-import { withStyles } from '@material-ui/core/styles';
+import React from "react"
+import PropTypes from "prop-types"
+import Card from "@material-ui/core/Card"
+import CardActions from "@material-ui/core/CardActions"
+import CardContent from "@material-ui/core/CardContent"
+import Button from "@material-ui/core/Button"
+import Typography from "@material-ui/core/Typography"
+import TextField from "@material-ui/core/TextField"
+import Divider from "@material-ui/core/Divider"
+import { withStyles } from "@material-ui/core/styles"
 
-const styles = theme => ({
+const styles = () => ({
     card: {
         maxWidth: 345,
         height: 320,
-        margin: 'auto'
+        margin: "auto"
     },
     cardActions: {
-        padding: '0 16px'
+        padding: "0 16px"
     },
     signInButton: {
-        width: '100%',
+        width: "100%",
         margin: 0
     },
     dividerContainer: {
-        padding: '0 16px',
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center'
+        padding: "0 16px",
+        width: "100%",
+        display: "flex",
+        alignItems: "center"
     },
     divider: {
-        width: '40%'
+        width: "40%"
     },
     dividerText: {
-        width: '20%',
-        textAlign: 'center'
+        width: "20%",
+        textAlign: "center"
     }
-});
+})
 
 class LoginCard extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
     }
 
     static propTypes = {
@@ -48,7 +48,7 @@ class LoginCard extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes } = this.props
         return (
             <Card className={classes.card}>
                 <CardContent>
@@ -85,9 +85,9 @@ class LoginCard extends React.Component {
                     </Button>
                 </CardActions>
             </Card>
-        );
+        )
     }
 }
 
-export default withStyles(styles, { withTheme: true })(LoginCard);
-export { LoginCard };
+export default withStyles(styles, { withTheme: true })(LoginCard)
+export { LoginCard }
