@@ -1,9 +1,9 @@
-import fetch from "isomorphic-unfetch"
+import fetch from 'isomorphic-unfetch'
 
 function validateHostAndPort(host) {
-    if (typeof host === "string")
+    if (typeof host === 'string')
         return
-    throw new Error("Host is not valid.")
+    throw new Error('Host is not valid.')
 }
 
 class Api {

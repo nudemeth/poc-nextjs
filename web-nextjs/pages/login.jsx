@@ -1,7 +1,7 @@
-import React from "react"
-import Container from "../components/layout/Container"
-import LoginCard from "../components/page/login/LoginCard"
-import { withReduxSaga } from "../store/store"
+import React from 'react'
+import Container from '../components/layout/Container'
+import LoginCard from '../components/page/login/LoginCard'
+import { withReduxSaga } from '../store/store'
 
 class Login extends React.Component {
     constructor(props) {
@@ -10,7 +10,7 @@ class Login extends React.Component {
 
     render() {
         return (
-            <Container title="Login">
+            <Container title='Login'>
                 <LoginCard />
             </Container>
         )

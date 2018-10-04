@@ -1,9 +1,9 @@
-import * as effects from "redux-saga/effects"
-import actionTypes from "../actions/actionTypes"
-import * as catalogSaga from "./catalog.saga"
-import * as catalogTypeSaga from "./catalogType.saga"
-import * as catalogBrandSaga from "./catalogBrand.saga"
-import * as aboutSaga from "./about.saga"
+import * as effects from 'redux-saga/effects'
+import actionTypes from '../actions/actionTypes'
+import * as catalogSaga from './catalog.saga'
+import * as catalogTypeSaga from './catalogType.saga'
+import * as catalogBrandSaga from './catalogBrand.saga'
+import * as aboutSaga from './about.saga'
 
 function * rootWatcher() {
     yield effects.all([

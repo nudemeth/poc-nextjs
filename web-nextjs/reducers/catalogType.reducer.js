@@ -1,5 +1,5 @@
-import { initialState } from "./root.reducer"
-import actionTypes from "../actions/actionTypes"
+import { initialState } from './root.reducer'
+import actionTypes from '../actions/actionTypes'
 
 export default function getCatalogTypeReducer(state = initialState, action) {
     switch (action.type) {

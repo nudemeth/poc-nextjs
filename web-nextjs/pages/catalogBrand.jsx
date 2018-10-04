@@ -1,9 +1,9 @@
-import React from "react"
-import PropTypes from "prop-types"
-import Container from "../components/layout/Container"
-import { loadCatalogBrands } from "../actions/catalogBrand.actions"
-import { withReduxSaga } from "../store/store"
-import CatalogBrandList from "../components/page/catalogBrand/CatalogBrandList"
+import React from 'react'
+import PropTypes from 'prop-types'
+import Container from '../components/layout/Container'
+import { loadCatalogBrands } from '../actions/catalogBrand.actions'
+import { withReduxSaga } from '../store/store'
+import CatalogBrandList from '../components/page/catalogBrand/CatalogBrandList'
 
 class CatalogBrand extends React.Component {
     constructor(props) {
@@ -24,7 +24,7 @@ class CatalogBrand extends React.Component {
 
     render() {
         return (
-            <Container title="Catalog Brand">
+            <Container title='Catalog Brand'>
                 <CatalogBrandList/>
             </Container>
         )

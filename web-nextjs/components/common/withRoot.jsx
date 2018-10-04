@@ -1,34 +1,34 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import getCssContext from './getCssContext';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { MuiThemeProvider } from '@material-ui/core/styles'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import getCssContext from './getCssContext'
 
 function withRoot(Page) {
     class Root extends React.Component {
         constructor(props) {
-            super(props);
+            super(props)
         }
 
-        cssContext = null;
+        cssContext = null
 
         static getInitialProps = (ctx) => {
             if (Page.getInitialProps) {
-                return Page.getInitialProps(ctx);
+                return Page.getInitialProps(ctx)
             }
         
-            return {};
+            return {}
         };
 
         componentWillMount() {
-            this.cssContext = this.props.cssContext || getCssContext();
+            this.cssContext = this.props.cssContext || getCssContext()
         }
 
         componentDidMount() {
             // Remove the server-side injected CSS.
-            const jssStyles = document.querySelector('#jss-server-side');
+            const jssStyles = document.querySelector('#jss-server-side')
             if (jssStyles && jssStyles.parentNode) {
-                jssStyles.parentNode.removeChild(jssStyles);
+                jssStyles.parentNode.removeChild(jssStyles)
             }
         }
 
@@ -43,15 +43,15 @@ function withRoot(Page) {
                     <CssBaseline />
                     <Page {...this.props} />
                 </MuiThemeProvider>
-            );
+            )
         }
     }
 
     Root.propTypes = {
         cssContext: PropTypes.object,
-    };
+    }
 
-    return Root;
+    return Root
 }
 
-export default withRoot;
+export default withRoot

@@ -4,12 +4,12 @@ const actionTypes = {
     RESET: 'RESET'
 }
 
-export default actionTypes;
+export default actionTypes
 
 export const initGreeting = (gt) => {
-    return { type: actionTypes.INIT, gt: gt};
+    return { type: actionTypes.INIT, gt: gt}
 }
 
 export const updateGreeting = (gt) => {
-    return { type: actionTypes.UPDATE, gt: gt};
+    return { type: actionTypes.UPDATE, gt: gt}
 }

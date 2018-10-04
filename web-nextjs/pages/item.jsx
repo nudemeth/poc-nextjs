@@ -1,8 +1,8 @@
-import React from "react"
-import PropTypes from "prop-types"
-import Container from "../components/layout/Container"
-import { withReduxSaga } from "../store/store"
-import { loadItem } from "../actions/catalog.actions"
+import React from 'react'
+import PropTypes from 'prop-types'
+import Container from '../components/layout/Container'
+import { withReduxSaga } from '../store/store'
+import { loadItem } from '../actions/catalog.actions'
 
 class Item extends React.Component {
     constructor(props) {
@@ -28,7 +28,7 @@ class Item extends React.Component {
     render() {
         const { item } = this.props
         return (
-            <Container title="Item">
+            <Container title='Item'>
                 <h1>Item Name: {item.name}</h1>
                 <ul>
                     <li>CatalogType: {item.catalogType}</li>

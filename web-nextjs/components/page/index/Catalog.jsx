@@ -1,18 +1,18 @@
-import React from "react"
-import PropTypes from "prop-types"
-import GridList from "@material-ui/core/GridList"
-import Hidden from "@material-ui/core/Hidden"
-import uuidv4 from "uuid/v4"
-import { withStyles } from "@material-ui/core/styles"
-import { connect } from "react-redux"
-import Item from "./Item"
+import React from 'react'
+import PropTypes from 'prop-types'
+import GridList from '@material-ui/core/GridList'
+import Hidden from '@material-ui/core/Hidden'
+import uuidv4 from 'uuid/v4'
+import { withStyles } from '@material-ui/core/styles'
+import { connect } from 'react-redux'
+import Item from './Item'
 
 const styles = theme => ({
     gridList: {
-        width: "100%",
-        [theme.breakpoints.up("lg")]: {
-            paddingLeft: "15%",
-            paddingRight: "15%"
+        width: '100%',
+        [theme.breakpoints.up('lg')]: {
+            paddingLeft: '15%',
+            paddingRight: '15%'
         }
     }
 })

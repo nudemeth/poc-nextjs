@@ -1,38 +1,38 @@
-import React from "react"
-import PropTypes from "prop-types"
-import GridListTile from "@material-ui/core/GridListTile"
-import Icon from "@material-ui/core/Icon"
-import IconButton from "@material-ui/core/IconButton"
-import Typography from "@material-ui/core/Typography"
-import { updateSelectedCatalogType } from "../../../actions/catalogType.actions"
-import { withStyles } from "@material-ui/core/styles"
-import { connect } from "react-redux"
+import React from 'react'
+import PropTypes from 'prop-types'
+import GridListTile from '@material-ui/core/GridListTile'
+import Icon from '@material-ui/core/Icon'
+import IconButton from '@material-ui/core/IconButton'
+import Typography from '@material-ui/core/Typography'
+import { updateSelectedCatalogType } from '../../../actions/catalogType.actions'
+import { withStyles } from '@material-ui/core/styles'
+import { connect } from 'react-redux'
 
 const defaultColor = theme => theme.palette.grey[500]
 const selectedColor = theme => theme.palette.secondary.main
 const catalogTypeStyle = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: "1px",
-    borderStyle: "solid",
-    backgroundColor: "#fff"
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    backgroundColor: '#fff'
 }
 
 const styles = theme => ({
     iconButtonRoot: {
-        width: "100%",
-        height: "100%",
-        "&:hover": {
-            backgroundColor: "#fff"
+        width: '100%',
+        height: '100%',
+        '&:hover': {
+            backgroundColor: '#fff'
         }
     },
     iconButtonLabel: {
-        width: "100%",
+        width: '100%',
         height: 80,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-evenly"
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-evenly'
     },
     icon: {
         color: defaultColor(theme)
@@ -51,14 +51,14 @@ const styles = theme => ({
     catalogTypeRoot: {
         height: 184,
         padding: 2,
-        [theme.breakpoints.up("lg")]: {
-            width: "33.3333%"
+        [theme.breakpoints.up('lg')]: {
+            width: '33.3333%'
         },
-        [theme.breakpoints.down("md")]: {
-            width: "50%"
+        [theme.breakpoints.down('md')]: {
+            width: '50%'
         },
-        [theme.breakpoints.down("xs")]: {
-            width: "100%"
+        [theme.breakpoints.down('xs')]: {
+            width: '100%'
         }
     }
 })
@@ -91,7 +91,7 @@ class CatalogTypeItem extends React.Component {
             <GridListTile classes={{root: classes.catalogTypeRoot, tile: catalogTypeTileClass}}>
                 <IconButton disableRipple classes={{root: classes.iconButtonRoot, label: classes.iconButtonLabel}} onClick={this.handleCatalogTypeToggle}>
                     <Icon className={iconClass} >{catalogType.icon}</Icon>
-                    <Typography component="span">{catalogType.type}</Typography>
+                    <Typography component='span'>{catalogType.type}</Typography>
                 </IconButton>
             </GridListTile>
         )

@@ -1,6 +1,6 @@
-import fetch from "isomorphic-unfetch"
-import Api from "./api"
-import config from "../config"
+import fetch from 'isomorphic-unfetch'
+import Api from './api'
+import config from '../config'
 
 class CatalogApi extends Api {
     constructor(host) {
@@ -15,15 +15,15 @@ class CatalogApi extends Api {
         const catalogTypesParam = catalogTypeIds.join()
         const catalogBrandsParam = catalogBrandIds.join()
 
-        if (catalogTypesParam !== "" && catalogBrandsParam !== "") {
+        if (catalogTypesParam !== '' && catalogBrandsParam !== '') {
             return await this.tryFetch(`${this.host}items/types/${catalogTypesParam}/brands/${catalogBrandsParam}`)
         }
 
-        if (catalogTypesParam !== "") {
+        if (catalogTypesParam !== '') {
             return await this.tryFetch(`${this.host}items/types/${catalogTypesParam}`)
         }
 
-        if (catalogBrandsParam !== "") {
+        if (catalogBrandsParam !== '') {
             return await this.tryFetch(`${this.host}items/brands/${catalogBrandsParam}`)
         }
 

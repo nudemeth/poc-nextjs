@@ -1,8 +1,8 @@
-import * as effects from "redux-saga/effects"
-import * as actions from "../actions/catalog.actions"
-import catalogApi from "../api/catalog.api"
-import * as catalogTypeSaga from "./catalogType.saga"
-import * as catalogBrandSaga from "./catalogBrand.saga"
+import * as effects from 'redux-saga/effects'
+import * as actions from '../actions/catalog.actions'
+import catalogApi from '../api/catalog.api'
+import * as catalogTypeSaga from './catalogType.saga'
+import * as catalogBrandSaga from './catalogBrand.saga'
 
 function * loadItemsWorker() {
     try {

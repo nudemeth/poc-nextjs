@@ -1,10 +1,10 @@
-import React from "react"
-import PropTypes from "prop-types"
-import Container from "../components/layout/Container"
-import Catalog from "../components/page/index/Catalog"
-import HeaderContent from "../components/page/index/HeaderContent"
-import { loadItems } from "../actions/catalog.actions"
-import { withReduxSaga } from "../store/store"
+import React from 'react'
+import PropTypes from 'prop-types'
+import Container from '../components/layout/Container'
+import Catalog from '../components/page/index/Catalog'
+import HeaderContent from '../components/page/index/HeaderContent'
+import { loadItems } from '../actions/catalog.actions'
+import { withReduxSaga } from '../store/store'
 
 class Index extends React.Component {
     constructor(props) {
@@ -13,7 +13,7 @@ class Index extends React.Component {
 
     static async getInitialProps({ store }) {
         store.dispatch(loadItems())
-        return { text: "Index Page" }
+        return { text: 'Index Page' }
     }
 
     static propTypes = {
@@ -26,7 +26,7 @@ class Index extends React.Component {
 
     render() {
         return (
-            <Container title="Index" header={<HeaderContent/>}>
+            <Container title='Index' header={<HeaderContent/>}>
                 <Catalog/>
             </Container>
         )

@@ -1,21 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Link from 'next/link';
-import Divider from '@material-ui/core/Divider';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Icon from '@material-ui/core/Icon';
-import { withStyles } from '@material-ui/core/styles';
-import uuidv4 from 'uuid/v4';
+import React from 'react'
+import PropTypes from 'prop-types'
+import Link from 'next/link'
+import Divider from '@material-ui/core/Divider'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import Icon from '@material-ui/core/Icon'
+import { withStyles } from '@material-ui/core/styles'
+import uuidv4 from 'uuid/v4'
 
 const styles = theme => ({
     drawerHeader: theme.mixins.toolbar,
-});
+})
 
 class DrawerMenu extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
     }
 
     static propTypes = {
@@ -24,41 +24,41 @@ class DrawerMenu extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes } = this.props
         return (
             <React.Fragment>
                 <div key={uuidv4()} className={classes.drawerHeader} />
                 <Divider key={uuidv4()} />
                 <List key={uuidv4()}>
-                    <Link prefetch href="/">
+                    <Link prefetch href='/'>
                         <ListItem button>
-                            <Icon color="action">home</Icon>
-                            <ListItemText primary="Home" />
+                            <Icon color='action'>home</Icon>
+                            <ListItemText primary='Home' />
                         </ListItem>
                     </Link>
-                    <Link prefetch href="/catalogType">
+                    <Link prefetch href='/catalogType'>
                         <ListItem button>
-                            <Icon color="action">label</Icon>
-                            <ListItemText primary="Type" />
+                            <Icon color='action'>label</Icon>
+                            <ListItemText primary='Type' />
                         </ListItem>
                     </Link>
-                    <Link prefetch href="/catalogBrand">
+                    <Link prefetch href='/catalogBrand'>
                         <ListItem button>
-                            <Icon color="action">label</Icon>
-                            <ListItemText primary="Brand" />
+                            <Icon color='action'>label</Icon>
+                            <ListItemText primary='Brand' />
                         </ListItem>
                     </Link>
-                    <Link prefetch href="/about">
+                    <Link prefetch href='/about'>
                         <ListItem button>
-                            <Icon color="action">info</Icon>
-                            <ListItemText primary="About" />
+                            <Icon color='action'>info</Icon>
+                            <ListItemText primary='About' />
                         </ListItem>
                     </Link>
                 </List>
             </React.Fragment>
-        );
+        )
     }
 }
 
-export default withStyles(styles, { withTheme: true })(DrawerMenu);
-export { DrawerMenu };
+export default withStyles(styles, { withTheme: true })(DrawerMenu)
+export { DrawerMenu }

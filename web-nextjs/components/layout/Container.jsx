@@ -1,10 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Head from 'next/head';
+import React from 'react'
+import PropTypes from 'prop-types'
+import Head from 'next/head'
 import Header from './Header'
 import SideBar from './SideBar'
-import withRoot from '../common/withRoot';
-import { withStyles } from '@material-ui/core/styles';
+import withRoot from '../common/withRoot'
+import { withStyles } from '@material-ui/core/styles'
 
 const styles = theme => ({
     root: {
@@ -31,11 +31,11 @@ const styles = theme => ({
             marginTop: 64,
         },
     },
-});
+})
 
 class Container extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             menuOpen: false
         }
@@ -43,15 +43,18 @@ class Container extends React.Component {
 
     static propTypes = {
         classes: PropTypes.object.isRequired,
-        theme: PropTypes.object.isRequired
+        theme: PropTypes.object.isRequired,
+        title: PropTypes.string.isRequired,
+        header: PropTypes.object.isRequired,
+        children: PropTypes.any.isRequired
     }
 
     handleDrawerToggle = () => {
-        this.setState({ menuOpen: !this.state.menuOpen });
+        this.setState({ menuOpen: !this.state.menuOpen })
     };
 
     render() {
-        const { classes, theme } = this.props;
+        const { classes } = this.props
         return (
             <div className={classes.root}>
                 <div className={classes.appFrame}>
@@ -62,14 +65,14 @@ class Container extends React.Component {
                         {this.props.header}
                     </Header>
                     <SideBar menuOpen={this.state.menuOpen} handleDrawerToggle={this.handleDrawerToggle} />
-                    <main role="main" className={classes.content}>
+                    <main role='main' className={classes.content}>
                         {this.props.children}
                     </main>
                 </div>
             </div>
-        );
+        )
     }
 }
 
-export default withRoot(withStyles(styles, { withTheme: true })(Container));
-export { Container };
+export default withRoot(withStyles(styles, { withTheme: true })(Container))
+export { Container }

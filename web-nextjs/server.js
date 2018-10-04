@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
-const express = require("express")
-const next = require("next")
-const favicon = require("serve-favicon")
-const path = require("path")
+const express = require('express')
+const next = require('next')
+const favicon = require('serve-favicon')
+const path = require('path')
 
-const dev = process.env.NODE_ENV !== "production"
+const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
@@ -14,7 +14,7 @@ app
         const server = express()
         const port = dev ? 3000 : 80
 
-        server.use(favicon(path.join(__dirname, "static", "favicon.ico")))
+        server.use(favicon(path.join(__dirname, 'static', 'favicon.ico')))
 
         /*server.get('/p/:id', (req, res) => {
             const actualPage = '/post';
@@ -22,7 +22,7 @@ app
             app.render(req, res, actualPage, queryParams);
         });*/
 
-        server.get("*", (req, res) => {
+        server.get('*', (req, res) => {
             return handle(req, res)
         })
 

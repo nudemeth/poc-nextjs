@@ -1,6 +1,6 @@
-import * as effects from "redux-saga/effects"
-import * as actions from "../actions/catalogType.actions"
-import catalogApi from "../api/catalog.api"
+import * as effects from 'redux-saga/effects'
+import * as actions from '../actions/catalogType.actions'
+import catalogApi from '../api/catalog.api'
 
 function * loadCatalogTypesWorker() {
     const { catalogTypeReducer: { catalogTypes } } = yield effects.select()

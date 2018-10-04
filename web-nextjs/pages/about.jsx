@@ -1,8 +1,8 @@
-import React from "react"
-import PropTypes from "prop-types"
-import Container from "../components/layout/Container"
-import { initGreeting, updateGreeting } from "../actions/about.actions"
-import { withReduxSaga } from "../store/store"
+import React from 'react'
+import PropTypes from 'prop-types'
+import Container from '../components/layout/Container'
+import { initGreeting, updateGreeting } from '../actions/about.actions'
+import { withReduxSaga } from '../store/store'
 
 class About extends React.Component {
     constructor(props) {
@@ -10,7 +10,7 @@ class About extends React.Component {
     }
 
     static async getInitialProps({ store }) {
-        store.dispatch(initGreeting("This is from server"))
+        store.dispatch(initGreeting('This is from server'))
         return {}
     }
 
@@ -25,7 +25,7 @@ class About extends React.Component {
 
     render() {
         return (
-            <Container title="About">
+            <Container title='About'>
                 <h1>This is About Page: {this.props.greeting}</h1>
             </Container>
         )

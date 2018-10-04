@@ -1,12 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-import DrawerMenu from './DrawerMenu';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { withStyles } from '@material-ui/core/styles'
+import Drawer from '@material-ui/core/Drawer'
+import Hidden from '@material-ui/core/Hidden'
+import DrawerMenu from './DrawerMenu'
 import uuidv4 from 'uuid/v4'
 
-const drawerWidth = 240;
+const drawerWidth = 240
 const styles = theme => ({
     drawerHeader: theme.mixins.toolbar,
     drawerDocked: {
@@ -20,25 +20,27 @@ const styles = theme => ({
             position: 'relative',
         },
     },
-});
+})
 
 class SideBar extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
     }
 
     static propTypes = {
         classes: PropTypes.object.isRequired,
-        theme: PropTypes.object.isRequired
+        theme: PropTypes.object.isRequired,
+        handleDrawerToggle: PropTypes.func.isRequired,
+        menuOpen: PropTypes.bool.isRequired
     }
 
     render() {
-        const { classes, theme } = this.props;
+        const { classes } = this.props
         return (
             <React.Fragment>
                 <Hidden key={uuidv4()} mdUp>
                     <Drawer
-                        variant="temporary"
+                        variant='temporary'
                         open={this.props.menuOpen}
                         classes={{paper: classes.drawerPaper, docked: classes.drawerDocked, }}
                         onClose={this.props.handleDrawerToggle}
@@ -49,9 +51,9 @@ class SideBar extends React.Component {
                         <DrawerMenu/>
                     </Drawer>
                 </Hidden>
-                <Hidden key={uuidv4()} smDown implementation="css">
+                <Hidden key={uuidv4()} smDown implementation='css'>
                     <Drawer
-                        variant="permanent"
+                        variant='permanent'
                         open
                         classes={{paper: classes.drawerPaper, docked: classes.drawerDocked, }}
                     >
@@ -59,9 +61,9 @@ class SideBar extends React.Component {
                     </Drawer>
                 </Hidden>
             </React.Fragment>
-        );
+        )
     }
 }
 
-export default  withStyles(styles, { withTheme: true })(SideBar);
-export { SideBar };
+export default  withStyles(styles, { withTheme: true })(SideBar)
+export { SideBar }
