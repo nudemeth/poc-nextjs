@@ -1,50 +1,62 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import Document, { Head, Main, NextScript } from 'next/document'
-import { JssProvider }  from 'react-jss'
-import getCssContext from '../components/common/getCssContext'
+import flush from 'styled-jsx/server'
 
 class DefaultDocument extends Document {
     static getInitialProps({ renderPage }) {
         // Resolution order
         //
         // On the server:
-        // 1. page.getInitialProps
-        // 2. document.getInitialProps
-        // 3. page.render
-        // 4. document.render
+        // 1. app.getInitialProps
+        // 2. page.getInitialProps
+        // 3. document.getInitialProps
+        // 4. app.render
+        // 5. page.render
+        // 6. document.render
         //
         // On the server with error:
-        // 2. document.getInitialProps
+        // 1. document.getInitialProps
+        // 2. app.render
         // 3. page.render
         // 4. document.render
         //
         // On the client
-        // 1. page.getInitialProps
-        // 3. page.render
+        // 1. app.getInitialProps
+        // 2. page.getInitialProps
+        // 3. app.render
+        // 4. page.render
 
-        // Get the context of the page to collected side effects.
-        const cssContext = getCssContext()
-        const page = (Page) => (props) => {
-            const jss = <JssProvider
-                registry={cssContext.sheetsRegistry}
-                generateClassName={cssContext.generateClassName}
-            >
-                <Page cssContext={cssContext} {...props} />
-            </JssProvider>
-            return jss
+        // Render app and page and get the context of the page with collected side effects.
+        let pageContext
+        const page = (Component) => {
+            const WrappedComponent = props => {
+                pageContext = props.pageContext
+                return <Component {...props} />
+            }
+
+            WrappedComponent.propTypes = {
+                pageContext: PropTypes.object.isRequired
+            }
+
+            return WrappedComponent
         }
         const renderedPage = renderPage(page)
 
         return {
             ...renderedPage,
-            cssContext,
+            pageContext,
             styles: (
-                <style id='jss-server-side' dangerouslySetInnerHTML={{ __html: cssContext.sheetsRegistry.toString() }} />
+                <React.Fragment>
+                    <style id='jss-server-side' dangerouslySetInnerHTML={{ __html: pageContext.sheetsRegistry.toString() }} />
+                    {flush() || null}
+                </React.Fragment>
             )
         }
     }
 
     render() {
+        const { pageContext } = this.props
         return (
             <html>
                 <Head>
@@ -59,7 +71,7 @@ class DefaultDocument extends Document {
                         }
                     />
                     {/* PWA primary color */}
-                    <meta name='theme-color' content={this.props.cssContext.theme.palette.primary[500]} />
+                    <meta name='theme-color' content={pageContext.theme.palette.primary[500]} />
                     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500' rel='stylesheet' type='text/css' />
                     <link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet' type='text/css' />
                     <link href='./static/css/style.css' rel='stylesheet' type='text/css' />

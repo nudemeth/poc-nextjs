@@ -1,7 +1,7 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import Container from '../components/layout/Container'
 import LoginCard from '../components/page/login/LoginCard'
-import { withReduxSaga } from '../store/store'
 
 class Login extends React.Component {
     constructor(props) {
@@ -17,5 +17,5 @@ class Login extends React.Component {
     }
 }
 
-export default withReduxSaga()(Login)
+export default connect()(Login)
 export { Login }

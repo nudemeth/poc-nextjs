@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import Head from 'next/head'
 import Header from './Header'
 import SideBar from './SideBar'
-import withRoot from '../common/withRoot'
 import { withStyles } from '@material-ui/core/styles'
 
 const styles = theme => ({
@@ -74,5 +73,5 @@ class Container extends React.Component {
     }
 }
 
-export default withRoot(withStyles(styles, { withTheme: true })(Container))
+export default withStyles(styles, { withTheme: true })(Container)
 export { Container }

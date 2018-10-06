@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import Container from '../components/layout/Container'
-import { withReduxSaga } from '../store/store'
 import { loadItem } from '../actions/catalog.actions'
 
 class Item extends React.Component {
@@ -9,7 +9,7 @@ class Item extends React.Component {
         super(props)
     }
 
-    static async getInitialProps({ store, query }) {
+    static async getInitialProps({ ctx: { store, query }}) {
         const id = parseInt(query.id)
         store.dispatch(loadItem(id))
     }
@@ -42,5 +42,5 @@ class Item extends React.Component {
 
 const mapStateToProps = ({ itemReducer: { item }}) => ({ item })
 
-export default withReduxSaga(mapStateToProps)(Item)
+export default connect(mapStateToProps)(Item)
 export { Item }

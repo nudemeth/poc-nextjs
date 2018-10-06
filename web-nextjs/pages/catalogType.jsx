@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import Container from '../components/layout/Container'
 import { loadCatalogTypes } from '../actions/catalogType.actions'
-import { withReduxSaga } from '../store/store'
 import CatalogTypeList from '../components/page/catalogType/CatalogTypeList'
 
 class CatalogType extends React.Component {
@@ -10,7 +10,7 @@ class CatalogType extends React.Component {
         super(props)
     }
 
-    static async getInitialProps({ store }) {
+    static async getInitialProps({ ctx: { store } }) {
         store.dispatch(loadCatalogTypes())
     }
 
@@ -31,5 +31,5 @@ class CatalogType extends React.Component {
     }
 }
 
-export default withReduxSaga()(CatalogType)
+export default connect()(CatalogType)
 export { CatalogType }

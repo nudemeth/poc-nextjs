@@ -1,15 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import Container from '../components/layout/Container'
 import { initGreeting, updateGreeting } from '../actions/about.actions'
-import { withReduxSaga } from '../store/store'
 
 class About extends React.Component {
     constructor(props) {
         super(props)
     }
 
-    static async getInitialProps({ store }) {
+    static async getInitialProps({ ctx: { store } }) {
         store.dispatch(initGreeting('This is from server'))
         return {}
     }
@@ -34,5 +34,5 @@ class About extends React.Component {
 
 const mapStateToProps = ({ aboutReducer: { greeting }}) => ({ greeting })
 
-export default withReduxSaga(mapStateToProps)(About)
+export default connect(mapStateToProps)(About)
 export { About }
