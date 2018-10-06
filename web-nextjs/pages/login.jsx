@@ -10,7 +10,7 @@ class Login extends React.Component {
 
     render() {
         return (
-            <Container title='Login'>
+            <Container title='Login' header={<div/>}>
                 <LoginCard />
             </Container>
         )

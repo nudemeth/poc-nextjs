@@ -24,7 +24,7 @@ class CatalogType extends React.Component {
 
     render() {
         return (
-            <Container title='Catalog Type'>
+            <Container title='Catalog Type' header={<div/>}>
                 <CatalogTypeList/>
             </Container>
         )

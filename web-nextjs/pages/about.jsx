@@ -25,7 +25,7 @@ class About extends React.Component {
 
     render() {
         return (
-            <Container title='About'>
+            <Container title='About' header={<div/>}>
                 <h1>This is About Page: {this.props.greeting}</h1>
             </Container>
         )

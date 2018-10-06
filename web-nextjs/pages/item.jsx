@@ -28,7 +28,7 @@ class Item extends React.Component {
     render() {
         const { item } = this.props
         return (
-            <Container title='Item'>
+            <Container title='Item' header={<div/>}>
                 <h1>Item Name: {item.name}</h1>
                 <ul>
                     <li>CatalogType: {item.catalogType}</li>

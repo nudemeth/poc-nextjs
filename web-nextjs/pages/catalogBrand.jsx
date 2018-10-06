@@ -24,7 +24,7 @@ class CatalogBrand extends React.Component {
 
     render() {
         return (
-            <Container title='Catalog Brand'>
+            <Container title='Catalog Brand' header={<div/>}>
                 <CatalogBrandList/>
             </Container>
         )

@@ -45,7 +45,7 @@ class Container extends React.Component {
         classes: PropTypes.object.isRequired,
         theme: PropTypes.object.isRequired,
         title: PropTypes.string.isRequired,
-        header: PropTypes.object.isRequired,
+        header: PropTypes.any.isRequired,
         children: PropTypes.any.isRequired
     }
 
