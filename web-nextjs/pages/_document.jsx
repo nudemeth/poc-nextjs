@@ -24,14 +24,15 @@ class DefaultDocument extends Document {
 
         // Get the context of the page to collected side effects.
         const cssContext = getCssContext()
-        const page = (Page) => (props) => (
-            <JssProvider
+        const page = (Page) => (props) => {
+            const jss = <JssProvider
                 registry={cssContext.sheetsRegistry}
                 generateClassName={cssContext.generateClassName}
             >
                 <Page cssContext={cssContext} {...props} />
             </JssProvider>
-        )
+            return jss
+        }
         const renderedPage = renderPage(page)
 
         return {
