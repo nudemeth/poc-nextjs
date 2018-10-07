@@ -1,9 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CatalogType page with Snapshot Testing Should show catalogType list in CatalogType page 1`] = `
-<Root
+<WithStyles(Container)
+  header={<div />}
   title="Catalog Type"
 >
   <Component />
-</Root>
+</WithStyles(Container)>
 `;

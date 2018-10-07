@@ -1,12 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`About page with Snapshot Testing Should show "This is About Page: This is from client" in About page 1`] = `
-<Root
+<WithStyles(Container)
+  header={<div />}
   title="About"
 >
   <h1>
     This is About Page: 
     ABC
   </h1>
-</Root>
+</WithStyles(Container)>
 `;

@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Index page with Snapshot Testing Should show "Index Page: Prodcuts Page" in Index page 1`] = `
-<Root
+<WithStyles(Container)
   header={<WithStyles(HeaderContent) />}
   title="Index"
 >
   <Component />
-</Root>
+</WithStyles(Container)>
 `;

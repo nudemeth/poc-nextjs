@@ -1,9 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CatalogBrand page with Snapshot Testing Should show catalogBrand list in CatalogBrand page 1`] = `
-<Root
+<WithStyles(Container)
+  header={<div />}
   title="Catalog Brand"
 >
   <Component />
-</Root>
+</WithStyles(Container)>
 `;

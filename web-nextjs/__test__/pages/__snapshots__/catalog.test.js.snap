@@ -1,7 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Item page with Snapshot Testing Should show "Item Name: Item 1" in Item page 1`] = `
-<Root
+<WithStyles(Container)
+  header={<div />}
   title="Item"
 >
   <h1>
@@ -22,5 +23,5 @@ exports[`Item page with Snapshot Testing Should show "Item Name: Item 1" in Item
       https://material-ui-next.com/static/images/cards/paella.jpg
     </li>
   </ul>
-</Root>
+</WithStyles(Container)>
 `;
