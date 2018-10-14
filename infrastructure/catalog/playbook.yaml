@@ -2,24 +2,39 @@
   hosts: all
   become: true
   tasks:
-  - name: Register SQL server 2017 repo
-    shell: wget -qO- https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
-    shell: add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/16.04/mssql-server-2017.list)"
+  - name: Import MS public repo GPG keys
+    apt_key:
+      url: https://packages.microsoft.com/keys/microsoft.asc
+      state: present
 
-  - name: Update and upgrade apt packages
+  - name: Register MSSQL server 2017
+    get_url:
+      url: https://packages.microsoft.com/config/ubuntu/16.04/mssql-server-2017.list
+      dest: /etc/apt/sources.list.d/mssql.list
+
+  - name: Register MSSQL tools
+    get_url:
+      url: https://packages.microsoft.com/config/ubuntu/16.04/prod.list
+      dest: /etc/apt/sources.list.d/msprod.list
+
+  - name: Update apt packages
     apt:
       update_cache: yes
 
-  - name: Install SQL server 2017 package
+  - name: Install MSSQL server 2017 package
+    environment:
+      ACCEPT_EULA: 'y'
     apt: 
-      name: mssql-server
+      name: "{{ packages }}"
       allow_unauthenticated: yes
+      force: yes
+    vars:
+      packages:
+      - mssql-server
+      - python-pexpect
+      - mssql-tools
 
-  - name: Install pexpect
-    apt:
-      name: python-pexpect
-
-  - name: Setup SQL server 2017
+  - name: Setup MSSQL server 2017
     expect:
       echo: yes
       command: /opt/mssql/bin/mssql-conf setup
@@ -27,3 +42,4 @@
         'Choose an edition of SQL Server': '3'
         'The license terms for this product': 'Y'
         'Enter the SQL Server': 'P@ssw0rd'
+        'Confirm the SQL Server': 'P@ssw0rd'
