@@ -17,6 +17,8 @@ services:
     environment:
       - "API_BASE_URL=http://api-go.localhost"
       - "API_BASE_URL_TLS=https://api-go.localhost"
+    ports:
+      - "1433:1433"
     networks:
       - microservices-net
 

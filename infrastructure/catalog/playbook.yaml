@@ -1,0 +1,29 @@
+- name: Provisioning
+  hosts: all
+  become: true
+  tasks:
+  - name: Register SQL server 2017 repo
+    shell: wget -qO- https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+    shell: add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/16.04/mssql-server-2017.list)"
+
+  - name: Update and upgrade apt packages
+    apt:
+      update_cache: yes
+
+  - name: Install SQL server 2017 package
+    apt: 
+      name: mssql-server
+      allow_unauthenticated: yes
+
+  - name: Install pexpect
+    apt:
+      name: python-pexpect
+
+  - name: Setup SQL server 2017
+    expect:
+      echo: yes
+      command: /opt/mssql/bin/mssql-conf setup
+      responses:
+        'Choose an edition of SQL Server': '3'
+        'The license terms for this product': 'Y'
+        'Enter the SQL Server': 'P@ssw0rd'
