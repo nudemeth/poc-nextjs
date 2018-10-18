@@ -21,7 +21,12 @@
     apt:
       update_cache: yes
 
-  - name: Install MSSQL server 2017 package
+  - name: Uninstall MSSQL server 2017 package
+    apt:
+      name: mssql-server
+      state: absent
+
+  - name: Install MSSQL server 2017 and tool package
     environment:
       ACCEPT_EULA: 'y'
     apt: 
@@ -43,3 +48,16 @@
         'The license terms for this product': 'Y'
         'Enter the SQL Server': 'P@ssw0rd'
         'Confirm the SQL Server': 'P@ssw0rd'
+
+  - name: add {{extra_path}} to path
+    lineinfile:
+      path: /etc/environment
+      state: present
+      backrefs: yes
+      regexp: 'PATH=(["]*)((?!.*?{{extra_path}}).*?)(["]*)$'
+      line: 'PATH=\1\2:{{extra_path}}\3'
+    vars:
+      extra_path: /opt/mssql-tools/bin
+
+  - name: Connect to SQL server
+    shell: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'P@ssw0rd'
