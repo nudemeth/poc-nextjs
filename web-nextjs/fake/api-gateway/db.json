@@ -1,17 +1,17 @@
 {
     "items": [
-        { "id": 1, "catalogTypeId": 2, "catalogBrandId": 2, "description": ".NET Bot Black Sweatshirt", "name": ".NET Bot Black Sweatshirt", "price": 19.5, "fileName": "Item 1.png", "createDate": "2018-01-01T00:00:00.000Z" },
-        { "id": 2, "catalogTypeId": 1, "catalogBrandId": 2, "description": ".NET Black & White Mug", "name": ".NET Black & White Mug", "price": 8.5, "fileName": "Item 2.png", "createDate": "2018-01-01T00:00:00.000Z" },
-        { "id": 3, "catalogTypeId": 2, "catalogBrandId": 5, "description": "Prism White T-Shirt", "name": "Prism White T-Shirt", "price": 12, "fileName": "Item 3.png", "createDate": "2018-01-01T00:00:00.000Z" },
-        { "id": 4, "catalogTypeId": 2, "catalogBrandId": 2, "description": ".NET Foundation Sweatshirt", "name": ".NET Foundation Sweatshirt", "price": 12, "fileName": "Item 4.png", "createDate": "2018-01-01T00:00:00.000Z" },
-        { "id": 5, "catalogTypeId": 3, "catalogBrandId": 5, "description": "Roslyn Red Sheet", "name": "Roslyn Red Sheet", "price": 8.5, "fileName": "Item 5.png", "createDate": "2018-01-01T00:00:00.000Z" },
-        { "id": 6, "catalogTypeId": 2, "catalogBrandId": 2, "description": ".NET Blue Sweatshirt", "name": ".NET Blue Sweatshirt", "price": 12, "fileName": "Item 6.png", "createDate": "2018-01-01T00:00:00.000Z" },
-        { "id": 7, "catalogTypeId": 2, "catalogBrandId": 5, "description": "Roslyn Red T-Shirt", "name": "Roslyn Red T-Shirt", "price": 12, "fileName": "Item 7.png", "createDate": "2018-01-01T00:00:00.000Z" },
-        { "id": 8, "catalogTypeId": 2, "catalogBrandId": 5, "description": "Kudu Purple Sweatshirt", "name": "Kudu Purple Sweatshirt", "price": 8.5, "fileName": "Item 8.png", "createDate": "2018-01-01T00:00:00.000Z" },
-        { "id": 9, "catalogTypeId": 1, "catalogBrandId": 5, "description": "Cup<T> White Mug", "name": "Cup<T> White Mug", "price": 12.5, "fileName": "Item 9.png", "createDate": "2018-01-01T00:00:00.000Z" },
-        { "id": 10, "catalogTypeId": 3, "catalogBrandId": 2, "description": ".NET Foundation Sheet", "name": ".NET Foundation Sheet", "price": 21, "fileName": "Item 10.png", "createDate": "2018-01-01T00:00:00.000Z" },
-        { "id": 11, "catalogTypeId": 3, "catalogBrandId": 2, "description": "Cup<T> Sheet", "name": "Cup<T> Sheet", "price": 8.5, "fileName": "Item 11.png", "createDate": "2018-01-01T00:00:00.000Z" },
-        { "id": 12, "catalogTypeId": 2, "catalogBrandId": 5, "description": "Prism White TShirt", "name": "Prism White TShirt", "price": 12, "fileName": "Item 12.png", "createDate": "2018-01-01T00:00:00.000Z" }
+        { "id": 1, "catalogTypeId": 2, "catalogBrandId": 2, "description": ".NET Bot Black Sweatshirt", "name": ".NET Bot Black Sweatshirt", "price": 19.5, "fileName": "Item 1.png", "createdDate": "2018-01-01T00:00:00.000Z" },
+        { "id": 2, "catalogTypeId": 1, "catalogBrandId": 2, "description": ".NET Black & White Mug", "name": ".NET Black & White Mug", "price": 8.5, "fileName": "Item 2.png", "createdDate": "2018-01-01T00:00:00.000Z" },
+        { "id": 3, "catalogTypeId": 2, "catalogBrandId": 5, "description": "Prism White T-Shirt", "name": "Prism White T-Shirt", "price": 12, "fileName": "Item 3.png", "createdDate": "2018-01-01T00:00:00.000Z" },
+        { "id": 4, "catalogTypeId": 2, "catalogBrandId": 2, "description": ".NET Foundation Sweatshirt", "name": ".NET Foundation Sweatshirt", "price": 12, "fileName": "Item 4.png", "createdDate": "2018-01-01T00:00:00.000Z" },
+        { "id": 5, "catalogTypeId": 3, "catalogBrandId": 5, "description": "Roslyn Red Sheet", "name": "Roslyn Red Sheet", "price": 8.5, "fileName": "Item 5.png", "createdDate": "2018-01-01T00:00:00.000Z" },
+        { "id": 6, "catalogTypeId": 2, "catalogBrandId": 2, "description": ".NET Blue Sweatshirt", "name": ".NET Blue Sweatshirt", "price": 12, "fileName": "Item 6.png", "createdDate": "2018-01-01T00:00:00.000Z" },
+        { "id": 7, "catalogTypeId": 2, "catalogBrandId": 5, "description": "Roslyn Red T-Shirt", "name": "Roslyn Red T-Shirt", "price": 12, "fileName": "Item 7.png", "createdDate": "2018-01-01T00:00:00.000Z" },
+        { "id": 8, "catalogTypeId": 2, "catalogBrandId": 5, "description": "Kudu Purple Sweatshirt", "name": "Kudu Purple Sweatshirt", "price": 8.5, "fileName": "Item 8.png", "createdDate": "2018-01-01T00:00:00.000Z" },
+        { "id": 9, "catalogTypeId": 1, "catalogBrandId": 5, "description": "Cup<T> White Mug", "name": "Cup<T> White Mug", "price": 12.5, "fileName": "Item 9.png", "createdDate": "2018-01-01T00:00:00.000Z" },
+        { "id": 10, "catalogTypeId": 3, "catalogBrandId": 2, "description": ".NET Foundation Sheet", "name": ".NET Foundation Sheet", "price": 21, "fileName": "Item 10.png", "createdDate": "2018-01-01T00:00:00.000Z" },
+        { "id": 11, "catalogTypeId": 3, "catalogBrandId": 2, "description": "Cup<T> Sheet", "name": "Cup<T> Sheet", "price": 8.5, "fileName": "Item 11.png", "createdDate": "2018-01-01T00:00:00.000Z" },
+        { "id": 12, "catalogTypeId": 2, "catalogBrandId": 5, "description": "Prism White TShirt", "name": "Prism White TShirt", "price": 12, "fileName": "Item 12.png", "createdDate": "2018-01-01T00:00:00.000Z" }
     ],
     "catalogTypes": [
         { "id": 1, "type": "Mug", "icon": "local_cafe", "isSelected": true },

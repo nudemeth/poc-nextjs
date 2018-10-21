@@ -10,7 +10,7 @@ namespace Catalog.API.Models
         public string Description { get; set; }
         public string ImageUrl { get; set; }
         public string ImageAlt { get; set; }
-        public DateTime CreateDate { get; set; }
+        public DateTime CreatedDate { get; set; }
         public int CatalogBrandId { get; set; }
         public CatalogBrand CatalogBrand { get; set; }
         public int CatalogTypeId { get; set; }

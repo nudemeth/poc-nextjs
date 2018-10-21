@@ -32,7 +32,7 @@ class Item extends React.Component {
                 <h1>Item Name: {item.name}</h1>
                 <ul>
                     <li>CatalogType: {item.catalogType}</li>
-                    <li>Create Date: {item.createDate}</li>
+                    <li>Create Date: {item.createdDate}</li>
                     <li>Image URL: {item.imageUrl}</li>
                 </ul>
             </Container>

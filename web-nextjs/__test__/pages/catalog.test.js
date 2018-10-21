@@ -12,7 +12,7 @@ const stubItem = {
     id: 1,
     name: 'Item 1',
     catalogType: 'CatalogType 1',
-    createDate: '2018-01-01T00:00:00.000Z',
+    createdDate: '2018-01-01T00:00:00.000Z',
     imageUrl: 'https://material-ui-next.com/static/images/cards/paella.jpg',
     imageAlt: 'Contemplative Reptile'
 }

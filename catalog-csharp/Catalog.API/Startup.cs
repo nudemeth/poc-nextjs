@@ -26,7 +26,7 @@ namespace Catalog.API
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterModule(new AutofacModule());
+            builder.RegisterModule(new AutofacModule(Configuration));
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
