@@ -35,18 +35,8 @@ namespace Catalog.API.Controllers
         public async Task<IActionResult> GetItemsByIds(string ids = null)
         {
             var items = catalogService.GetItems();
-            var itemIds = ids.Split(',').Select(i => Int32.Parse(i)).ToArray();
+            var itemIds = ids.Split(',').Select(i => new Guid(i)).ToArray();
             var result = items.Where(i => itemIds.Contains(i.Id)).ToList();
-            return await Task.FromResult(Ok(result));
-        }
-
-        // GET api/[controller]/items/1
-        [HttpGet]
-        [Route("items/{id:int}")]
-        public async Task<IActionResult> GetItemById(int id)
-        {
-            var items = catalogService.GetItems();
-            var result = items.Where(i => i.Id == id).ToList();
             return await Task.FromResult(Ok(result));
         }
 
@@ -64,8 +54,8 @@ namespace Catalog.API.Controllers
         public async Task<IActionResult> GetItemsByTypesAndBrands(string catalogTypeIds, string catalogBrandIds)
         {
             var items = catalogService.GetItems();
-            var typeIds = catalogTypeIds.Split(',').Select(i => Int32.Parse(i)).ToArray();
-            var brandIds = catalogBrandIds.Split(',').Select(i => Int32.Parse(i)).ToArray();
+            var typeIds = catalogTypeIds.Split(',').Select(i => new Guid(i)).ToArray();
+            var brandIds = catalogBrandIds.Split(',').Select(i => new Guid(i)).ToArray();
             var result = items.Where(i => typeIds.Contains(i.CatalogTypeId) && brandIds.Contains(i.CatalogBrandId)).ToList();
             return await Task.FromResult(Ok(result));
         }
@@ -75,7 +65,7 @@ namespace Catalog.API.Controllers
         public async Task<IActionResult> GetItemsByTypes(string catalogTypeIds)
         {
             var items = catalogService.GetItems();
-            var typeIds = catalogTypeIds.Split(',').Select(i => Int32.Parse(i)).ToArray();
+            var typeIds = catalogTypeIds.Split(',').Select(i => new Guid(i)).ToArray();
             var result = items.Where(i => typeIds.Contains(i.CatalogTypeId)).ToList();
             return await Task.FromResult(Ok(result));
         }
@@ -85,7 +75,7 @@ namespace Catalog.API.Controllers
         public async Task<IActionResult> GetItemsByBrands(string catalogBrandIds)
         {
             var items = catalogService.GetItems();
-            var brandIds = catalogBrandIds.Split(',').Select(i => Int32.Parse(i)).ToArray();
+            var brandIds = catalogBrandIds.Split(',').Select(i => new Guid(i)).ToArray();
             var result = items.Where(i => brandIds.Contains(i.CatalogBrandId)).ToList();
             return await Task.FromResult(Ok(result));
         }
@@ -112,13 +102,13 @@ namespace Catalog.API.Controllers
 
         // PUT api/catalog/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(string id, [FromBody] string value)
         {
         }
 
         // DELETE api/catalog/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(string id)
         {
         }
     }

@@ -13,8 +13,14 @@ namespace Catalog.API.Infrastructure.EntityConfig
             builder.Property(c => c.Id).IsRequired(true);
             builder.Property(c => c.Name).IsRequired(true).HasMaxLength(200);
             builder.Property(c => c.Price).IsRequired(true);
+            builder.Property(c => c.CreatedDate).HasColumnName("CREATED_DATE");
+            builder.Property(c => c.CatalogTypeId).HasColumnName("CATALOG_TYPE_ID");
+            builder.Property(c => c.CatalogBrandId).HasColumnName("CATALOG_BRAND_ID");
             builder.HasOne(c => c.CatalogBrand).WithMany().HasForeignKey(c => c.CatalogBrandId);
             builder.HasOne(c => c.CatalogType).WithMany().HasForeignKey(c => c.CatalogTypeId);
+            builder.Ignore(c => c.FileName);
+            builder.Ignore(c => c.ImageAlt);
+            builder.Ignore(c => c.ImageUrl);
         }
     }
 }
