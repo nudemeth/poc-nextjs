@@ -1,0 +1,22 @@
+Vagrant.configure("2") do |config|
+
+    config.vm.define "catalog-db" do |catalog|
+        catalog.vm.box = "bento/ubuntu-16.04"
+        catalog.vm.hostname = "catalog-db"
+        catalog.vm.network "forwarded_port", guest: 1433, host: 1433
+        catalog.vm.synced_folder "./catalog", "/provision", type: "smb"
+
+        catalog.ssh.username = "vagrant"
+        catalog.ssh.password = "vagrant"
+
+        catalog.vm.provider "hyperv" do |h|
+            h.memory = 2048
+            h.vmname = "catalog-db"
+        end
+
+        catalog.vm.provision "ansible_local" do |ansible|
+            ansible.playbook = "/provision/playbook.yaml"
+        end
+    end
+
+end
