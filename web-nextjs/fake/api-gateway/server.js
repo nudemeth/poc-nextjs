@@ -5,11 +5,15 @@ const server = jsonServer.create()
 const router = jsonServer.router(path.join(__dirname, 'db.json'))
 const middlewares = jsonServer.defaults()
 const routes = require('./routes')
+const fake = require('./db.json')
 
 server.use(middlewares)
 server.get('/api/v1/catalog/items/:id/img', (req, res) => {
     const id = req.params.id
-    const imgPath = path.join(__dirname, 'images', `${id}.png`)
+    const item = fake.items.find(function(value) {
+        return value.id === id
+    })
+    const imgPath = path.join(__dirname, `${item.imagePath}`)
     res.sendFile(imgPath)
 })
 server.use(jsonServer.rewriter(routes))
