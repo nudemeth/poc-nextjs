@@ -17,6 +17,7 @@ services:
     environment:
       - "API_BASE_URL=http://api-go.localhost"
       - "API_BASE_URL_TLS=https://api-go.localhost"
+      - "CONNECTION_STRING=Server=catalog-db;Database=CATALOG;User Id=sa; Password=P@ssw0rd;"
     ports:
       - "1433:1433"
     networks:

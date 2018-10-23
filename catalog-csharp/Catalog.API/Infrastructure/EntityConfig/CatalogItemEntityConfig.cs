@@ -18,7 +18,7 @@ namespace Catalog.API.Infrastructure.EntityConfig
             builder.Property(c => c.CatalogBrandId).HasColumnName("CATALOG_BRAND_ID");
             builder.HasOne(c => c.CatalogBrand).WithMany().HasForeignKey(c => c.CatalogBrandId);
             builder.HasOne(c => c.CatalogType).WithMany().HasForeignKey(c => c.CatalogTypeId);
-            builder.Ignore(c => c.FileName);
+            builder.Property(c => c.ImagePath).HasColumnName("IMAGE_PATH");
             builder.Ignore(c => c.ImageAlt);
             builder.Ignore(c => c.ImageUrl);
         }

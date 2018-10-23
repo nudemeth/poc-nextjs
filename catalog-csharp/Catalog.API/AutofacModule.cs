@@ -18,10 +18,6 @@ namespace Catalog.API
         }
         protected override void Load(ContainerBuilder builder)
         {
-            var config = new Dictionary<string, string>()
-            {
-                { "image-path", "./Images" }
-            };
             var connStr = GetConnectionString();
             var options = new DbContextOptionsBuilder<CatalogContext>().UseSqlServer(connStr).Options;
             // The generic ILogger<TCategoryName> service was added to the ServiceCollection by ASP.NET Core.
@@ -33,16 +29,15 @@ namespace Catalog.API
                 )
                 .As<ICatalogService>()
                 .InstancePerLifetimeScope();
-
-            builder.Register(c => config)
-                .As<IDictionary<string, string>>()
-                .SingleInstance();
         }
 
         private string GetConnectionString()
         {
-            var connStr = configuration["ConnectionString"];
+            var connStr = configuration["ConnectionString"] ?? configuration["CONNECTION_STRING"];
             
+            if (string.IsNullOrEmpty(connStr))
+                connStr = configuration["CONNECTION_STRING"];
+
             if (string.IsNullOrEmpty(connStr))
                 throw new Exception("No valid connection string has been found.");
 

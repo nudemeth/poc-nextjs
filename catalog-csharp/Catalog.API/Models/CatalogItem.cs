@@ -15,6 +15,6 @@ namespace Catalog.API.Models
         public CatalogBrand CatalogBrand { get; set; }
         public Guid CatalogTypeId { get; set; }
         public CatalogType CatalogType { get; set; }
-        public string FileName { get; set; }
+        public string ImagePath { get; set; }
     }
 }

@@ -14,15 +14,13 @@ namespace Catalog.API.Controllers
     public class ImageController : Controller
     {   
         private ICatalogService catalogService;
-        private IDictionary<string, string> config;
-        public ImageController(ICatalogService catalogService, IDictionary<string, string> config)
+        public ImageController(ICatalogService catalogService)
         {
             this.catalogService = catalogService;
-            this.config = config;
         }
 
         [HttpGet]
-        [Route("api/v1/catalog/items/{catalogItemId:int}/img")]
+        [Route("api/v1/catalog/items/{catalogItemId}/img")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetImage(string catalogItemId)
@@ -35,10 +33,9 @@ namespace Catalog.API.Controllers
                 return await Task.FromResult(NotFound());
             }
 
-            var path = Path.Combine(config["image-path"], item.FileName);
-            var imageFileExtension = Path.GetExtension(item.FileName);
+            var imageFileExtension = Path.GetExtension(item.ImagePath);
             var mimetype = GetImageMimeTypeFromImageFileExtension(imageFileExtension);
-            var buffer = System.IO.File.ReadAllBytes(path);
+            var buffer = System.IO.File.ReadAllBytes(item.ImagePath);
 
             return await Task.FromResult(File(buffer, mimetype));
         }
