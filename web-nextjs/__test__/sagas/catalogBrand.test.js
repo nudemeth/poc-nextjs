@@ -12,7 +12,7 @@ describe('Load CatalogBrands Worker saga', () => {
     })
 
     it('Should end the generator if catalogBrands exist in the store', () => {
-        const store = { catalogBrandReducer: { catalogBrands: [{ id: 1 }] }}
+        const store = { catalogBrandReducer: { catalogBrands: [{ id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c' }] }}
         const generator = catalogBrandSaga.loadCatalogBrandsWorker()
         
         generator.next()
@@ -34,7 +34,7 @@ describe('Load CatalogBrands Worker saga', () => {
 
     it('Should put action to loadCatalogBrandsSuccess after successfully fetching catalogBrands', () => {
         const store = { catalogBrandReducer: {} }
-        const data = { 'id': 1 }
+        const data = { id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c' }
         const res = { json: () => data }
         const generator = catalogBrandSaga.loadCatalogBrandsWorker()
         
@@ -63,7 +63,7 @@ describe('Load CatalogBrands Worker saga', () => {
 
     it('Should end the generator after putting to loadCatalogBrandsSuccess action', () => {
         const store = { catalogBrandReducer: {} }
-        const data = { 'id': 1 }
+        const data = { id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c' }
         const res = { json: () => data }
         const generator = catalogBrandSaga.loadCatalogBrandsWorker()
         
@@ -93,7 +93,7 @@ describe('Load CatalogBrands Worker saga', () => {
 
 describe('Get Selected CatalogBrands Id Worker saga', () => {
     it('Should get selected catalogBrands id', () => {
-        const store = { catalogBrandReducer: { catalogBrands: [{ id: 1, isSelected: true }, { id: 2, isSelected: false }] }}
+        const store = { catalogBrandReducer: { catalogBrands: [{ id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c', isSelected: true }, { id: 'daf69c8e-afea-4991-8dd5-c3837c19d5b4', isSelected: false }] }}
         const generator = catalogBrandSaga.getSelectedCatalogBrandIds()
 
         generator.next()
@@ -101,11 +101,11 @@ describe('Get Selected CatalogBrands Id Worker saga', () => {
         
         const result = generator.next(store)
         expect(result.value.length).toBe(1)
-        expect(result.value).toEqual([1])
+        expect(result.value).toEqual(['37204a9c-de5d-450e-9d2a-0634f0f5a04c'])
     })
 
     it('Should end the generator after getting selected catalogBrands id', () => {
-        const store = { catalogBrandReducer: { catalogBrands: [{ id: 1, isSelected: true }, { id: 2, isSelected: false }] }}
+        const store = { catalogBrandReducer: { catalogBrands: [{ id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c', isSelected: true }, { id: 'daf69c8e-afea-4991-8dd5-c3837c19d5b4', isSelected: false }] }}
         const generator = catalogBrandSaga.getSelectedCatalogBrandIds()
 
         generator.next()
@@ -118,7 +118,7 @@ describe('Get Selected CatalogBrands Id Worker saga', () => {
 
 describe('Update Selected CatalogBrands Worker saga', () => {
     it('Should get catalogBrands from the store', () => {
-        const action = { payload: { catalogBrand: { id: 1 }, isSelected: true } }
+        const action = { payload: { catalogBrand: { id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c' }, isSelected: true } }
         const generator = catalogBrandSaga.updateSelectedCatalogBrand(action)
         const result = generator.next()
         expect(result.value).toEqual(effects.select())
@@ -127,7 +127,7 @@ describe('Update Selected CatalogBrands Worker saga', () => {
 
     it('Should put action to loadCatalogBrandsSuccess after updated selected catalogBrand', () => {
         const action = { payload: { catalogBrand: { id: 2 }, isSelected: true } }
-        const store = { catalogBrandReducer: { catalogBrands: [{ id: 1, isSelected: true }, { id: 2, isSelected: false }] }}
+        const store = { catalogBrandReducer: { catalogBrands: [{ id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c', isSelected: true }, { id: 'daf69c8e-afea-4991-8dd5-c3837c19d5b4', isSelected: false }] }}
         const generator = catalogBrandSaga.updateSelectedCatalogBrand(action)
 
         generator.next()

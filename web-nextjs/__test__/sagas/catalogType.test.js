@@ -12,7 +12,7 @@ describe('Load CatalogTypes Worker saga', () => {
     })
 
     it('Should end the generator if catalogTypes exist in the store', () => {
-        const store = { catalogTypeReducer: { catalogTypes: [{ id: 1 }] }}
+        const store = { catalogTypeReducer: { catalogTypes: [{ id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c' }] }}
         const generator = catalogTypeSaga.loadCatalogTypesWorker()
         
         generator.next()
@@ -34,7 +34,7 @@ describe('Load CatalogTypes Worker saga', () => {
 
     it('Should put action to loadCatalogTypesSuccess after successfully fetching catalogTypes', () => {
         const store = { catalogTypeReducer: {} }
-        const data = { 'id': 1 }
+        const data = { id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c' }
         const res = { json: () => data }
         const generator = catalogTypeSaga.loadCatalogTypesWorker()
         
@@ -63,7 +63,7 @@ describe('Load CatalogTypes Worker saga', () => {
 
     it('Should end the generator after putting to loadCatalogTypesSuccess action', () => {
         const store = { catalogTypeReducer: {} }
-        const data = { 'id': 1 }
+        const data = { id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c' }
         const res = { json: () => data }
         const generator = catalogTypeSaga.loadCatalogTypesWorker()
         
@@ -93,7 +93,7 @@ describe('Load CatalogTypes Worker saga', () => {
 
 describe('Get Selected CatalogTypes Id Worker saga', () => {
     it('Should get selected catalogTypes id', () => {
-        const store = { catalogTypeReducer: { catalogTypes: [{ id: 1, isSelected: true }, { id: 2, isSelected: false }] }}
+        const store = { catalogTypeReducer: { catalogTypes: [{ id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c', isSelected: true }, { id: 'daf69c8e-afea-4991-8dd5-c3837c19d5b4', isSelected: false }] }}
         const generator = catalogTypeSaga.getSelectedCatalogTypeIds()
 
         generator.next()
@@ -101,11 +101,11 @@ describe('Get Selected CatalogTypes Id Worker saga', () => {
         
         const result = generator.next(store)
         expect(result.value.length).toBe(1)
-        expect(result.value).toEqual([1])
+        expect(result.value).toEqual(['37204a9c-de5d-450e-9d2a-0634f0f5a04c'])
     })
 
     it('Should end the generator after getting selected catalogTypes id', () => {
-        const store = { catalogTypeReducer: { catalogTypes: [{ id: 1, isSelected: true }, { id: 2, isSelected: false }] }}
+        const store = { catalogTypeReducer: { catalogTypes: [{ id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c', isSelected: true }, { id: 'daf69c8e-afea-4991-8dd5-c3837c19d5b4', isSelected: false }] }}
         const generator = catalogTypeSaga.getSelectedCatalogTypeIds()
 
         generator.next()
@@ -118,7 +118,7 @@ describe('Get Selected CatalogTypes Id Worker saga', () => {
 
 describe('Update Selected CatalogTypes Worker saga', () => {
     it('Should get catalogTypes from the store', () => {
-        const action = { payload: { catalogType: { id: 1 }, isSelected: true } }
+        const action = { payload: { catalogType: { id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c' }, isSelected: true } }
         const generator = catalogTypeSaga.updateSelectedCatalogType(action)
         const result = generator.next()
         expect(result.value).toEqual(effects.select())
@@ -126,8 +126,8 @@ describe('Update Selected CatalogTypes Worker saga', () => {
     })
 
     it('Should put action to loadCatalogTypesSuccess after updated selected catalogType', () => {
-        const action = { payload: { catalogType: { id: 2 }, isSelected: true } }
-        const store = { catalogTypeReducer: { catalogTypes: [{ id: 1, isSelected: true }, { id: 2, isSelected: false }] }}
+        const action = { payload: { catalogType: { id: 'daf69c8e-afea-4991-8dd5-c3837c19d5b4' }, isSelected: true } }
+        const store = { catalogTypeReducer: { catalogTypes: [{ id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c', isSelected: true }, { id: 'daf69c8e-afea-4991-8dd5-c3837c19d5b4', isSelected: false }] }}
         const generator = catalogTypeSaga.updateSelectedCatalogType(action)
 
         generator.next()

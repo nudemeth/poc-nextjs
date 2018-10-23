@@ -6,8 +6,6 @@
     "start": "cross-env NODE_ENV=production node server.js",
     "test": "cross-env NODE_ENV=test jest",
     "jest-update": "cross-env NODE_ENV=test jest --updateSnapshot",
-    "prod": "npm-run-all --parallel fake-api-gateway prod-server",
-    "prod-server": "cross-env NODE_ENV=production node server.js",
     "dev": "npm-run-all --parallel fake-api-gateway dev-server",
     "dev-server": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 node server.js",
     "build": "next build",

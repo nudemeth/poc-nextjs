@@ -7,7 +7,7 @@ import catalogApi from '../../api/catalog.api'
 
 describe('Load Item Worker saga', () => {
     it('Should call fetching item by id', () => {
-        const params = { payload: { id: 1 } }
+        const params = { payload: { id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c' } }
         const generator = catalogSaga.loadItemWorker(params)
         const result = generator.next()
         expect(result.value).toEqual(effects.call(catalogApi.getItemById, params.payload.id))
@@ -15,8 +15,8 @@ describe('Load Item Worker saga', () => {
     })
 
     it('Should put action to loadItemSuccess after successfully fetch item by id', () => {
-        const params = { payload: { id: 1 } }
-        const data = { 'id': 1, 'name': 'Item 1', 'catalogTypeId': 1 }
+        const params = { payload: { id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c' } }
+        const data = { 'id': '37204a9c-de5d-450e-9d2a-0634f0f5a04c', 'name': 'Item 1', 'catalogTypeId': 1 }
         const res = { json: () => data }
         const generator = catalogSaga.loadItemWorker(params)
         
@@ -29,7 +29,7 @@ describe('Load Item Worker saga', () => {
     })
 
     it('Should put action to loadItemFailure when an error occurs on fetching item by id', () => {
-        const params = { payload: { id: 1 } }
+        const params = { payload: { id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c' } }
         const err = new Error()
         const res = { json: () => { throw err }}
         const generator = catalogSaga.loadItemWorker(params)
@@ -42,7 +42,7 @@ describe('Load Item Worker saga', () => {
     })
 
     it('Should end the generator after putting to loadItemFailure action', () => {
-        const params = { payload: { id: 1 } }
+        const params = { payload: { id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c' } }
         const err = new Error()
         const res = { json: () => { throw err }}
         const generator = catalogSaga.loadItemWorker(params)
@@ -55,8 +55,8 @@ describe('Load Item Worker saga', () => {
     })
 
     it('Should end the generator after putting to loadItemSuccess action', () => {
-        const params = { payload: { id: 1 } }
-        const data = { 'id': 1, 'name': 'Item 1', 'catalogTypeId': 1 }
+        const params = { payload: { id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c' } }
+        const data = { 'id': '37204a9c-de5d-450e-9d2a-0634f0f5a04c', 'name': 'Item 1', 'catalogTypeId': 1 }
         const res = { json: () => data }
         const generator = catalogSaga.loadItemWorker(params)
         
@@ -101,7 +101,7 @@ describe('Load Items Worker saga', () => {
     })
 
     it('Should put action to loadItemsSuccess after successfully fetch items by catalogType ids', () => {
-        const data = { payload: [{ id: 1 }, { id: 2 }] }
+        const data = { payload: [{ id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c' }, { id: 'daf69c8e-afea-4991-8dd5-c3837c19d5b4' }] }
         const res = { json: () => data }
         const generator = catalogSaga.loadItemsWorker()
         
@@ -130,7 +130,7 @@ describe('Load Items Worker saga', () => {
     })
 
     it('Should end the generator after putting to loadItemsSuccess action', () => {
-        const data = { payload: [{ id: 1 }, { id: 2 }] }
+        const data = { payload: [{ id: '37204a9c-de5d-450e-9d2a-0634f0f5a04c' }, { id: 'daf69c8e-afea-4991-8dd5-c3837c19d5b4' }] }
         const res = { json: () => data }
         const generator = catalogSaga.loadItemsWorker()
         
