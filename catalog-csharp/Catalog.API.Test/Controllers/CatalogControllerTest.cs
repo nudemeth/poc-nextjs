@@ -8,13 +8,14 @@ using Catalog.API.Models;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ServiceTest.Controller
 {
     public class CatalogControllerTest
     {
         private CatalogController controller;
-        private Mock<ICatalogService> mockCatalogService;
+        private Mock<ICatalogService> mockCatalogService = new Mock<ICatalogService>();
         private IList<CatalogItem> mockItems = new List<CatalogItem>();
         private IList<CatalogType> mockTypes = new List<CatalogType>();
         private IList<CatalogBrand> mockBrands = new List<CatalogBrand>();
@@ -22,7 +23,6 @@ namespace ServiceTest.Controller
         public CatalogControllerTest()
         {
             SetUpMockData();
-            SetUpMock();
             controller = new CatalogController(mockCatalogService.Object);
         }
 
@@ -55,9 +55,9 @@ namespace ServiceTest.Controller
         private void SetUpMock()
         {
             var mock = new Mock<ICatalogService>();
-            mock.Setup(m => m.GetItems()).Returns(() => mockItems);
-            mock.Setup(m => m.GetTypes()).Returns(() => mockTypes);
-            mock.Setup(m => m.GetBrands()).Returns(() => mockBrands);
+            mock.Setup(m => m.GetItems()).Returns(() => Task.FromResult(mockItems));
+            mock.Setup(m => m.GetTypes()).Returns(() => Task.FromResult(mockTypes));
+            mock.Setup(m => m.GetBrands()).Returns(() => Task.FromResult(mockBrands));
             this.mockCatalogService = mock;
         }
 
@@ -112,86 +112,124 @@ namespace ServiceTest.Controller
         [Fact]
         public async void WhenCallGetItems_ShouldGetAllItems()
         {
+            mockCatalogService.Setup(m => m.GetItems()).Returns(() => Task.FromResult(mockItems));
+
             var result = await controller.GetItems() as OkObjectResult;
             AssertResultOk(result);
             Assert.Equal(mockItems, result.Value);
+
+            mockCatalogService.Reset();
         }
 
         [Fact]
         public async void WhenCallGetItemsByIds_ShouldGetItemsFilteredByIds()
         {
-            var ids = mockItems.Select(c => c.Id).ToArray();
+            var ids = mockItems.Select(c => c.Id).Take(3).ToArray();
+            var items = mockItems.Take(3).ToList() as IList<CatalogItem>;
+            mockCatalogService.Setup(m => m.GetItems(ids)).Returns(() => Task.FromResult(items));
+            
             var result = await controller.GetItemsByIds(String.Join(',', ids)) as OkObjectResult;
             var expected = mockItems.Where(i => ids.Contains(i.Id)).ToList();
             AssertResultOk(result);
             Assert.Equal(expected, result.Value);
+
+            mockCatalogService.Reset();
         }
 
         [Fact]
         public async void WhenCallGetItemsById_ShouldGetItemFilteredById()
         {
             var id = mockItems.First().Id;
+            var expected = mockItems.Where(i => i.Id == id).ToList() as IList<CatalogItem>;
+            mockCatalogService.Setup(m => m.GetItems(new Guid[] { id })).Returns(() => Task.FromResult(expected));
+
             var result = await controller.GetItemsByIds(id.ToString()) as OkObjectResult;
-            var expected = mockItems.Where(i => i.Id == id).ToList();
             AssertResultOk(result);
             Assert.Equal(expected, result.Value);
+
+            mockCatalogService.Reset();
         }
 
         [Fact]
         public async void WhenCallGetItemsByName_ShouldGetItemFilteredByName()
         {
-            var name = "Item 2";
+            var name = "Prism White T-Shirt";
+            var expected = mockItems.Where(i => i.Name == name).First();
+            mockCatalogService.Setup(m => m.GetItemByName(name)).Returns(() => Task.FromResult(expected));
+
             var result = await controller.GetItemByName(name) as OkObjectResult;
-            var expected = mockItems.Where(i => i.Name == name).ToList();
             AssertResultOk(result);
             Assert.Equal(expected, result.Value);
+
+            mockCatalogService.Reset();
         }
 
         [Fact]
         public async void WhenCallGetItemsByTypes_ShouldGetItemFilteredByTypes()
         {
-            var ids = mockTypes.Select(c => c.Id).Take(3);
+            var ids = mockTypes.Select(c => c.Id).Take(3).ToArray();
+            var expected = mockItems.Where(i => ids.Contains(i.CatalogTypeId)).ToList() as IList<CatalogItem>;
+            mockCatalogService.Setup(m => m.GetItemsByTypes(ids)).Returns(() => Task.FromResult(expected));
+
             var result = await controller.GetItemsByTypes(String.Join(',', ids)) as OkObjectResult;
-            var expected = mockItems.Where(i => ids.Contains(i.CatalogTypeId)).ToList();
             AssertResultOk(result);
             Assert.Equal(expected, result.Value);
+
+            mockCatalogService.Reset();
         }
 
         [Fact]
-        public async void WhenCallGetItemsByBrands_ShouldGetItemFilteredByTypes()
+        public async void WhenCallGetItemsByBrands_ShouldGetItemFilteredByBrands()
         {
-            var ids = mockBrands.Select(c => c.Id).Take(3);
+            var ids = mockBrands.Select(c => c.Id).Take(3).ToArray();
+            var expected = mockItems.Where(i => ids.Contains(i.CatalogBrandId)).ToList() as IList<CatalogItem>;
+            mockCatalogService.Setup(m => m.GetItemsByBrands(ids)).Returns(() => Task.FromResult(expected));
+
             var result = await controller.GetItemsByBrands(String.Join(',', ids)) as OkObjectResult;
-            var expected = mockItems.Where(i => ids.Contains(i.CatalogBrandId)).ToList();
             AssertResultOk(result);
             Assert.Equal(expected, result.Value);
+
+            mockCatalogService.Reset();
         }
 
         [Fact]
         public async void WhenCallGetItemsByTypesAndBrands_ShouldGetItemFilteredByTypesAndBrands()
         {
-            var typeIds = mockTypes.Select(c => c.Id).Take(2);
-            var brandIds = mockBrands.Select(c => c.Id).Take(2);
+            var typeIds = mockTypes.Select(c => c.Id).Take(2).ToArray();
+            var brandIds = mockBrands.Select(c => c.Id).Take(2).ToArray();
+            var expected = mockItems.Where(i => typeIds.Contains(i.CatalogTypeId) && brandIds.Contains(i.CatalogBrandId)).ToList() as IList<CatalogItem>;
+
+            mockCatalogService.Setup(m => m.GetItemsByTypesAndBrands(typeIds, brandIds)).Returns(() => Task.FromResult(expected));
+
             var result = await controller.GetItemsByTypesAndBrands(String.Join(',', typeIds), String.Join(',', brandIds)) as OkObjectResult;
-            var expected = mockItems.Where(i => typeIds.Contains(i.CatalogTypeId) && brandIds.Contains(i.CatalogBrandId)).ToList();
             AssertResultOk(result);
             Assert.Equal(expected, result.Value);
+
+            mockCatalogService.Reset();
         }
 
         [Fact]
         public async void WhenCallGetCatalogTypes_ShouldGetCatalogTypes()
         {
+            mockCatalogService.Setup(m => m.GetTypes()).Returns(() => Task.FromResult(mockTypes));
+
             var result = await controller.GetCatalogTypes() as OkObjectResult;
             AssertResultOk(result);
             Assert.Equal(mockTypes, result.Value);
+
+            mockCatalogService.Reset();
         }
 
         [Fact]
         public async void WhenCallGetCatalogBrands_ShouldGetCatalogBrands()
         {
+            mockCatalogService.Setup(m => m.GetBrands()).Returns(() => Task.FromResult(mockBrands));
+
             var result = await controller.GetCatalogBrands() as OkObjectResult;
             AssertResultOk(result);
             Assert.Equal(mockBrands, result.Value);
+
+            mockCatalogService.Reset();
         }
 
         private void AssertResultOk(OkObjectResult result)

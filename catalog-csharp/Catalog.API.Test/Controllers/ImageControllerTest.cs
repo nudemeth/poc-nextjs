@@ -8,19 +8,19 @@ using Catalog.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Catalog.API.Test.Controller
 {
     public class ImageControllerTest
     {
         private ImageController controller;
-        private Mock<ICatalogService> mockCatalogService;
+        private Mock<ICatalogService> mockCatalogService = new Mock<ICatalogService>();
         private IList<CatalogItem> mockItems = new List<CatalogItem>();
 
         public ImageControllerTest()
         {
             SetUpMockData();
-            SetUpMock();
             controller = new ImageController(mockCatalogService.Object);
         }
 
@@ -39,12 +39,6 @@ namespace Catalog.API.Test.Controller
             mockItems.Add(new CatalogItem() { Id = Guid.NewGuid(), CatalogTypeId = Guid.NewGuid(), CatalogBrandId = Guid.NewGuid(), Description = "Cup<T> Sheet", Name = "Cup<T> Sheet", Price = 8.5M, ImagePath = "./Images/Item 11.png", CreatedDate = DateTime.Today });
             mockItems.Add(new CatalogItem() { Id = Guid.NewGuid(), CatalogTypeId = Guid.NewGuid(), CatalogBrandId = Guid.NewGuid(), Description = "Prism White TShirt", Name = "Prism White TShirt", Price = 12, ImagePath = "./Images/Item 12.png", CreatedDate = DateTime.Today });
         }
-        private void SetUpMock()
-        {
-            var mock = new Mock<ICatalogService>();
-            mock.Setup(m => m.GetItems()).Returns(() => mockItems);
-            this.mockCatalogService = mock;
-        }
 
         [Fact]
         public void WhenCallGetImage_ShouldExist()
@@ -56,12 +50,13 @@ namespace Catalog.API.Test.Controller
         [Fact]
         public async void WhenGetImage_ShouldGetImageFileFromId()
         {
-            var id = mockItems.First().Id.ToString();
-            var result = await controller.GetImage(id) as FileContentResult;
+            var mockItem = mockItems.First();
+            mockCatalogService.Setup(m => m.GetItem(mockItem.Id)).Returns(() => Task.FromResult(mockItem));
+            var result = await controller.GetImage(mockItem.Id.ToString()) as FileContentResult;
 
             Assert.NotNull(result);
             
-            var item = mockItems.Where(i => i.Id == new Guid(id)).SingleOrDefault();
+            var item = mockItems.Where(i => i.Id == new Guid(mockItem.Id.ToString())).SingleOrDefault();
             var mimetype = "image/png";
             var buffer = System.IO.File.ReadAllBytes(item.ImagePath);
             var expected = controller.File(buffer, mimetype);
@@ -69,6 +64,8 @@ namespace Catalog.API.Test.Controller
             Assert.Equal(expected.FileDownloadName, result.FileDownloadName);
             Assert.Equal(expected.LastModified, result.LastModified);
             Assert.Equal(expected.ContentType, result.ContentType);
+
+            mockCatalogService.Reset();
         }
     }
 }

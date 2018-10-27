@@ -23,21 +23,21 @@ namespace Catalog.API.Controllers
         [Route("api/v1/catalog/items/{catalogItemId}/img")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetImage(string catalogItemId)
+        public async Task<IActionResult> GetImage(string id)
         {
-            var guid = new Guid(catalogItemId);
-            var item = catalogService.GetItems().SingleOrDefault(i => i.Id == guid);
+            var guid = new Guid(id);
+            var item = await catalogService.GetItem(guid);
 
             if (item == null)
             {
-                return await Task.FromResult(NotFound());
+                return NotFound();
             }
 
             var imageFileExtension = Path.GetExtension(item.ImagePath);
             var mimetype = GetImageMimeTypeFromImageFileExtension(imageFileExtension);
             var buffer = System.IO.File.ReadAllBytes(item.ImagePath);
 
-            return await Task.FromResult(File(buffer, mimetype));
+            return File(buffer, mimetype);
         }
 
         private string GetImageMimeTypeFromImageFileExtension(string extension)

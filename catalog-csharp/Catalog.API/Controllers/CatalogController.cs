@@ -26,7 +26,8 @@ namespace Catalog.API.Controllers
         [Route("items")]
         public async Task<IActionResult> GetItems()
         {
-            return await Task.FromResult(Ok(catalogService.GetItems()));
+            var items = await catalogService.GetItems();
+            return Ok(items);
         }
 
         // GET api/[controller]/items/[1,2,3]
@@ -34,64 +35,61 @@ namespace Catalog.API.Controllers
         [Route("items/{ids:minlength(1)}")]
         public async Task<IActionResult> GetItemsByIds(string ids = null)
         {
-            var items = catalogService.GetItems();
             var itemIds = ids.Split(',').Select(i => new Guid(i)).ToArray();
-            var result = items.Where(i => itemIds.Contains(i.Id)).ToList();
-            return await Task.FromResult(Ok(result));
+            var items = await catalogService.GetItems(itemIds);
+            return Ok(items);
         }
 
         [HttpGet]
         [Route("items/withname/{name:minlength(1)}")]
         public async Task<IActionResult> GetItemByName(string name)
         {
-            var items = catalogService.GetItems();
-            var result = items.Where(i => i.Name == name).ToList();
-            return await Task.FromResult(Ok(result));
+            var item = await catalogService.GetItemByName(name);
+            return Ok(item);
         }
 
         [HttpGet]
         [Route("items/types/{catalogTypeIds:minlength(1)}/brands/{catalogBrandIds:minlength(1)}")]
         public async Task<IActionResult> GetItemsByTypesAndBrands(string catalogTypeIds, string catalogBrandIds)
         {
-            var items = catalogService.GetItems();
             var typeIds = catalogTypeIds.Split(',').Select(i => new Guid(i)).ToArray();
             var brandIds = catalogBrandIds.Split(',').Select(i => new Guid(i)).ToArray();
-            var result = items.Where(i => typeIds.Contains(i.CatalogTypeId) && brandIds.Contains(i.CatalogBrandId)).ToList();
-            return await Task.FromResult(Ok(result));
+            var items = await catalogService.GetItemsByTypesAndBrands(typeIds, brandIds);
+            return Ok(items);
         }
 
         [HttpGet]
         [Route("items/types/{catalogTypeIds:minlength(1)}")]
         public async Task<IActionResult> GetItemsByTypes(string catalogTypeIds)
         {
-            var items = catalogService.GetItems();
             var typeIds = catalogTypeIds.Split(',').Select(i => new Guid(i)).ToArray();
-            var result = items.Where(i => typeIds.Contains(i.CatalogTypeId)).ToList();
-            return await Task.FromResult(Ok(result));
+            var items = await catalogService.GetItemsByTypes(typeIds);
+            return Ok(items);
         }
 
         [HttpGet]
         [Route("items/brands/{catalogBrandIds:minlength(1)}")]
         public async Task<IActionResult> GetItemsByBrands(string catalogBrandIds)
         {
-            var items = catalogService.GetItems();
             var brandIds = catalogBrandIds.Split(',').Select(i => new Guid(i)).ToArray();
-            var result = items.Where(i => brandIds.Contains(i.CatalogBrandId)).ToList();
-            return await Task.FromResult(Ok(result));
+            var items = await catalogService.GetItemsByBrands(brandIds);
+            return Ok(items);
         }
 
         [HttpGet]
         [Route("catalogTypes")]
         public async Task<IActionResult> GetCatalogTypes()
         {
-            return await Task.FromResult(Ok(catalogService.GetTypes()));
+            var types = await catalogService.GetTypes();
+            return Ok(types);
         }
 
         [HttpGet]
         [Route("catalogBrands")]
         public async Task<IActionResult> GetCatalogBrands()
         {
-            return await Task.FromResult(Ok(catalogService.GetBrands()));
+            var brands = await catalogService.GetBrands();
+            return Ok(brands);
         }
 
         // POST api/[controller]
