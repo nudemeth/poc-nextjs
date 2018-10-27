@@ -13,7 +13,6 @@ class Index extends React.Component {
 
     static async getInitialProps({ ctx: { store } }) {
         store.dispatch(loadItems())
-        return { text: 'Index Page' }
     }
 
     static propTypes = {
