@@ -1,4 +1,5 @@
 using Autofac;
+using Catalog.API.DataAccess;
 using Catalog.API.Infrastructure;
 using Catalog.API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -23,12 +24,19 @@ namespace Catalog.API
             // The generic ILogger<TCategoryName> service was added to the ServiceCollection by ASP.NET Core.
             // It was then registered with Autofac using the Populate method in ConfigureServices.
             builder.Register(c =>
+                new UnitOfWork(new CatalogContext(options))
+            )
+            .As<IUnitOfWork>()
+            .InstancePerLifetimeScope();
+
+            builder.Register(c =>
                 new CatalogService(
                     c.Resolve<ILogger<CatalogService>>(),
-                    new CatalogContext(options))
+                    c.Resolve<IUnitOfWork>()
                 )
-                .As<ICatalogService>()
-                .InstancePerLifetimeScope();
+            )
+            .As<ICatalogService>()
+            .InstancePerLifetimeScope();
         }
 
         private string GetConnectionString()

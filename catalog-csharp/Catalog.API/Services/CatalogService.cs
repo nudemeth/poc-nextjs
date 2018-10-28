@@ -6,55 +6,55 @@ using Catalog.API.Infrastructure;
 using Catalog.API.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Catalog.API.DataAccess;
 
 namespace Catalog.API.Services
 {
     public class CatalogService : ICatalogService
     {
         private readonly ILogger<CatalogService> logger;
-        private readonly CatalogContext catalogContext;
+        private readonly IUnitOfWork unitOfWork;
 
-        public CatalogService(ILogger<CatalogService> logger, CatalogContext catalogContext)
+        public CatalogService(ILogger<CatalogService> logger, IUnitOfWork unitOfWork)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.catalogContext = catalogContext ?? throw new ArgumentNullException(nameof(catalogContext));
+            this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
-
         public async Task<IList<CatalogType>> GetTypes()
         {
-            return await catalogContext.CatalogTypes.ToListAsync();
+            return await unitOfWork.CatalogTypeRepository.Get();
         }
         public async Task<IList<CatalogBrand>> GetBrands()
         {
-            return await catalogContext.CatalogBrands.ToListAsync();
+            return await unitOfWork.CatalogBrandRepository.Get();
         }
         public async Task<IList<CatalogItem>> GetItems()
         {
-            return await catalogContext.CatalogItems.ToListAsync();
+            return await unitOfWork.CatalogItemRepository.Get();
         }
         public async Task<IList<CatalogItem>> GetItems(Guid[] ids)
         {
-            return await catalogContext.CatalogItems.Where(i => ids.Contains(i.Id)).ToListAsync();
+            return await unitOfWork.CatalogItemRepository.Get(ids);
         }
         public async Task<CatalogItem> GetItem(Guid id)
         {
-            return await catalogContext.CatalogItems.Where(i => i.Id == id).SingleOrDefaultAsync();
+            return await unitOfWork.CatalogItemRepository.Get(id);
         }
         public async Task<CatalogItem> GetItemByName(string name)
         {
-            return await catalogContext.CatalogItems.Where(i => i.Name == name).SingleOrDefaultAsync();
+            return await unitOfWork.CatalogItemRepository.GetByName(name);
         }
         public async Task<IList<CatalogItem>> GetItemsByTypesAndBrands(Guid[] catalogTypeIds, Guid[] catalogBrandIds)
         {
-            return await catalogContext.CatalogItems.Where(i => catalogTypeIds.Contains(i.CatalogTypeId) && catalogBrandIds.Contains(i.CatalogBrandId)).ToListAsync();
+            return await unitOfWork.CatalogItemRepository.GetByTypesAndBrands(catalogTypeIds, catalogBrandIds);
         }
         public async Task<IList<CatalogItem>> GetItemsByTypes(Guid[] catalogTypeIds)
         {
-            return await catalogContext.CatalogItems.Where(i => catalogTypeIds.Contains(i.CatalogTypeId)).ToListAsync();
+            return await unitOfWork.CatalogItemRepository.GetByTypes(catalogTypeIds);
         }
         public async Task<IList<CatalogItem>> GetItemsByBrands(Guid[] catalogBrandIds)
         {
-            return await catalogContext.CatalogItems.Where(i => catalogBrandIds.Contains(i.CatalogBrandId)).ToListAsync();
+            return await unitOfWork.CatalogItemRepository.GetByBrands(catalogBrandIds);
         }
     }
 }
