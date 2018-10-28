@@ -14,7 +14,6 @@ namespace Catalog.API.Services
     {
         private readonly ILogger<CatalogService> logger;
         private readonly IUnitOfWork unitOfWork;
-
         public CatalogService(ILogger<CatalogService> logger, IUnitOfWork unitOfWork)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -42,19 +41,20 @@ namespace Catalog.API.Services
         }
         public async Task<CatalogItem> GetItemByName(string name)
         {
-            return await unitOfWork.CatalogItemRepository.GetByName(name);
+            var items = await unitOfWork.CatalogItemRepository.Get(i => i.Name == name);
+            return items.SingleOrDefault();
         }
         public async Task<IList<CatalogItem>> GetItemsByTypesAndBrands(Guid[] catalogTypeIds, Guid[] catalogBrandIds)
         {
-            return await unitOfWork.CatalogItemRepository.GetByTypesAndBrands(catalogTypeIds, catalogBrandIds);
+            return await unitOfWork.CatalogItemRepository.Get(i => catalogTypeIds.Contains(i.CatalogTypeId) && catalogBrandIds.Contains(i.CatalogBrandId));
         }
         public async Task<IList<CatalogItem>> GetItemsByTypes(Guid[] catalogTypeIds)
         {
-            return await unitOfWork.CatalogItemRepository.GetByTypes(catalogTypeIds);
+            return await unitOfWork.CatalogItemRepository.Get(i => catalogTypeIds.Contains(i.CatalogTypeId));
         }
         public async Task<IList<CatalogItem>> GetItemsByBrands(Guid[] catalogBrandIds)
         {
-            return await unitOfWork.CatalogItemRepository.GetByBrands(catalogBrandIds);
+            return await unitOfWork.CatalogItemRepository.Get(i => catalogBrandIds.Contains(i.CatalogBrandId));
         }
     }
 }

@@ -2,7 +2,7 @@ using System;
 
 namespace Catalog.API.Models
 {
-    public class CatalogBrand
+    public class CatalogBrand : ICatalogModel
     {
         public Guid Id { get; set; }
         public string Brand { get; set; }

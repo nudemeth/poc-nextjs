@@ -1,47 +1,48 @@
 using System;
 using Catalog.API.Infrastructure;
+using Catalog.API.Models;
 
 namespace Catalog.API.DataAccess
 {
     public class UnitOfWork : IUnitOfWork
     {
         private readonly CatalogContext context;
-        private ICatalogItemRepository catalogItemRepository;
-        private ICatalogTypeRepository catalogTypeRepository;
-        private ICatalogBrandRepository catalogBrandRepository;
+        private ICatalogRepository<CatalogItem> catalogItemRepository;
+        private ICatalogRepository<CatalogType> catalogTypeRepository;
+        private ICatalogRepository<CatalogBrand> catalogBrandRepository;
         public UnitOfWork(CatalogContext context)
         {
             this.context = context;
         }
-        public ICatalogItemRepository CatalogItemRepository
+        public ICatalogRepository<CatalogItem> CatalogItemRepository
         {
             get
             {
                 if (catalogItemRepository == null)
                 {
-                    catalogItemRepository = new CatalogItemRepository(context);
+                    catalogItemRepository = new CatalogRepository<CatalogItem>(context);
                 }
                 return catalogItemRepository;
             }
         }
-        public ICatalogTypeRepository CatalogTypeRepository
+        public ICatalogRepository<CatalogType> CatalogTypeRepository
         {
             get
             {
                 if (catalogTypeRepository == null)
                 {
-                    catalogTypeRepository = new CatalogTypeRepository(context);
+                    catalogTypeRepository = new CatalogRepository<CatalogType>(context);
                 }
                 return catalogTypeRepository;
             }
         }
-        public ICatalogBrandRepository CatalogBrandRepository
+        public ICatalogRepository<CatalogBrand> CatalogBrandRepository
         {
             get
             {
                 if (catalogBrandRepository == null)
                 {
-                    catalogBrandRepository = new CatalogBrandRepository(context);
+                    catalogBrandRepository = new CatalogRepository<CatalogBrand>(context);
                 }
                 return catalogBrandRepository;
             }
