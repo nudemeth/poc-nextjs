@@ -22,6 +22,8 @@ services:
       - "1433:1433"
     networks:
       - microservices-net
+    depends_on:
+      - rabbitmq
 
   api-go:
     container_name: api-go.localhost
@@ -34,6 +36,13 @@ services:
       - microservices-net
     depends_on: 
       - catalog-csharp
+
+  eventbus-rabbitmq:
+    container_name: eventbus-rabbitmq
+    build:
+      context: ./eventbus-rabbitmq
+    networks:
+      - microservices-net
 
   nginx:
     container_name: nginx
