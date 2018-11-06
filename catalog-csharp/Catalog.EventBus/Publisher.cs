@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Catalog.EventBus
 {
-    public class Sender
+    public class Publisher
     {
         public void Send()
         {
@@ -13,19 +13,17 @@ namespace Catalog.EventBus
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queue: "hello",
-                                 durable: false,
-                                 exclusive: false,
-                                 autoDelete: false,
-                                 arguments: null);
+                channel.ExchangeDeclare(exchange: "direct_logs",
+                                    type: "direct");
 
-                string message = "Hello World!";
+                var severity = "info";
+                var message = "Hello World!";
                 var body = Encoding.UTF8.GetBytes(message);
-
-                channel.BasicPublish(exchange: "",
-                                    routingKey: "hello",
+                channel.BasicPublish(exchange: "direct_logs",
+                                    routingKey: severity,
                                     basicProperties: null,
                                     body: body);
+                Console.WriteLine(" [x] Sent '{0}':'{1}'", severity, message);
             }
         }
     }
