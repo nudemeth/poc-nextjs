@@ -1,13 +1,24 @@
 lazy val akkaHttpVersion = "10.1.5"
 lazy val akkaVersion    = "2.5.17"
 
-lazy val root = (project in file(".")).
-  settings(
-    inThisBuild(List(
-      organization    := "com.nudemeth",
-      scalaVersion    := "2.12.7"
-    )),
-    name := "ordering",
+lazy val commonSettings = Seq(
+  version         := "0.1-SNAPSHOT",
+  organization    := "com.nudemeth",
+  scalaVersion    := "2.12.7"
+)
+
+lazy val root = (project in file("."))
+  .aggregate(api)
+  .dependsOn(api)
+  .settings(commonSettings: _*)
+  /*.settings(
+    mainClass in (Compile, run) := Some("com.nudemeth.poc.ordering.api.QuickstartServer")
+  )*/
+
+lazy val api = (project in file("./ordering-api"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "ordering-api",
     libraryDependencies ++= Seq(
       "com.typesafe.akka" %% "akka-http"            % akkaHttpVersion,
       "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
@@ -20,3 +31,5 @@ lazy val root = (project in file(".")).
       "org.scalatest"     %% "scalatest"            % "3.0.5"         % Test
     )
   )
+
+mainClass in (Compile, run) := Some("com.nudemeth.poc.ordering.api.QuickstartServer")
