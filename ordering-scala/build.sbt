@@ -11,9 +11,11 @@ lazy val root = (project in file("."))
   .aggregate(api)
   .dependsOn(api)
   .settings(commonSettings: _*)
-  /*.settings(
-    mainClass in (Compile, run) := Some("com.nudemeth.poc.ordering.api.QuickstartServer")
-  )*/
+  .settings(
+    mainClass in (Compile, run) := Some("com.nudemeth.poc.ordering.api.QuickstartServer"),
+  )
+  .disablePlugins(RevolverPlugin)
+
 
 lazy val api = (project in file("./ordering-api"))
   .settings(commonSettings: _*)
@@ -32,4 +34,3 @@ lazy val api = (project in file("./ordering-api"))
     )
   )
 
-mainClass in (Compile, run) := Some("com.nudemeth.poc.ordering.api.QuickstartServer")
