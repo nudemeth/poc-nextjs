@@ -18,6 +18,8 @@ lazy val root = (project in file("."))
 
 
 lazy val api = (project in file("./ordering-api"))
+  .aggregate(domain)
+  .dependsOn(domain)
   .settings(commonSettings: _*)
   .settings(
     name := "ordering-api",
@@ -34,3 +36,11 @@ lazy val api = (project in file("./ordering-api"))
     )
   )
 
+lazy val domain = (project in file("./ordering-domain"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "ordering-domain",
+    libraryDependencies ++= Seq(
+      "org.scalatest"     %% "scalatest"            % "3.0.5"         % Test
+    )
+  )
