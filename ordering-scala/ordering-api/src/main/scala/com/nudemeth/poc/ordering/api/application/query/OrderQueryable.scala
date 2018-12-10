@@ -7,7 +7,7 @@ import com.nudemeth.poc.ordering.domain.model.order.Order
 import scala.concurrent.Future
 
 trait OrderQueryable {
-  def GetOrderAsync(id: UUID): Future[Order]
-  def GetOrdersFromUserAsync(id: UUID): Future[Order]
+  def GetOrderAsync(id: UUID): Future[Option[Order]]
+  def GetOrdersFromUserAsync(id: UUID): Future[List[Order]]
   def GetCardTypesAsync(): Future[Order]
 }

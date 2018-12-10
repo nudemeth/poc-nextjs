@@ -4,8 +4,11 @@ import java.util.UUID
 
 import com.outworkers.phantom.dsl._
 import com.outworkers.phantom.Table
+import com.outworkers.phantom.builder.Specified
+import com.outworkers.phantom.builder.query.InsertQuery
 import com.outworkers.phantom.jdk8._
 import com.outworkers.phantom.keys.PartitionKey
+import shapeless.HNil
 
 import scala.concurrent.Future
 
@@ -35,7 +38,8 @@ abstract class OrderModel extends Table[OrderModel, OrderEntity] {
       .one()
   }
 
-  def saveOrUpdate(order: OrderEntity): Future[ResultSet] = {
+  def saveOrUpdate(order: OrderEntity): Future[ResultSet] = saveOrUpdateTransaction(order).future()
+  def saveOrUpdateTransaction(order: OrderEntity): InsertQuery[OrderModel, OrderEntity, Specified, HNil] = {
     insert
       .value(_.id, order.id)
       .value(_.userId, order.userId)
@@ -52,7 +56,6 @@ abstract class OrderModel extends Table[OrderModel, OrderEntity] {
       .value(_.buyerId, order.buyerId)
       .value(_.paymentMethodId, order.paymentMethodId)
       .consistencyLevel_=(ConsistencyLevel.ALL)
-      .future()
   }
 
   def deleteByUserId(id: UUID): Future[ResultSet] = {

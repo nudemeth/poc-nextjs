@@ -3,7 +3,7 @@ package com.nudemeth.poc.ordering.domain.model.order
 case class Address(
   street: String,
   city: String,
-  state: String,
+  state: Option[String],
   country: String,
   zipCode: String) {
 

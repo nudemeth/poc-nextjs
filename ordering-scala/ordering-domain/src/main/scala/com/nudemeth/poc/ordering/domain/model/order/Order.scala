@@ -10,7 +10,7 @@ case class Order(
   cardNumber: String,
   cardSecurityNumber: String,
   cardHolderName: String,
-  cardExpiration: Instant,
+  cardExpiration: Option[Instant],
   buyerId: Option[Int] = None,
   paymentMethodId: Option[Int] = None) {
 
