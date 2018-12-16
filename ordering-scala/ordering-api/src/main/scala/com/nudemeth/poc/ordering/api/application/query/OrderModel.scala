@@ -31,7 +31,7 @@ abstract class OrderModel extends Table[OrderModel, OrderEntity] {
   object buyerId extends OptionalCol[Int]
   object paymentMethodId extends OptionalCol[Int]
 
-  def getByUserId(id: UUID): Future[Option[OrderEntity]] = {
+  def getById(id: UUID): Future[Option[OrderEntity]] = {
     select
       .where(_.id eqs id)
       .consistencyLevel_=(ConsistencyLevel.ONE)

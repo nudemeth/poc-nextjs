@@ -10,7 +10,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class OrderQuery(connStr: String) extends OrderQueryable {
   override def GetOrderAsync(id: UUID): Future[Option[Order]] = {
     for {
-      e <- Database.OrderModel.getByUserId(id)
+      e <- Database.OrderModel.getById(id)
       d <- mapToDomain(e)
     } yield d
   }
