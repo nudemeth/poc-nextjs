@@ -2,22 +2,22 @@ package com.nudemeth.poc.ordering.api.application.query
 
 import java.util.UUID
 
-import com.outworkers.phantom.dsl._
 import com.outworkers.phantom.Table
 import com.outworkers.phantom.builder.Specified
 import com.outworkers.phantom.builder.query.InsertQuery
+import com.outworkers.phantom.dsl._
 import com.outworkers.phantom.jdk8._
 import com.outworkers.phantom.keys.PartitionKey
 import shapeless.HNil
 
 import scala.concurrent.Future
 
-abstract class OrderModel extends Table[OrderModel, OrderEntity] {
-  override def tableName: String = "Order"
+abstract class OrderByUserModel extends Table[OrderByUserModel, OrderEntity] {
+  override def tableName: String = "OrderByUser"
 
-  object id extends Col[UUID] with PartitionKey
+  object id extends Col[UUID] with ClusteringOrder
   object userId extends Col[String]
-  object userName extends Col[String]
+  object userName extends Col[String] with PartitionKey
   object street extends Col[String]
   object city extends Col[String]
   object state extends OptionalCol[String]
@@ -31,15 +31,15 @@ abstract class OrderModel extends Table[OrderModel, OrderEntity] {
   object buyerId extends OptionalCol[Int]
   object paymentMethodId extends OptionalCol[Int]
 
-  def getById(id: UUID): Future[Option[OrderEntity]] = {
+  def getByUserName(userName: String): Future[List[OrderEntity]] = {
     select
-      .where(_.id eqs id)
+      .where(_.userName eqs userName)
       .consistencyLevel_=(ConsistencyLevel.ONE)
-      .one()
+      .fetch()
   }
 
   def saveOrUpdate(order: OrderEntity): Future[ResultSet] = saveOrUpdateTransaction(order).future()
-  def saveOrUpdateTransaction(order: OrderEntity): InsertQuery[OrderModel, OrderEntity, Specified, HNil] = {
+  def saveOrUpdateTransaction(order: OrderEntity): InsertQuery[OrderByUserModel, OrderEntity, Specified, HNil] = {
     insert
       .value(_.id, order.id)
       .value(_.userId, order.userId)
@@ -58,9 +58,9 @@ abstract class OrderModel extends Table[OrderModel, OrderEntity] {
       .consistencyLevel_=(ConsistencyLevel.ALL)
   }
 
-  def deleteById(id: UUID): Future[ResultSet] = {
+  def deleteByUserName(userName: String): Future[ResultSet] = {
     delete
-      .where(_.id eqs id)
+      .where(_.userName eqs userName)
       .consistencyLevel_=(ConsistencyLevel.ONE)
       .future()
   }
