@@ -4,7 +4,7 @@ lazy val phantomVersion   = "2.29.0"
 
 lazy val commonSettings = Seq(
   version         := "0.1-SNAPSHOT",
-  organization    := "com.nudemeth",
+  organization    := "nudemeth",
   scalaVersion    := "2.12.7"
 )
 
@@ -48,3 +48,4 @@ lazy val domain = (project in file("./ordering-domain"))
       "org.scalatest"     %% "scalatest"            % "3.0.5"         % Test
     )
   )
+  .disablePlugins(RevolverPlugin)
