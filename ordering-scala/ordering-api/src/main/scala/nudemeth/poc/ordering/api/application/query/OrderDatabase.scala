@@ -8,6 +8,7 @@ import scala.concurrent.Future
 class OrderDatabase(override val connector: CassandraConnection) extends Database[OrderDatabase](connector) {
   object OrderModel extends OrderModel with connector.Connector
   object OrderByUserModel extends OrderByUserModel with connector.Connector
+  object CardTypeModel extends CardTypeModel with connector.Connector
 
   def saveOrUpdate(order: OrderEntity): Future[ResultSet] = {
     Batch.logged

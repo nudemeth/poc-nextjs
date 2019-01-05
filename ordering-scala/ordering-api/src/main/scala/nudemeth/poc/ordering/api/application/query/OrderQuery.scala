@@ -1,8 +1,9 @@
 package nudemeth.poc.ordering.api.application.query
 
-import java.time.Instant
 import java.util.UUID
 
+import nudemeth.poc.ordering.domain.model.aggregate.buyer.CardType
+import nudemeth.poc.ordering.domain.model.aggregate.buyer.CardType.CardType
 import nudemeth.poc.ordering.domain.model.aggregate.order.{ Address, Order }
 
 import scala.concurrent.Future
@@ -23,8 +24,17 @@ class OrderQuery(connStr: String) extends OrderQueryable {
     } yield d
   }
 
-  override def GetCardTypesAsync(): Future[Order] = {
-    Future.successful(Order("", "", None, 0, "", "", "", Some(Instant.now)))
+  override def GetCardTypesAsync(): Future[List[CardType]] = {
+    for {
+      e <- Database.CardTypeModel.list()
+      d <- mapToDomain(e)
+    } yield d
+  }
+
+  private def mapToDomain(entities: List[CardTypeEntity]): Future[List[CardType]] = Future {
+    entities.map(e => {
+      CardType.withName(e.name)
+    })
   }
 
   private def mapToDomains(entities: List[OrderEntity]): Future[List[Order]] = Future {
