@@ -4,14 +4,14 @@ package nudemeth.poc.ordering.api
 import scala.concurrent.{ Await, ExecutionContext, Future }
 import scala.concurrent.duration.Duration
 import scala.util.{ Failure, Success }
-
 import akka.actor.{ ActorRef, ActorSystem }
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
+import nudemeth.poc.ordering.api.controller.{ OrderingRegistryActor, OrderingRoutes }
 
 //#main-class
-object QuickstartServer extends App with UserRoutes {
+object QuickstartServer extends App with OrderingRoutes {
 
   // set up ActorSystem and other dependencies here
   //#main-class
@@ -21,11 +21,11 @@ object QuickstartServer extends App with UserRoutes {
   implicit val executionContext: ExecutionContext = system.dispatcher
   //#server-bootstrapping
 
-  val userRegistryActor: ActorRef = system.actorOf(UserRegistryActor.props, "userRegistryActor")
+  val orderingRegistryActor: ActorRef = system.actorOf(OrderingRegistryActor.props, "orderingRegistryActor")
 
   //#main-class
-  // from the UserRoutes trait
-  lazy val routes: Route = userRoutes
+  // from the OrderingRoutes trait
+  lazy val routes: Route = orderingRouts
   //#main-class
 
   //#http-server
