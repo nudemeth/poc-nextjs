@@ -13,10 +13,10 @@ object OrderingRegistryActor {
   final case class CreateOrder(order: Order)
   final case class GetOrder(id: UUID)
 
-  def props: Props = Props[APIRegistryActor]
+  def props: Props = Props[OrderingRegistryActor]
 }
 
-class APIRegistryActor extends Actor with ActorLogging {
+class OrderingRegistryActor extends Actor with ActorLogging {
   import nudemeth.poc.ordering.api.controller.OrderingRegistryActor._
 
   var orders = List.empty[Order]

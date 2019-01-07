@@ -4,7 +4,7 @@ import java.util.UUID
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import nudemeth.poc.ordering.api.controller.OrderingRegistryActor.ActionPerformed
-import spray.json.{ DefaultJsonProtocol, DeserializationException, JsString, JsValue, JsonFormat, RootJsonFormat }
+import spray.json._
 
 trait JsonSupport extends SprayJsonSupport {
   import DefaultJsonProtocol._
@@ -18,6 +18,16 @@ trait JsonSupport extends SprayJsonSupport {
       }
     }
   }
+
+  /*implicit object OrderListFormat extends JsonFormat[List[Order]] {
+    def write(orders: List[Order]) = JsArray(orders.map(o => o.toJson).toVector)
+    def read(value: JsValue): List[Order] = {
+      value match {
+        case JsArray(Vector(JsString(id), JsString(name))) => List(Order(UUID.fromString(id), name))
+        case _ => throw DeserializationException("Expected array of Order")
+      }
+    }
+  }*/
 
   implicit val orderJsonFormat: RootJsonFormat[Order] = jsonFormat2(Order)
   implicit val ordersJsonFormat: RootJsonFormat[Orders] = jsonFormat1(Orders)
