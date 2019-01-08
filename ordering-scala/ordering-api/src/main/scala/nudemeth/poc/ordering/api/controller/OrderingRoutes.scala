@@ -29,7 +29,7 @@ trait OrderingRoutes extends JsonSupport {
         pathEnd {
           concat(
             get {
-              val orders: Future[Orders] = (orderingRegistryActor ? GetOrders).mapTo[Orders]
+              val orders: Future[List[Order]] = (orderingRegistryActor ? GetOrders).mapTo[List[Order]]
               complete(orders)
             },
             post {

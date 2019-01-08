@@ -19,7 +19,7 @@ trait JsonSupport extends SprayJsonSupport {
     }
   }
 
-  /*implicit object OrderListFormat extends JsonFormat[List[Order]] {
+  implicit object OrderListFormat extends RootJsonFormat[List[Order]] {
     def write(orders: List[Order]) = JsArray(orders.map(o => o.toJson).toVector)
     def read(value: JsValue): List[Order] = {
       value match {
@@ -27,10 +27,10 @@ trait JsonSupport extends SprayJsonSupport {
         case _ => throw DeserializationException("Expected array of Order")
       }
     }
-  }*/
+  }
 
   implicit val orderJsonFormat: RootJsonFormat[Order] = jsonFormat2(Order)
-  implicit val ordersJsonFormat: RootJsonFormat[Orders] = jsonFormat1(Orders)
+  implicit val ordersJsonFormat: RootJsonFormat[List[Order]] = OrderListFormat
 
   implicit val actionPerformedJsonFormat: RootJsonFormat[ActionPerformed] = jsonFormat1(ActionPerformed)
 }

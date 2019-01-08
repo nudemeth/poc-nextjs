@@ -5,7 +5,6 @@ import java.util.UUID
 import akka.actor.{ Actor, ActorLogging, Props }
 
 final case class Order(id: UUID, name: String)
-final case class Orders(orders: List[Order])
 
 object OrderingRegistryActor {
   final case class ActionPerformed(description: String)
@@ -23,7 +22,7 @@ class OrderingRegistryActor extends Actor with ActorLogging {
 
   def receive: Receive = {
     case GetOrders =>
-      sender() ! Orders(orders)
+      sender() ! orders
     case GetOrder(id) =>
       sender() ! orders.find(_.id == id)
     case CreateOrder(order) =>
