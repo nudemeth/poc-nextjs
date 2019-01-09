@@ -25,7 +25,7 @@ object QuickstartServer extends App with OrderingRoutes {
 
   //#main-class
   // from the OrderingRoutes trait
-  lazy val routes: Route = orderingRouts
+  lazy val routes: Route = orderingRoutes
   //#main-class
 
   //#http-server
