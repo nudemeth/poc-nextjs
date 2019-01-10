@@ -44,12 +44,21 @@ trait OrderingRoutes extends JsonSupport {
             })
         },
         path(JavaUUID) { id =>
-          get {
-            val maybeOrder: Future[Option[Order]] = (orderingRegistryActor ? GetOrder(id)).mapTo[Option[Order]]
-            rejectEmptyResponse {
-              complete(maybeOrder)
-            }
-          }
+          concat(
+            get {
+              val maybeOrder: Future[Option[Order]] = (orderingRegistryActor ? GetOrder(id)).mapTo[Option[Order]]
+              rejectEmptyResponse {
+                complete(maybeOrder)
+              }
+            },
+            delete {
+              val userDeleted: Future[ActionPerformed] =
+                (orderingRegistryActor ? DeleteOrder(id)).mapTo[ActionPerformed]
+              onSuccess(userDeleted) { performed =>
+                log.info("Deleted order [{}]: {}", id.toString, performed.description)
+                complete((StatusCodes.OK, performed))
+              }
+            })
         })
     }
 }
