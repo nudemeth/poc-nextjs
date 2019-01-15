@@ -11,7 +11,7 @@ import akka.stream.ActorMaterializer
 import nudemeth.poc.ordering.api.controller.{ OrderingRegistryActor, OrderingRoutes }
 
 //#main-class
-object QuickstartServer extends App with OrderingRoutes {
+object Server extends App with OrderingRoutes {
 
   // set up ActorSystem and other dependencies here
   //#main-class

@@ -13,7 +13,7 @@ lazy val root = (project in file("."))
   .dependsOn(api)
   .settings(commonSettings: _*)
   .settings(
-    mainClass in (Compile, run) := Some("nudemeth.poc.ordering.api.QuickstartServer"),
+    mainClass in (Compile, run) := Some("nudemeth.poc.ordering.api.Server"),
   )
   .disablePlugins(RevolverPlugin)
 

@@ -24,7 +24,7 @@ trait OrderingRoutes extends JsonSupport {
   implicit lazy val timeout: Timeout = Timeout(5.seconds) // usually we'd obtain the timeout from the system's configuration
 
   lazy val orderingRoutes: Route =
-    pathPrefix("orders") {
+    pathPrefix("api" / "v1" / "orders") {
       concat(
         pathEnd {
           concat(
