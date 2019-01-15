@@ -19,18 +19,34 @@ object OrderingRegistryActor {
 class OrderingRegistryActor extends Actor with ActorLogging {
   import nudemeth.poc.ordering.api.controller.OrderingRegistryActor._
 
-  var orders = List.empty[Order]
+  var orders: List[Order] = List[Order](Order(UUID.randomUUID(), "a"), Order(UUID.randomUUID(), "b"))
 
   def receive: Receive = {
     case GetOrders =>
-      sender() ! orders
+      sender() ! getOrders
     case GetOrder(id) =>
-      sender() ! orders.find(_.id == id)
+      sender() ! getOrder(id)
     case CreateOrder(order) =>
-      orders = orders :+ order
+      createOrder(order)
       sender() ! ActionPerformed(s"Order ${order.name} created.")
     case DeleteOrder(id) =>
-      orders = orders.filterNot(_.id == id)
+      deleteOrder(id)
       sender() ! ActionPerformed(s"Order id $id deleted.")
+  }
+
+  private def getOrders: List[Order] = {
+    orders
+  }
+
+  private def getOrder(id: UUID): Option[Order] = {
+    orders.find(_.id == id)
+  }
+
+  private def createOrder(order: Order): Unit = {
+    orders = orders :+ order
+  }
+
+  private def deleteOrder(id: UUID): Unit = {
+    orders = orders.filterNot(_.id == id)
   }
 }

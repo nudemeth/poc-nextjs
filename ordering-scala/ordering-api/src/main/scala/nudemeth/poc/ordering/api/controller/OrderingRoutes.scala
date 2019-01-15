@@ -26,39 +26,46 @@ trait OrderingRoutes extends JsonSupport {
   lazy val orderingRoutes: Route =
     pathPrefix("api" / "v1" / "orders") {
       concat(
-        pathEnd {
-          concat(
-            get {
-              val orders: Future[List[Order]] = (orderingRegistryActor ? GetOrders).mapTo[List[Order]]
-              complete(orders)
-            },
-            post {
-              entity(as[Order]) { order =>
-                val orderCreated: Future[ActionPerformed] =
-                  (orderingRegistryActor ? CreateOrder(order)).mapTo[ActionPerformed]
-                onSuccess(orderCreated) { performed =>
-                  log.info("Created order [{}]: {}", order.name, performed.description)
-                  complete((StatusCodes.Created, performed))
-                }
-              }
-            })
-        },
-        path(JavaUUID) { id =>
-          concat(
-            get {
-              val maybeOrder: Future[Option[Order]] = (orderingRegistryActor ? GetOrder(id)).mapTo[Option[Order]]
-              rejectEmptyResponse {
-                complete(maybeOrder)
-              }
-            },
-            delete {
-              val userDeleted: Future[ActionPerformed] =
-                (orderingRegistryActor ? DeleteOrder(id)).mapTo[ActionPerformed]
-              onSuccess(userDeleted) { performed =>
-                log.info("Deleted order [{}]: {}", id.toString, performed.description)
-                complete((StatusCodes.OK, performed))
-              }
-            })
-        })
+        getOrdersRoute,
+        postOrderRoute,
+        getOrderRoute,
+        deleteOrderRoute)
     }
+
+  val getOrdersRoute: Route = get {
+    pathEndOrSingleSlash {
+      val orders: Future[List[Order]] = (orderingRegistryActor ? GetOrders).mapTo[List[Order]]
+      complete(orders)
+    }
+  }
+  val postOrderRoute: Route = post {
+    pathEndOrSingleSlash {
+      entity(as[Order]) { order =>
+        val orderCreated: Future[ActionPerformed] =
+          (orderingRegistryActor ? CreateOrder(order)).mapTo[ActionPerformed]
+        onSuccess(orderCreated) { performed =>
+          log.info("Created order [{}]: {}", order.name, performed.description)
+          complete((StatusCodes.Created, performed))
+        }
+      }
+    }
+  }
+  val getOrderRoute: Route = get {
+    path(JavaUUID) { id =>
+      val maybeOrder: Future[Option[Order]] = (orderingRegistryActor ? GetOrder(id)).mapTo[Option[Order]]
+      rejectEmptyResponse {
+        complete(maybeOrder)
+      }
+    }
+  }
+  val deleteOrderRoute: Route = delete {
+    path(JavaUUID) { id =>
+      val userDeleted: Future[ActionPerformed] =
+        (orderingRegistryActor ? DeleteOrder(id)).mapTo[ActionPerformed]
+      onSuccess(userDeleted) { performed =>
+        log.info("Deleted order [{}]: {}", id.toString, performed.description)
+        complete((StatusCodes.OK, performed))
+      }
+    }
+  }
 }
