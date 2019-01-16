@@ -3,8 +3,8 @@ package nudemeth.poc.ordering.api.application.query
 import java.util.UUID
 
 import com.outworkers.phantom.Table
-import com.outworkers.phantom.builder.Specified
-import com.outworkers.phantom.builder.query.InsertQuery
+import com.outworkers.phantom.builder.{Chainned, Specified, Unlimited, Unordered}
+import com.outworkers.phantom.builder.query.{DeleteQuery, InsertQuery}
 import com.outworkers.phantom.dsl._
 import com.outworkers.phantom.jdk8._
 import com.outworkers.phantom.keys.PartitionKey
@@ -16,8 +16,8 @@ abstract class OrderByUserModel extends Table[OrderByUserModel, OrderEntity] {
   override def tableName: String = "OrderByUser"
 
   object id extends Col[UUID] with ClusteringOrder
-  object userId extends Col[String]
-  object userName extends Col[String] with PartitionKey
+  object userId extends Col[String] with PartitionKey
+  object userName extends Col[String]
   object street extends Col[String]
   object city extends Col[String]
   object state extends OptionalCol[String]
@@ -31,9 +31,9 @@ abstract class OrderByUserModel extends Table[OrderByUserModel, OrderEntity] {
   object buyerId extends OptionalCol[Int]
   object paymentMethodId extends OptionalCol[Int]
 
-  def getByUserName(userName: String): Future[List[OrderEntity]] = {
+  def getByUserName(userId: String): Future[List[OrderEntity]] = {
     select
-      .where(_.userName eqs userName)
+      .where(_.userId eqs userId)
       .consistencyLevel_=(ConsistencyLevel.ONE)
       .fetch()
   }
@@ -58,10 +58,11 @@ abstract class OrderByUserModel extends Table[OrderByUserModel, OrderEntity] {
       .consistencyLevel_=(ConsistencyLevel.ALL)
   }
 
-  def deleteByUserName(userName: String): Future[ResultSet] = {
+  def deleteByUserIdAndId(userName: String, id: UUID): Future[ResultSet] = deleteByUserIdAndIdTransaction(userName, id).future()
+  def deleteByUserIdAndIdTransaction(userId: String, id: UUID): DeleteQuery[OrderByUserModel, OrderEntity, Unlimited, Unordered, Specified, Chainned, HNil] = {
     delete
-      .where(_.userName eqs userName)
+      .where(_.userId eqs userId)
+      .and(_.id eqs id)
       .consistencyLevel_=(ConsistencyLevel.ONE)
-      .future()
   }
 }

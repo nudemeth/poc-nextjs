@@ -4,10 +4,10 @@ import java.util.UUID
 
 import com.outworkers.phantom.dsl._
 import com.outworkers.phantom.Table
-import com.outworkers.phantom.builder.Specified
-import com.outworkers.phantom.builder.query.InsertQuery
+import com.outworkers.phantom.builder.{Chainned, Specified, Unlimited, Unordered}
+import com.outworkers.phantom.builder.query.{DeleteQuery, InsertQuery}
 import com.outworkers.phantom.jdk8._
-import com.outworkers.phantom.keys.PartitionKey
+import com.outworkers.phantom.keys.PrimaryKey
 import shapeless.HNil
 
 import scala.concurrent.Future
@@ -15,7 +15,7 @@ import scala.concurrent.Future
 abstract class OrderModel extends Table[OrderModel, OrderEntity] {
   override def tableName: String = "Order"
 
-  object id extends Col[UUID] with PartitionKey
+  object id extends Col[UUID] with PrimaryKey
   object userId extends Col[String]
   object userName extends Col[String]
   object street extends Col[String]
@@ -58,10 +58,10 @@ abstract class OrderModel extends Table[OrderModel, OrderEntity] {
       .consistencyLevel_=(ConsistencyLevel.ALL)
   }
 
-  def deleteById(id: UUID): Future[ResultSet] = {
+  def deleteById(id: UUID): Future[ResultSet] = deleteByIdTransaction(id).future()
+  def deleteByIdTransaction(id: UUID): DeleteQuery[OrderModel, OrderEntity, Unlimited, Unordered, Specified, Chainned, HNil] = {
     delete
       .where(_.id eqs id)
       .consistencyLevel_=(ConsistencyLevel.ONE)
-      .future()
   }
 }

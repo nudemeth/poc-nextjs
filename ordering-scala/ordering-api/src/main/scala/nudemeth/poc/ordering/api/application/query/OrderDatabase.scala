@@ -16,6 +16,13 @@ class OrderDatabase(override val connector: CassandraConnection) extends Databas
       .add(OrderByUserModel.saveOrUpdateTransaction(order))
       .future()
   }
+
+  def delete(order: OrderEntity): Future[ResultSet] = {
+    Batch.logged
+      .add(OrderModel.deleteByIdTransaction(order.id))
+      .add(OrderByUserModel.deleteByUserIdAndIdTransaction(order.userId, order.id))
+      .future()
+  }
 }
 
 object Database extends OrderDatabase(Connector.connector)
