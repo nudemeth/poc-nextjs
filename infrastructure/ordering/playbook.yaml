@@ -1,0 +1,31 @@
+- name: Provisioning
+  hosts: all
+  become: true
+  tasks:
+  - name: Register Cassandra 3.1.1.x
+    apt_repository:
+      repo: deb http://www.apache.org/dist/cassandra/debian 311x main
+      state: present
+      filename: cassandra.sources.list
+
+  - name: Add the Apache Cassandra repository keys
+    apt_key:
+      url: https://www.apache.org/dist/cassandra/KEYS
+      state: present
+
+  - name: Update apt packages
+    apt:
+      update_cache: yes
+
+  - name: Install Cassandra package
+    apt:
+      name: cassandra
+      state: present
+
+  - name: Start Cassandra
+    service:
+      name: cassandra
+      state: started
+
+  - name: Run seed script
+    shell: cqlsh -f /provision/seed.cql
