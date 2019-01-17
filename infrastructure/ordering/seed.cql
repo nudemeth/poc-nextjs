@@ -1,3 +1,12 @@
+CREATE ROLE IF NOT EXISTS sa
+WITH SUPERUSER = TRUE
+AND LOGIN = TRUE
+AND PASSWORD = 'P@ssw0rd';
+
+LOGIN sa 'P@ssw0rd';
+
+DROP ROLE cassandra;
+
 CREATE KEYSPACE IF NOT EXISTS ordering 
     WITH REPLICATION = {
         'class' : 'SimpleStrategy',

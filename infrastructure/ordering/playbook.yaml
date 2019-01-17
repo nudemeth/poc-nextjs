@@ -22,19 +22,28 @@
       name: cassandra
       state: present
 
-  - name: Start Cassandra
+  - name: Update Cassandra Authentication method
+    replace:
+      path: /etc/cassandra/cassandra.yaml
+      regexp: 'AllowAllAuthenticator$'
+      replace: 'PasswordAuthenticator'
+
+  - name: Restart Cassandra
     service:
       name: cassandra
-      state: started
+      state: restarted
 
   - name: Wait for Cassandra bootstrapping
     wait_for:
-      port: 9042
+      path: /var/log/cassandra/system.log
       timeout: 60
-      state: started
+      search_regex: "Created default superuser role 'cassandra'"
 
   - name: Verify Cassandra is running
     shell: nodetool status
+    register: debugmsg
+
+  - debug: msg="{{ debugmsg.stdout_lines }}"
 
   - name: Run seed script
-    shell: cqlsh -f /provision/seed.cql
+    shell: cqlsh -u cassandra -p cassandra -f /provision/seed.cql
