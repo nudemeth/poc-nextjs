@@ -4,8 +4,8 @@ import java.util.UUID
 
 import com.outworkers.phantom.dsl._
 import com.outworkers.phantom.Table
-import com.outworkers.phantom.builder.{Chainned, Specified, Unlimited, Unordered}
-import com.outworkers.phantom.builder.query.{DeleteQuery, InsertQuery}
+import com.outworkers.phantom.builder.{ Chainned, Specified, Unlimited, Unordered }
+import com.outworkers.phantom.builder.query.{ DeleteQuery, InsertQuery }
 import com.outworkers.phantom.jdk8._
 import com.outworkers.phantom.keys.PrimaryKey
 import shapeless.HNil

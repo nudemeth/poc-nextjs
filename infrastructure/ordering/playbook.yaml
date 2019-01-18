@@ -17,6 +17,11 @@
     apt:
       update_cache: yes
 
+  - name: Uninstall Cassandra package
+    apt:
+      name: cassandra
+      state: absent
+
   - name: Install Cassandra package
     apt:
       name: cassandra
@@ -37,6 +42,7 @@
     wait_for:
       path: /var/log/cassandra/system.log
       timeout: 60
+      sleep: 5
       search_regex: "Created default superuser role 'cassandra'"
 
   - name: Verify Cassandra is running

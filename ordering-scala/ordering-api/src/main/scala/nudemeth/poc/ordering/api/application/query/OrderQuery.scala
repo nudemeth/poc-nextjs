@@ -9,7 +9,7 @@ import nudemeth.poc.ordering.domain.model.aggregate.order.{ Address, Order }
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class OrderQuery(connStr: String) extends OrderQueryable {
+class OrderQuery extends OrderQueryable {
   override def GetOrderAsync(id: UUID): Future[Option[Order]] = {
     for {
       e <- Database.OrderModel.getById(id)

@@ -2,7 +2,9 @@ package nudemeth.poc.ordering.api.controller
 
 import java.util.UUID
 
-import akka.actor.{ Actor, ActorLogging, Props }
+import akka.actor.{Actor, ActorLogging, Props}
+
+import scala.concurrent.{ExecutionContext, Future}
 
 final case class Order(id: UUID, name: String)
 
@@ -34,9 +36,9 @@ class OrderingRegistryActor extends Actor with ActorLogging {
       sender() ! ActionPerformed(s"Order id $id deleted.")
   }
 
-  private def getOrders: List[Order] = {
+  private def getOrders: Future[List[Order]] = Future {
     orders
-  }
+  }(ExecutionContext.global)
 
   private def getOrder(id: UUID): Option[Order] = {
     orders.find(_.id == id)
