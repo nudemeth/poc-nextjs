@@ -1,17 +1,17 @@
-package nudemeth.poc.ordering.api.application.query
+package nudemeth.poc.ordering.api.application.query.viewmodel
 
 import com.outworkers.phantom.jdk8.ZonedDateTime
 
-case class OrderViewModel(
+case class Order(
   orderNumber: Int,
-  date: ZonedDateTime,
+  //date: ZonedDateTime,
   status: String,
   description: String,
   street: String,
   city: String,
   zipCode: String,
   country: String,
-  orderItems: List[OrderItemViewModel],
+  //orderItems: List[OrderItem],
   total: Double) {
 
 }

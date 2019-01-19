@@ -25,4 +25,4 @@ class OrderDatabase(override val connector: CassandraConnection) extends Databas
   }
 }
 
-object Database extends OrderDatabase(Connector.connector)
+object OrderDatabase extends OrderDatabase(Connector.connector)

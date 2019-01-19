@@ -9,6 +9,7 @@ import akka.http.scaladsl.server.directives.RouteDirectives.complete
 import akka.http.scaladsl.server.Route
 import akka.pattern.ask
 import akka.util.Timeout
+import nudemeth.poc.ordering.api.application.query.viewmodel.Order
 import nudemeth.poc.ordering.api.controller.OrderingRegistryActor._
 
 import scala.concurrent.Future
@@ -44,7 +45,7 @@ trait OrderingRoutes extends JsonSupport {
         val orderCreated: Future[ActionPerformed] =
           (orderingRegistryActor ? CreateOrder(order)).mapTo[ActionPerformed]
         onSuccess(orderCreated) { performed =>
-          log.info("Created order [{}]: {}", order.name, performed.description)
+          log.info("Created order [{}]: {}", order.orderNumber.toString, performed.description)
           complete((StatusCodes.Created, performed))
         }
       }

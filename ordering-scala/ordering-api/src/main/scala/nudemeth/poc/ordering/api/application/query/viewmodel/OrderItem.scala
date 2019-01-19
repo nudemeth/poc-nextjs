@@ -1,6 +1,6 @@
-package nudemeth.poc.ordering.api.application.query
+package nudemeth.poc.ordering.api.application.query.viewmodel
 
-case class OrderItemViewModel(
+case class OrderItem(
   productName: String,
   units: Int,
   unitPrice: Double,

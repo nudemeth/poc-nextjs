@@ -1,43 +1,50 @@
 package nudemeth.poc.ordering.api.application.query
 
+import java.time.ZonedDateTime
 import java.util.UUID
 
-import nudemeth.poc.ordering.domain.model.aggregate.buyer.CardType
-import nudemeth.poc.ordering.domain.model.aggregate.buyer.CardType.CardType
-import nudemeth.poc.ordering.domain.model.aggregate.order.{ Address, Order }
+import nudemeth.poc.ordering.api.application.query.viewmodel._
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class OrderQuery extends OrderQueryable {
-  override def GetOrderAsync(id: UUID): Future[Option[Order]] = {
-    for {
-      e <- Database.OrderModel.getById(id)
+
+  val orders = List(
+    Order(1, "InProgress", "abc", "aa", "Bangkok", "00000", "Thailand", 0),
+    Order(2, "Pending", "abc", "aa", "Bangkok", "00000", "Thailand", 0))
+
+  override def getOrderAsync(id: UUID): Future[Option[Order]] = {
+    /*for {
+      e <- OrderDatabase.OrderModel.getById(id)
       d <- mapToDomain(e)
-    } yield d
+    } yield d*/
+    Future(orders.find(_.orderNumber == 1))
   }
 
-  override def GetOrdersFromUserAsync(userName: String): Future[List[Order]] = {
-    for {
-      e <- Database.OrderByUserModel.getByUserName(userName)
+  override def getOrdersByUserAsync(userName: String): Future[List[Order]] = {
+    /*for {
+      e <- OrderDatabase.OrderByUserModel.getByUserName(userName)
       d <- mapToDomains(e)
-    } yield d
+    } yield d*/
+    Future(orders)
   }
 
-  override def GetCardTypesAsync(): Future[List[CardType]] = {
+  override def getCardTypesAsync: Future[List[CardType]] = {
     for {
-      e <- Database.CardTypeModel.list()
+      e <- OrderDatabase.CardTypeModel.list()
       d <- mapToDomain(e)
     } yield d
   }
 
   private def mapToDomain(entities: List[CardTypeEntity]): Future[List[CardType]] = Future {
-    entities.map(e => {
+    /*entities.map(e => {
       CardType.withName(e.name)
-    })
+    })*/
+    entities.map(e => CardType(e.name))
   }
 
-  private def mapToDomains(entities: List[OrderEntity]): Future[List[Order]] = Future {
+  /*private def mapToDomains(entities: List[OrderEntity]): Future[List[Order]] = Future {
     entities.map(e => {
       Order(
         e.userId,
@@ -67,5 +74,5 @@ class OrderQuery extends OrderQueryable {
         e.buyerId,
         e.paymentMethodId)
     })
-  }
+  }*/
 }
