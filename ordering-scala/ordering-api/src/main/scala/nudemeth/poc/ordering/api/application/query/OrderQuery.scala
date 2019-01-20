@@ -11,8 +11,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class OrderQuery extends OrderQueryable {
 
   val orders = List(
-    Order(1, "InProgress", "abc", "aa", "Bangkok", "00000", "Thailand", 0),
-    Order(2, "Pending", "abc", "aa", "Bangkok", "00000", "Thailand", 0))
+    Order(1, ZonedDateTime.now(), "InProgress", "abc", "aa", "Bangkok", "00000", "Thailand", 0),
+    Order(2, ZonedDateTime.now(), "Pending", "abc", "aa", "Bangkok", "00000", "Thailand", 0))
 
   override def getOrderAsync(id: UUID): Future[Option[Order]] = {
     /*for {

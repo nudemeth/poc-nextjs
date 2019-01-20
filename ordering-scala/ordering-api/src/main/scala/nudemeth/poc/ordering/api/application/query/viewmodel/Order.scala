@@ -4,7 +4,7 @@ import com.outworkers.phantom.jdk8.ZonedDateTime
 
 case class Order(
   orderNumber: Int,
-  //date: ZonedDateTime,
+  date: ZonedDateTime,
   status: String,
   description: String,
   street: String,
