@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import nudemeth.poc.ordering.api.application.query.viewmodel.Order
+import nudemeth.poc.ordering.api.application.query.viewmodel.{ Order, OrderItem }
 import nudemeth.poc.ordering.api.controller.OrderingRegistryActor.ActionPerformed
 import spray.json._
 
@@ -33,20 +33,19 @@ trait JsonSupport extends SprayJsonSupport {
     }
   }
 
-  implicit object OrderListFormat extends RootJsonFormat[List[Order]] {
-    private val parser: DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-    def write(orders: List[Order]) = JsArray(orders.map(o => o.toJson).toVector)
-    def read(value: JsValue): List[Order] = {
+  /// To support array in root node
+  implicit object OrderListFormat extends RootJsonFormat[Vector[Order]] {
+    def write(orders: Vector[Order]) = JsArray(orders.map(o => o.toJson))
+    def read(value: JsValue): Vector[Order] = {
       value match {
-        case JsArray(Vector(JsNumber(orderNumber), JsString(date), JsString(status), JsString(description), JsString(street), JsString(city), JsString(country), JsString(zipCode), JsNumber(total))) =>
-          List(Order(orderNumber.toInt, ZonedDateTime.from(parser.parse(date)), status, description, street, city, country, zipCode, total.toDouble))
+        case JsArray(arr) => arr.map(_.convertTo[Order])
         case _ => throw DeserializationException("Expected array of Order")
       }
     }
   }
 
-  implicit val orderJsonFormat: RootJsonFormat[Order] = jsonFormat9(Order)
-  implicit val ordersJsonFormat: RootJsonFormat[List[Order]] = OrderListFormat
+  implicit val orderItemJsonFormat: RootJsonFormat[OrderItem] = jsonFormat4(OrderItem)
+  implicit val orderJsonFormat: RootJsonFormat[Order] = jsonFormat10(Order)
 
   implicit val actionPerformedJsonFormat: RootJsonFormat[ActionPerformed] = jsonFormat1(ActionPerformed)
 }

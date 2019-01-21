@@ -8,6 +8,6 @@ import scala.concurrent.Future
 
 trait OrderQueryable {
   def getOrderAsync(id: UUID): Future[Option[Order]]
-  def getOrdersByUserAsync(userName: String): Future[List[Order]]
-  def getCardTypesAsync: Future[List[CardType]]
+  def getOrdersByUserAsync(userName: String): Future[Vector[Order]]
+  def getCardTypesAsync: Future[Vector[CardType]]
 }

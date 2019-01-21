@@ -18,9 +18,10 @@ abstract class CardTypeModel extends Table[CardTypeModel, CardTypeEntity] {
       .one()
   }
 
-  def list(): Future[List[CardTypeEntity]] = {
+  def list(): Future[Vector[CardTypeEntity]] = {
     select
       .consistencyLevel_=(ConsistencyLevel.ONE)
       .fetch()
+      .mapTo[Vector[CardTypeEntity]]
   }
 }

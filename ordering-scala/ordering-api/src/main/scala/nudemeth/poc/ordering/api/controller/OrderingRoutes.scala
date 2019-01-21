@@ -35,7 +35,7 @@ trait OrderingRoutes extends JsonSupport {
 
   val getOrdersRoute: Route = get {
     pathEndOrSingleSlash {
-      val orders: Future[List[Order]] = (orderingRegistryActor ? GetOrders).mapTo[List[Order]]
+      val orders: Future[Vector[Order]] = (orderingRegistryActor ? GetOrders).mapTo[Vector[Order]]
       complete(orders)
     }
   }

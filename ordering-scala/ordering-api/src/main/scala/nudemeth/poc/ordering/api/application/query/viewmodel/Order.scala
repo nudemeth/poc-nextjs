@@ -11,7 +11,7 @@ case class Order(
   city: String,
   zipCode: String,
   country: String,
-  //orderItems: List[OrderItem],
+  orderItems: Vector[OrderItem],
   total: Double) {
 
 }
