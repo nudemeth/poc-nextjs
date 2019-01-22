@@ -14,59 +14,54 @@ CREATE KEYSPACE IF NOT EXISTS ordering
     };
 
 CREATE TABLE IF NOT EXISTS ordering.order_by_id (
-   id UUID,
-   user_id TEXT,
-   user_name TEXT,
-   street TEXT,
-   city TEXT,
-   state TEXT,
-   country TEXT,
-   zip_code TEXT,
-   card_type_id INT,
-   card_number TEXT,
-   card_security_number TEXT,
-   card_holder_name TEXT,
-   card_expiration TIMESTAMP,
-   buyer_id UUID,
-   payment_method_id UUID,
-   PRIMARY KEY (id)
+   order_id UUID,
+   order_date TIMESTAMP,
+   description TEXT,
+   address_city TEXT,
+   address_country TEXT,
+   address_state TEXT,
+   address_street TEXT,
+   address_zip_code TEXT,
+   status_name TEXT,
+   product_name TEXT,
+   units INT,
+   unit_price DOUBLE,
+   picture_url TEXT,
+   PRIMARY KEY (order_id)
 );
 
-CREATE TABLE IF NOT EXISTS ordering.order_by_user_id (
-   id UUID,
-   user_id TEXT,
-   user_name TEXT,
-   street TEXT,
-   city TEXT,
-   state TEXT,
-   country TEXT,
-   zip_code TEXT,
-   card_type_id INT,
-   card_number TEXT,
-   card_security_number TEXT,
-   card_holder_name TEXT,
-   card_expiration TIMESTAMP,
+CREATE TABLE IF NOT EXISTS ordering.order_by_buyer_id (
    buyer_id UUID,
-   payment_method_id UUID,
-   PRIMARY KEY (user_id, id)
-) WITH CLUSTERING ORDER BY (id DESC);
+   order_id UUID,
+   order_date TIMESTAMP,
+   address_city TEXT,
+   address_country TEXT,
+   address_state TEXT,
+   address_street TEXT,
+   address_zip_code TEXT,
+   status_name TEXT,
+   product_name TEXT,
+   units INT,
+   unit_price DOUBLE,
+   PRIMARY KEY (buyer_id, order_id),
+) WITH CLUSTERING ORDER BY (order_id DESC);
 
-INSERT INTO ordering.order_by_id (id, user_id, user_name, street, city, state, country, zip_code, card_type_id, card_number, card_security_number, card_holder_name, card_expiration, buyer_id, payment_method_id)
-VALUES (6bc6cfae-b04e-4b53-ba23-1a1b7260b121, '1', 'aaa','a','b', null, 'Thailand', '00000', 1, '1234-5678-1234-5678', '000', 'AAA BBBB', toTimestamp(now()), 2f17c7e4-a6b6-4ba0-a1eb-9b4f6d2ce4df, 65430366-f534-49e2-97bf-d54b91545345);
-INSERT INTO ordering.order_by_user_id (id, user_id, user_name, street, city, state, country, zip_code, card_type_id, card_number, card_security_number, card_holder_name, card_expiration, buyer_id, payment_method_id)
-VALUES (6bc6cfae-b04e-4b53-ba23-1a1b7260b121, '1', 'aaa','a','b', null, 'Thailand', '00000', 1, '1234-5678-1234-5678', '000', 'AAA BBBB', toTimestamp(now()), 2f17c7e4-a6b6-4ba0-a1eb-9b4f6d2ce4df, 65430366-f534-49e2-97bf-d54b91545345);
+INSERT INTO ordering.order_by_id (order_id, order_date, description, address_city, address_country, address_state, address_street, address_zip_code, status_name, product_name, units, unit_price, picture_url)
+VALUES (6bc6cfae-b04e-4b53-ba23-1a1b7260b121, toTimestamp(now()), 'order 1 desc','Bangkok','Thailand', null, 'Sukhumvit', '10110', 'Paid', 'Item 1', 1, 199, '/pic/Item 1.png');
+INSERT INTO ordering.order_by_buyer_id (buyer_id, order_id, order_date, address_city, address_country, address_state, address_street, address_zip_code, status_name, product_name, units, unit_price)
+VALUES (2f17c7e4-a6b6-4ba0-a1eb-9b4f6d2ce4df, 6bc6cfae-b04e-4b53-ba23-1a1b7260b121, toTimestamp(now()), 'Bangkok','Thailand', null, 'Sukhumvit', '10110', 'Paid', 'Item 1', 1, 199);
 
-INSERT INTO ordering.order_by_id (id, user_id, user_name, street, city, state, country, zip_code, card_type_id, card_number, card_security_number, card_holder_name, card_expiration, buyer_id, payment_method_id)
-VALUES (cc6a6c9d-0871-4f62-9bd1-f29b81ec8b5e, '1', 'aaa','a','b', null, 'Thailand', '00000', 1, '1234-5678-1234-5678', '000', 'AAA BBBB', toTimestamp(now()), 2f17c7e4-a6b6-4ba0-a1eb-9b4f6d2ce4df, 65430366-f534-49e2-97bf-d54b91545345);
-INSERT INTO ordering.order_by_user_id (id, user_id, user_name, street, city, state, country, zip_code, card_type_id, card_number, card_security_number, card_holder_name, card_expiration, buyer_id, payment_method_id)
-VALUES (cc6a6c9d-0871-4f62-9bd1-f29b81ec8b5e, '1', 'aaa','a','b', null, 'Thailand', '00000', 1, '1234-5678-1234-5678', '000', 'AAA BBBB', toTimestamp(now()), 2f17c7e4-a6b6-4ba0-a1eb-9b4f6d2ce4df, 65430366-f534-49e2-97bf-d54b91545345);
+INSERT INTO ordering.order_by_id (order_id, order_date, description, address_city, address_country, address_state, address_street, address_zip_code, status_name, product_name, units, unit_price, picture_url)
+VALUES (cc6a6c9d-0871-4f62-9bd1-f29b81ec8b5e, toTimestamp(now()), 'order 2 desc','Bangkok','Thailand', null, 'Sukhumvit', '10110', 'Distributed', 'Item 2', 2, 500, '/pic/Item 2.png');
+INSERT INTO ordering.order_by_buyer_id (buyer_id, order_id, order_date, address_city, address_country, address_state, address_street, address_zip_code, status_name, product_name, units, unit_price)
+VALUES (65430366-f534-49e2-97bf-d54b91545345, cc6a6c9d-0871-4f62-9bd1-f29b81ec8b5e, toTimestamp(now()), 'Bangkok','Thailand', null, 'Sukhumvit', '10110', 'Distributed', 'Item 2', 2, 500);
 
-INSERT INTO ordering.order_by_id (id, user_id, user_name, street, city, state, country, zip_code, card_type_id, card_number, card_security_number, card_holder_name, card_expiration, buyer_id, payment_method_id)
-VALUES (40426a32-5ea6-4e86-b826-30abb6629a26, '2', 'bbb','c','d', null, 'Thailand', '11111', 1, '9876-5432-9876-5432', '111', 'CCC DDDD', toTimestamp(now()), 3da1e68a-9ff7-4b85-8e2e-b6440fb43ca5, d0ce2e17-ce35-4454-989e-441cee2ac389);
-INSERT INTO ordering.order_by_user_id (id, user_id, user_name, street, city, state, country, zip_code, card_type_id, card_number, card_security_number, card_holder_name, card_expiration, buyer_id, payment_method_id)
-VALUES (40426a32-5ea6-4e86-b826-30abb6629a26, '2', 'bbb','c','d', null, 'Thailand', '11111', 1, '9876-5432-9876-5432', '111', 'CCC DDDD', toTimestamp(now()), 3da1e68a-9ff7-4b85-8e2e-b6440fb43ca5, d0ce2e17-ce35-4454-989e-441cee2ac389);
+INSERT INTO ordering.order_by_id (order_id, order_date, description, address_city, address_country, address_state, address_street, address_zip_code, status_name, product_name, units, unit_price, picture_url)
+VALUES (40426a32-5ea6-4e86-b826-30abb6629a26, toTimestamp(now()), 'order 3 desc','Bangkok','Thailand', null, 'Phetkasem', '10160', 'Packaging', 'Item 3', 3, 999, '/pic/Item 3.png');
+INSERT INTO ordering.order_by_buyer_id (buyer_id, order_id, order_date, address_city, address_country, address_state, address_street, address_zip_code, status_name, product_name, units, unit_price)
+VALUES (3da1e68a-9ff7-4b85-8e2e-b6440fb43ca5, 40426a32-5ea6-4e86-b826-30abb6629a26, toTimestamp(now()), 'Bangkok','Thailand', null, 'Phetkasem', '10160', 'Packaging', 'Item 3', 3, 999);
 
-INSERT INTO ordering.order_by_id (id, user_id, user_name, street, city, state, country, zip_code, card_type_id, card_number, card_security_number, card_holder_name, card_expiration, buyer_id, payment_method_id)
-VALUES (40426a32-5ea6-4e86-b826-30abb6629a26, '2', 'bbb','c','d', null, 'Thailand', '11111', 1, '9876-5432-9876-5432', '111', 'CCC DDDD', toTimestamp(now()), 3da1e68a-9ff7-4b85-8e2e-b6440fb43ca5, d0ce2e17-ce35-4454-989e-441cee2ac389);
-INSERT INTO ordering.order_by_user_id (id, user_id, user_name, street, city, state, country, zip_code, card_type_id, card_number, card_security_number, card_holder_name, card_expiration, buyer_id, payment_method_id)
-VALUES (40426a32-5ea6-4e86-b826-30abb6629a26, '2', 'bbb','c','d', null, 'Thailand', '11111', 1, '9876-5432-9876-5432', '111', 'CCC DDDD', toTimestamp(now()), 3da1e68a-9ff7-4b85-8e2e-b6440fb43ca5, d0ce2e17-ce35-4454-989e-441cee2ac389);
+INSERT INTO ordering.order_by_id (order_id, order_date, description, address_city, address_country, address_state, address_street, address_zip_code, status_name, product_name, units, unit_price, picture_url)
+VALUES (d0ce2e17-ce35-4454-989e-441cee2ac389, toTimestamp(now()), 'order 4 desc','Bangkok','Thailand', null, 'Phetkasem', '10160', 'Packaging', 'Item 4', 4, 2000, '/pic/Item 4.png');
+INSERT INTO ordering.order_by_buyer_id (buyer_id, order_id, order_date, address_city, address_country, address_state, address_street, address_zip_code, status_name, product_name, units, unit_price)
+VALUES (3da1e68a-9ff7-4b85-8e2e-b6440fb43ca5, d0ce2e17-ce35-4454-989e-441cee2ac389, toTimestamp(now()), 'Bangkok','Thailand', null, 'Phetkasem', '10160', 'Packaging', 'Item 4', 4, 2000);
