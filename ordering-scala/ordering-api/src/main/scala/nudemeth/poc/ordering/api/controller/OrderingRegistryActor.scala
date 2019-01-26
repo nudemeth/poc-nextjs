@@ -27,7 +27,7 @@ class OrderingRegistryActor(repository: OrderQueryable) extends Actor with Actor
 
   def receive: Receive = {
     case GetOrders =>
-      repository.getOrdersByUserAsync("").pipeTo(sender())
+      repository.getOrdersByUserAsync(UUID.fromString("6bc6cfae-b04e-4b53-ba23-1a1b7260b121")).pipeTo(sender())
     case GetOrder(id) =>
       repository.getOrderAsync(id).pipeTo(sender())
     case CreateOrder(order) =>

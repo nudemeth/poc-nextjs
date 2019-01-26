@@ -4,20 +4,19 @@ import java.time.ZonedDateTime
 import java.util.UUID
 
 case class OrderEntity(
-  id: UUID,
-  userId: String,
-  userName: String,
-  street: String,
-  city: String,
-  state: Option[String],
-  country: String,
-  zipCode: String,
-  cardTypeId: Int,
-  cardNumber: String,
-  cardSecurityNumber: String,
-  cardHolderName: String,
-  cardExpiration: Option[ZonedDateTime],
-  buyerId: Option[Int] = None,
-  paymentMethodId: Option[Int] = None) {
+  orderId: UUID,
+  buyerId: UUID,
+  orderDate: ZonedDateTime,
+  description: String,
+  addressCity: String,
+  addressCountry: String,
+  addressState: Option[String],
+  addressStreet: String,
+  addressZipCode: String,
+  statusName: String,
+  productName: String,
+  units: Int,
+  unitPrice: Double,
+  pictureUrl: String) {
 
 }
