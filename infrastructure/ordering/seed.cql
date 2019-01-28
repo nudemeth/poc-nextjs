@@ -27,8 +27,8 @@ CREATE TABLE IF NOT EXISTS ordering.order_by_id (
    units INT,
    unit_price DOUBLE,
    picture_url TEXT,
-   PRIMARY KEY (order_id)
-);
+   PRIMARY KEY (order_id, product_name)
+) WITH CLUSTERING ORDER BY (product_name);
 
 CREATE TABLE IF NOT EXISTS ordering.order_by_buyer_id (
    buyer_id UUID,
