@@ -24,16 +24,16 @@ abstract class OrderModel extends Table[OrderModel, OrderEntity] {
   object address_street extends Col[String]
   object address_zip_code extends Col[String]
   object status_name extends Col[String]
-  object product_name extends Col[String]
+  object product_name extends Col[String] with ClusteringOrder
   object units extends Col[Int]
   object unit_price extends Col[Double]
   object picture_url extends Col[String]
 
-  def getById(id: UUID): Future[Option[OrderEntity]] = {
+  def getById(id: UUID): Future[List[OrderEntity]] = {
     select
       .where(_.order_id eqs id)
       .consistencyLevel_=(ConsistencyLevel.ONE)
-      .one()
+      .fetch()
   }
 
   def saveOrUpdate(order: OrderEntity): Future[ResultSet] = saveOrUpdateTransaction(order).future()

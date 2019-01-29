@@ -12,14 +12,14 @@ class OrderQuery extends OrderQueryable {
   override def getOrderAsync(id: UUID): Future[Option[Order]] = {
     for {
       e <- OrderDatabase.OrderModel.getById(id)
-      d <- mapToDomain(e)
+      d <- mapToViewModel(e)
     } yield d
   }
 
   override def getOrdersByUserAsync(userId: UUID): Future[Vector[Order]] = {
     for {
       e <- OrderDatabase.OrderByUserModel.getByUserName(userId)
-      d <- mapToViewModel(e)
+      d <- mapToViewModels(e)
     } yield d
   }
 
@@ -37,36 +37,46 @@ class OrderQuery extends OrderQueryable {
     Vector.empty[CardType]
   }
 
-  private def mapToViewModel(entities: List[OrderEntity]): Future[Vector[Order]] = Future {
-    entities.map(e => {
-      Order(
-        e.orderId,
-        e.orderDate,
-        e.statusName,
-        e.description,
-        e.addressStreet,
-        e.addressCity,
-        e.addressZipCode,
-        e.addressCountry,
-        Vector.empty[OrderItem],
-        0)
-    })
+  private def mapToViewModels(entities: List[OrderEntity]): Future[Vector[Order]] = Future {
+    entities
+      .groupBy(e => {
+        Order(
+          e.orderId,
+          e.orderDate,
+          e.statusName,
+          e.description,
+          e.addressStreet,
+          e.addressCity,
+          e.addressZipCode,
+          e.addressCountry,
+          Vector[OrderItem](),
+          0)
+      })
+      .map(e => {
+        Order(
+          e._1.orderNumber,
+          e._1.date,
+          e._1.status,
+          e._1.description,
+          e._1.street,
+          e._1.city,
+          e._1.zipCode,
+          e._1.country,
+          e._2.map(ee => {
+            OrderItem(
+              ee.productName,
+              ee.units,
+              ee.unitPrice,
+              ee.pictureUrl)
+          }).toVector,
+          e._2.size)
+      })
       .toVector
   }
 
-  private def mapToDomain(entity: Option[OrderEntity]): Future[Option[Order]] = Future {
-    entity.map(e => {
-      Order(
-        e.orderId,
-        e.orderDate,
-        e.statusName,
-        e.description,
-        e.addressStreet,
-        e.addressCity,
-        e.addressZipCode,
-        e.addressCountry,
-        Vector.empty[OrderItem],
-        0)
+  private def mapToViewModel(entities: List[OrderEntity]): Future[Option[Order]] = {
+    mapToViewModels(entities).map(e => {
+      Some(e(0))
     })
   }
 }
