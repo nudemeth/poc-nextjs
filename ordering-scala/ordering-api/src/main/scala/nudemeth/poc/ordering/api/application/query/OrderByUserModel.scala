@@ -13,7 +13,7 @@ import shapeless.HNil
 import scala.concurrent.Future
 
 abstract class OrderByUserModel extends Table[OrderByUserModel, OrderEntity] {
-  override def tableName: String = "OrderByUser"
+  override def tableName: String = "order_by_buyer_id"
 
   object buyer_Id extends Col[UUID] with PartitionKey
   object order_id extends Col[UUID] with ClusteringOrder
