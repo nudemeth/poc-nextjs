@@ -31,10 +31,9 @@ class OrderQuery extends OrderQueryable {
   }
 
   private def mapToViewModel(entities: Vector[CardTypeEntity]): Future[Vector[CardType]] = Future {
-    /*entities.map(e => {
-      CardType.withName(e.name)
-    })*/
-    Vector.empty[CardType]
+    entities.map(e => {
+      CardType(e.name)
+    })
   }
 
   private def mapToViewModels(entities: List[OrderEntity]): Future[Vector[Order]] = Future {

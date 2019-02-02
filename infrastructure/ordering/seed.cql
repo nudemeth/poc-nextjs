@@ -46,6 +46,16 @@ CREATE TABLE IF NOT EXISTS ordering.order_by_buyer_id (
    PRIMARY KEY (buyer_id, order_id),
 ) WITH CLUSTERING ORDER BY (order_id DESC);
 
+CREATE TABLE IF NOT EXISTS ordering.card_type (
+    name TEXT,
+    PRIMARY KEY (name)
+);
+
+INSERT INTO ordering.card_type (name) VALUES('VISA');
+INSERT INTO ordering.card_type (name) VALUES('MasterCard');
+INSERT INTO ordering.card_type (name) VALUES('Amex');
+INSERT INTO ordering.card_type (name) VALUES('JCB');
+
 INSERT INTO ordering.order_by_id (order_id, order_date, description, address_city, address_country, address_state, address_street, address_zip_code, status_name, product_name, units, unit_price, picture_url)
 VALUES (6bc6cfae-b04e-4b53-ba23-1a1b7260b121, toTimestamp(now()), 'order 1 desc','Bangkok','Thailand', null, 'Sukhumvit', '10110', 'Paid', 'Item 1', 1, 199, '/pic/Item 1.png');
 INSERT INTO ordering.order_by_buyer_id (buyer_id, order_id, order_date, address_city, address_country, address_state, address_street, address_zip_code, status_name, product_name, units, unit_price)
