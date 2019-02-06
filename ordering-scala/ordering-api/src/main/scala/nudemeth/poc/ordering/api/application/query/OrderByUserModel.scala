@@ -24,9 +24,7 @@ abstract class OrderByUserModel extends Table[OrderByUserModel, OrderEntity] {
   object address_street extends Col[String]
   object address_zip_code extends Col[String]
   object status_name extends Col[String]
-  object product_name extends Col[String]
-  object units extends Col[Int]
-  object unit_price extends Col[Double]
+  object order_items extends MapColumn[String, (Int, Double)] //{product_name, {units, unit_price}}
 
   def getByUserName(userId: UUID): Future[List[OrderEntity]] = {
     select
@@ -47,9 +45,7 @@ abstract class OrderByUserModel extends Table[OrderByUserModel, OrderEntity] {
       .value(_.address_street, order.addressStreet)
       .value(_.address_zip_code, order.addressZipCode)
       .value(_.status_name, order.statusName)
-      .value(_.product_name, order.productName)
-      .value(_.units, order.units)
-      .value(_.unit_price, order.unitPrice)
+      .value(_.order_items, order.orderItems.mapValues(v => (v._1, v._2)))
       .consistencyLevel_=(ConsistencyLevel.ALL)
   }
 

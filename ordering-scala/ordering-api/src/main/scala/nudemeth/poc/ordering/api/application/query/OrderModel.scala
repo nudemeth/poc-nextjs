@@ -23,16 +23,13 @@ abstract class OrderModel extends Table[OrderModel, OrderEntity] {
   object address_street extends Col[String]
   object address_zip_code extends Col[String]
   object status_name extends Col[String]
-  object product_name extends Col[String] with ClusteringOrder
-  object units extends Col[Int]
-  object unit_price extends Col[Double]
-  object picture_url extends Col[String]
+  object order_items extends MapColumn[String, (Int, Double, String)] //{product_name, {units, unit_price, picture_url}}
 
-  def getById(id: UUID): Future[List[OrderEntity]] = {
+  def getById(id: UUID): Future[Option[OrderEntity]] = {
     select
       .where(_.order_id eqs id)
       .consistencyLevel_=(ConsistencyLevel.ONE)
-      .fetch()
+      .one()
   }
 
   def saveOrUpdate(order: OrderEntity): Future[ResultSet] = saveOrUpdateTransaction(order).future()
@@ -47,10 +44,7 @@ abstract class OrderModel extends Table[OrderModel, OrderEntity] {
       .value(_.address_street, order.addressStreet)
       .value(_.address_zip_code, order.addressZipCode)
       .value(_.status_name, order.statusName)
-      .value(_.product_name, order.productName)
-      .value(_.units, order.units)
-      .value(_.unit_price, order.unitPrice)
-      .value(_.picture_url, order.pictureUrl)
+      .value(_.order_items, order.orderItems)
       .consistencyLevel_=(ConsistencyLevel.ALL)
   }
 

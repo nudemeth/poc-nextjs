@@ -14,9 +14,6 @@ case class OrderEntity(
   addressStreet: String,
   addressZipCode: String,
   statusName: String,
-  productName: String,
-  units: Int,
-  unitPrice: Double,
-  pictureUrl: String) {
+  orderItems: Map[String, (Int, Double, String)]) {
 
 }
