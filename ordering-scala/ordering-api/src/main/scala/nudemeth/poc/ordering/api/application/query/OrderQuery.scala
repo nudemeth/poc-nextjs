@@ -16,7 +16,7 @@ class OrderQuery extends OrderQueryable {
     } yield m
   }
 
-  override def getOrdersByUserAsync(userId: UUID): Future[Vector[Order]] = {
+  override def getOrdersByUserAsync(userId: UUID): Future[Vector[OrderSummary]] = {
     for {
       e <- OrderDatabase.OrderByUserModel.getByUserName(userId)
       m <- mapToViewModels(e)
@@ -36,21 +36,13 @@ class OrderQuery extends OrderQueryable {
     })
   }
 
-  private def mapToViewModels(entities: List[OrderEntity]): Future[Vector[Order]] = Future {
+  private def mapToViewModels(entities: List[OrderByUserEntity]): Future[Vector[OrderSummary]] = Future {
     entities.map(e => {
-      Order(
+      OrderSummary(
         e.orderId,
         e.orderDate,
         e.statusName,
-        e.description,
-        e.addressStreet,
-        e.addressCity,
-        e.addressZipCode,
-        e.addressCountry,
-        e.orderItems.map(ee => {
-          OrderItem(ee._1, ee._2._1, ee._2._2, "")
-        }).toVector,
-        e.orderItems.size)
+        e.total)
     })
       .toVector
   }
