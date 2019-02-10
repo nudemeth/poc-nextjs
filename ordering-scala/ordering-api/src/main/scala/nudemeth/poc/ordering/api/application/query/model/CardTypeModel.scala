@@ -1,8 +1,9 @@
-package nudemeth.poc.ordering.api.application.query
+package nudemeth.poc.ordering.api.application.query.model
 
-import com.outworkers.phantom.dsl._
 import com.outworkers.phantom.Table
+import com.outworkers.phantom.dsl._
 import com.outworkers.phantom.keys.PartitionKey
+import nudemeth.poc.ordering.api.application.query.entity.CardTypeEntity
 
 import scala.concurrent.Future
 

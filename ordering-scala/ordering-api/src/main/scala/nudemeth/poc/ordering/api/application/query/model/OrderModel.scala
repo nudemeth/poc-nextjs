@@ -1,12 +1,13 @@
-package nudemeth.poc.ordering.api.application.query
+package nudemeth.poc.ordering.api.application.query.model
 
 import java.util.UUID
 
-import com.outworkers.phantom.dsl._
 import com.outworkers.phantom.Table
-import com.outworkers.phantom.builder.{ Chainned, Specified, Unlimited, Unordered }
 import com.outworkers.phantom.builder.query.{ DeleteQuery, InsertQuery }
+import com.outworkers.phantom.builder.{ Chainned, Specified, Unlimited, Unordered }
+import com.outworkers.phantom.dsl._
 import com.outworkers.phantom.jdk8._
+import nudemeth.poc.ordering.api.application.query.entity.OrderEntity
 import shapeless.HNil
 
 import scala.concurrent.Future

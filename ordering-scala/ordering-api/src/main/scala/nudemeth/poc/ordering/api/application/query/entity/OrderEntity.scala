@@ -1,4 +1,4 @@
-package nudemeth.poc.ordering.api.application.query
+package nudemeth.poc.ordering.api.application.query.entity
 
 import java.time.ZonedDateTime
 import java.util.UUID

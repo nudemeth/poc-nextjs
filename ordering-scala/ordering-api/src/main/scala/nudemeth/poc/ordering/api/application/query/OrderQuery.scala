@@ -2,6 +2,7 @@ package nudemeth.poc.ordering.api.application.query
 
 import java.util.UUID
 
+import nudemeth.poc.ordering.api.application.query.entity.{ CardTypeEntity, OrderByUserEntity, OrderEntity }
 import nudemeth.poc.ordering.api.application.query.viewmodel._
 
 import scala.concurrent.Future

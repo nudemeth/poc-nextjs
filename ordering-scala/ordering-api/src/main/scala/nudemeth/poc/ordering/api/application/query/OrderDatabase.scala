@@ -2,6 +2,8 @@ package nudemeth.poc.ordering.api.application.query
 
 import com.outworkers.phantom.connectors.CassandraConnection
 import com.outworkers.phantom.dsl._
+import nudemeth.poc.ordering.api.application.query.entity.{ OrderByUserEntity, OrderEntity }
+import nudemeth.poc.ordering.api.application.query.model.{ CardTypeModel, OrderByUserModel, OrderModel }
 
 import scala.concurrent.Future
 
