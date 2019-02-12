@@ -1,6 +1,7 @@
 lazy val akkaHttpVersion  = "10.1.5"
 lazy val akkaVersion      = "2.5.17"
 lazy val phantomVersion   = "2.29.0"
+lazy val logbackVersion   = "1.2.3"
 
 lazy val commonSettings = Seq(
   version         := "0.1-SNAPSHOT",
@@ -13,7 +14,7 @@ lazy val root = (project in file("."))
   .dependsOn(api)
   .settings(commonSettings: _*)
   .settings(
-    mainClass in (Compile, run) := Some("nudemeth.poc.ordering.api.Server"),
+    mainClass in (Compile, run) := Some("nudemeth.poc.ordering.api.Server")
   )
   .disablePlugins(RevolverPlugin)
 
@@ -29,7 +30,7 @@ lazy val api = (project in file("./ordering-api"))
       "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
       "com.typesafe.akka" %% "akka-http-xml"        % akkaHttpVersion,
       "com.typesafe.akka" %% "akka-stream"          % akkaVersion,
-
+      
       "com.typesafe.akka" %% "akka-http-testkit"    % akkaHttpVersion % Test,
       "com.typesafe.akka" %% "akka-testkit"         % akkaVersion     % Test,
       "com.typesafe.akka" %% "akka-stream-testkit"  % akkaVersion     % Test,
@@ -37,6 +38,8 @@ lazy val api = (project in file("./ordering-api"))
 
       "com.outworkers"    %% "phantom-dsl"          % phantomVersion,
       "com.outworkers"    %% "phantom-jdk8"         % phantomVersion,
+
+      "ch.qos.logback"    % "logback-classic"      % logbackVersion   % Runtime,
     )
   )
 
