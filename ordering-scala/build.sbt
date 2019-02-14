@@ -1,3 +1,4 @@
+lazy val scalaMainVersion = "2.12.7"
 lazy val akkaHttpVersion  = "10.1.5"
 lazy val akkaVersion      = "2.5.17"
 lazy val phantomVersion   = "2.29.0"
@@ -6,7 +7,7 @@ lazy val logbackVersion   = "1.2.3"
 lazy val commonSettings = Seq(
   version         := "0.1-SNAPSHOT",
   organization    := "nudemeth",
-  scalaVersion    := "2.12.7"
+  scalaVersion    := scalaMainVersion
 )
 
 lazy val root = (project in file("."))
@@ -35,6 +36,7 @@ lazy val api = (project in file("./ordering-api"))
       "com.typesafe.akka" %% "akka-testkit"         % akkaVersion     % Test,
       "com.typesafe.akka" %% "akka-stream-testkit"  % akkaVersion     % Test,
       "org.scalatest"     %% "scalatest"            % "3.0.5"         % Test,
+      "org.scala-lang"    %  "scala-reflect"        % scalaMainVersion,
 
       "com.outworkers"    %% "phantom-dsl"          % phantomVersion,
       "com.outworkers"    %% "phantom-jdk8"         % phantomVersion,
