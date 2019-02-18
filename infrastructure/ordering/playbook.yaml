@@ -33,6 +33,30 @@
       regexp: 'AllowAllAuthenticator$'
       replace: 'PasswordAuthenticator'
 
+  - name: Rename cluster
+    replace:
+      path: /etc/cassandra/cassandra.yaml
+      regexp: 'Test Cluster'
+      replace: 'Ordering Cluster'
+
+  - name: Set RPC server to enable
+    replace:
+      path: /etc/cassandra/cassandra.yaml
+      regexp: 'start_rpc: false$'
+      replace: 'start_rpc: true'
+
+  - name: Set RPC address
+    replace:
+      path: /etc/cassandra/cassandra.yaml
+      regexp: 'rpc_address: localhost$'
+      replace: 'rpc_address: 0.0.0.0'
+
+  - name: Set broadcast RPC address
+    replace:
+      path: /etc/cassandra/cassandra.yaml
+      regexp: 'broadcast_rpc_address: 1.2.3.4$'
+      replace: 'broadcast_rpc_address: 172.23.32.26'
+
   - name: Restart Cassandra
     service:
       name: cassandra
