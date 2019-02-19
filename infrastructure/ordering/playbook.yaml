@@ -42,7 +42,7 @@
   - name: Set RPC server to enable
     replace:
       path: /etc/cassandra/cassandra.yaml
-      regexp: 'start_rpc: false$'
+      regexp: '^start_rpc: false$'
       replace: 'start_rpc: true'
 
   - name: Set RPC address
@@ -51,11 +51,13 @@
       regexp: 'rpc_address: localhost$'
       replace: 'rpc_address: 0.0.0.0'
 
+  - debug: msg="ip address {{ ansible_eth0.ipv4.address }}"
+
   - name: Set broadcast RPC address
     replace:
       path: /etc/cassandra/cassandra.yaml
-      regexp: 'broadcast_rpc_address: 1.2.3.4$'
-      replace: 'broadcast_rpc_address: 172.23.32.26'
+      regexp: '^# broadcast_rpc_address: 1.2.3.4$'
+      replace: 'broadcast_rpc_address: {{ ansible_eth0.ipv4.address }}'
 
   - name: Restart Cassandra
     service:
