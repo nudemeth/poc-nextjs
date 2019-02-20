@@ -1,12 +1,13 @@
 package nudemeth.poc.ordering.api.application.query.model
 
+import java.time.ZonedDateTime
 import java.util.UUID
 
 import com.outworkers.phantom.Table
 import com.outworkers.phantom.builder.query.{ DeleteQuery, InsertQuery }
 import com.outworkers.phantom.builder.{ Chainned, Specified, Unlimited, Unordered }
 import com.outworkers.phantom.dsl._
-import com.outworkers.phantom.jdk8._
+import com.outworkers.phantom.jdk8.indexed._
 import nudemeth.poc.ordering.api.application.query.entity.OrderEntity
 import shapeless.HNil
 
@@ -15,7 +16,7 @@ import scala.concurrent.Future
 abstract class OrderModel extends Table[OrderModel, OrderEntity] {
   override def tableName: String = "order_by_id"
 
-  object order_id extends Col[UUID] with PartitionKey
+  object order_id extends Col[UUID] with PrimaryKey
   object order_date extends Col[ZonedDateTime]
   object description extends Col[String]
   object address_city extends Col[String]
