@@ -12,18 +12,18 @@ class OrderDatabase(override val connector: CassandraConnection) extends Databas
   object OrderByUserModel extends OrderByUserModel with connector.Connector
   object CardTypeModel extends CardTypeModel with connector.Connector
 
-  def saveOrUpdate(order: OrderEntity): Future[ResultSet] = {
-    val orderByUser = OrderByUserEntity(order.orderId, order.buyerId, order.orderDate, order.statusName, order.orderItems.size)
+  def saveOrUpdate(order: OrderEntity, buyerId: UUID): Future[ResultSet] = {
+    val orderByUser = OrderByUserEntity(order.orderId, buyerId, order.orderDate, order.statusName, order.orderItems.size)
     Batch.logged
       .add(OrderModel.saveOrUpdateTransaction(order))
       .add(OrderByUserModel.saveOrUpdateTransaction(orderByUser))
       .future()
   }
 
-  def delete(order: OrderEntity): Future[ResultSet] = {
+  def delete(order: OrderEntity, buyerId: UUID): Future[ResultSet] = {
     Batch.logged
       .add(OrderModel.deleteByIdTransaction(order.orderId))
-      .add(OrderByUserModel.deleteByUserIdAndIdTransaction(order.buyerId, order.orderId))
+      .add(OrderByUserModel.deleteByUserIdAndIdTransaction(buyerId, order.orderId))
       .future()
   }
 }

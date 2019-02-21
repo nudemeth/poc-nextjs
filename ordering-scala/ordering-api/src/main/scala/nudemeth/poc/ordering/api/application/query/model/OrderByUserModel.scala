@@ -16,15 +16,15 @@ import scala.concurrent.Future
 abstract class OrderByUserModel extends Table[OrderByUserModel, OrderByUserEntity] {
   override def tableName: String = "order_by_buyer_id"
 
-  object buyer_Id extends Col[UUID] with PartitionKey
-  object order_id extends Col[UUID] with ClusteringOrder
-  object order_date extends Col[ZonedDateTime]
-  object status_name extends Col[String]
+  object buyerId extends Col[UUID] with PartitionKey { override lazy val name = "buyer_id" }
+  object orderId extends Col[UUID] with ClusteringOrder { override lazy val name = "order_id" }
+  object orderDate extends Col[ZonedDateTime] { override lazy val name = "order_date" }
+  object statusName extends Col[String] { override lazy val name = "status_name" }
   object total extends Col[Int]
 
   def getByUserName(userId: UUID): Future[List[OrderByUserEntity]] = {
     select
-      .where(_.buyer_Id eqs userId)
+      .where(_.buyerId eqs userId)
       .consistencyLevel_=(ConsistencyLevel.ONE)
       .fetch()
   }
@@ -32,10 +32,10 @@ abstract class OrderByUserModel extends Table[OrderByUserModel, OrderByUserEntit
   def saveOrUpdate(order: OrderByUserEntity): Future[ResultSet] = saveOrUpdateTransaction(order).future()
   def saveOrUpdateTransaction(order: OrderByUserEntity): InsertQuery[OrderByUserModel, OrderByUserEntity, Specified, HNil] = {
     insert
-      .value(_.buyer_Id, order.buyerId)
-      .value(_.order_id, order.orderId)
-      .value(_.order_date, order.orderDate)
-      .value(_.status_name, order.statusName)
+      .value(_.buyerId, order.buyerId)
+      .value(_.orderId, order.orderId)
+      .value(_.orderDate, order.orderDate)
+      .value(_.statusName, order.statusName)
       .value(_.total, order.total)
       .consistencyLevel_=(ConsistencyLevel.ALL)
   }
@@ -43,8 +43,8 @@ abstract class OrderByUserModel extends Table[OrderByUserModel, OrderByUserEntit
   def deleteByUserIdAndId(userName: UUID, id: UUID): Future[ResultSet] = deleteByUserIdAndIdTransaction(userName, id).future()
   def deleteByUserIdAndIdTransaction(userId: UUID, id: UUID): DeleteQuery[OrderByUserModel, OrderByUserEntity, Unlimited, Unordered, Specified, Chainned, HNil] = {
     delete
-      .where(_.buyer_Id eqs userId)
-      .and(_.order_id eqs id)
+      .where(_.buyerId eqs userId)
+      .and(_.orderId eqs id)
       .consistencyLevel_=(ConsistencyLevel.ONE)
   }
 }

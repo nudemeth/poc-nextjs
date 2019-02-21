@@ -16,20 +16,20 @@ import scala.concurrent.Future
 abstract class OrderModel extends Table[OrderModel, OrderEntity] {
   override def tableName: String = "order_by_id"
 
-  object order_id extends Col[UUID] with PrimaryKey
-  object order_date extends Col[ZonedDateTime]
+  object orderId extends Col[UUID] with PrimaryKey { override lazy val name = "order_id" }
+  object orderDate extends Col[ZonedDateTime] { override lazy val name = "order_date" }
   object description extends Col[String]
-  object address_city extends Col[String]
-  object address_country extends Col[String]
-  object address_state extends OptionalCol[String]
-  object address_street extends Col[String]
-  object address_zip_code extends Col[String]
-  object status_name extends Col[String]
-  object order_items extends MapColumn[String, (Int, Double, String)] //{product_name, {units, unit_price, picture_url}}
+  object addressCity extends Col[String] { override lazy val name = "address_city" }
+  object addressCountry extends Col[String] { override lazy val name = "address_country" }
+  object addressState extends OptionalCol[String] { override lazy val name = "address_state" }
+  object addressStreet extends Col[String] { override lazy val name = "address_street" }
+  object addressZipCode extends Col[String] { override lazy val name = "address_zip_code" }
+  object statusName extends Col[String] { override lazy val name = "status_name" }
+  object orderItems extends MapColumn[String, (Int, Double, String)] { override lazy val name = "order_items" }
 
   def getById(id: UUID): Future[Option[OrderEntity]] = {
     select
-      .where(_.order_id eqs id)
+      .where(_.orderId eqs id)
       .consistencyLevel_=(ConsistencyLevel.ONE)
       .one()
   }
@@ -37,23 +37,23 @@ abstract class OrderModel extends Table[OrderModel, OrderEntity] {
   def saveOrUpdate(order: OrderEntity): Future[ResultSet] = saveOrUpdateTransaction(order).future()
   def saveOrUpdateTransaction(order: OrderEntity): InsertQuery[OrderModel, OrderEntity, Specified, HNil] = {
     insert
-      .value(_.order_id, order.orderId)
-      .value(_.order_date, order.orderDate)
+      .value(_.orderId, order.orderId)
+      .value(_.orderDate, order.orderDate)
       .value(_.description, order.description)
-      .value(_.address_city, order.addressCity)
-      .value(_.address_country, order.addressCountry)
-      .value(_.address_state, order.addressState)
-      .value(_.address_street, order.addressStreet)
-      .value(_.address_zip_code, order.addressZipCode)
-      .value(_.status_name, order.statusName)
-      .value(_.order_items, order.orderItems)
+      .value(_.addressCity, order.addressCity)
+      .value(_.addressCountry, order.addressCountry)
+      .value(_.addressState, order.addressState)
+      .value(_.addressStreet, order.addressStreet)
+      .value(_.addressZipCode, order.addressZipCode)
+      .value(_.statusName, order.statusName)
+      .value(_.orderItems, order.orderItems)
       .consistencyLevel_=(ConsistencyLevel.ALL)
   }
 
   def deleteById(id: UUID): Future[ResultSet] = deleteByIdTransaction(id).future()
   def deleteByIdTransaction(id: UUID): DeleteQuery[OrderModel, OrderEntity, Unlimited, Unordered, Specified, Chainned, HNil] = {
     delete
-      .where(_.order_id eqs id)
+      .where(_.orderId eqs id)
       .consistencyLevel_=(ConsistencyLevel.ONE)
   }
 }

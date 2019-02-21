@@ -5,7 +5,6 @@ import java.util.UUID
 
 case class OrderEntity(
   orderId: UUID,
-  buyerId: UUID,
   orderDate: ZonedDateTime,
   description: String,
   addressCity: String,

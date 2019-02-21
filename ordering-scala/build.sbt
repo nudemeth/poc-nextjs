@@ -1,7 +1,7 @@
 lazy val scalaMainVersion = "2.12.7"
 lazy val akkaHttpVersion  = "10.1.5"
 lazy val akkaVersion      = "2.5.17"
-lazy val phantomVersion   = "2.29.0"
+lazy val phantomVersion   = "2.31.0"
 lazy val logbackVersion   = "1.2.3"
 
 lazy val commonSettings = Seq(
