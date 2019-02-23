@@ -7,9 +7,7 @@ import akka.pattern.pipe
 import nudemeth.poc.ordering.api.application.query.OrderQueryable
 import nudemeth.poc.ordering.api.application.query.viewmodel.Order
 
-import scala.concurrent.{ ExecutionContext, Future }
-
-//final case class Order(id: UUID, name: String)
+import scala.concurrent.ExecutionContext
 
 object OrderingRegistryActor {
   final case class ActionPerformed(description: String)
@@ -27,13 +25,14 @@ class OrderingRegistryActor(repository: OrderQueryable) extends Actor with Actor
 
   def receive: Receive = {
     case GetOrders =>
-      val userName = "6bc6cfae-b04e-4b53-ba23-1a1b7260b121"
-      repository.getOrdersByUserNameAsync(UUID.fromString(userName)).pipeTo(sender())
+      val userName = UUID.fromString("6bc6cfae-b04e-4b53-ba23-1a1b7260b121")
+      repository.getOrdersByUserNameAsync(userName).pipeTo(sender())
     case GetOrder(id) =>
       repository.getOrderAsync(id).pipeTo(sender())
     case CreateOrder(order) =>
       sender() ! ""
     case DeleteOrder(id) =>
-      sender() ! ""
+      val userName = UUID.fromString("6bc6cfae-b04e-4b53-ba23-1a1b7260b121")
+      repository.deleteOrderAsync(id, userName).pipeTo(sender())
   }
 }

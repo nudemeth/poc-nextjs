@@ -31,6 +31,10 @@ class OrderQuery extends OrderQueryable {
     } yield m
   }
 
+  override def deleteOrderAsync(id: UUID, userId: UUID): Future[Boolean] = {
+    OrderDatabase.delete(id, userId).map(r => r.wasApplied())
+  }
+
   private def mapToViewModel(entities: Vector[CardTypeEntity]): Future[Vector[CardType]] = Future {
     entities.map(e => {
       CardType(e.name)
