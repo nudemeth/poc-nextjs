@@ -47,6 +47,12 @@ class LoginCard extends React.Component {
         theme: PropTypes.object.isRequired
     }
 
+    handleGithubSignIn = () => {
+        if (window) {
+            window.open('https://github.com/login/oauth/authorize?client_id=f4b44543204f5b40deec')
+        }
+    }
+
     render() {
         const { classes } = this.props
         return (
@@ -80,7 +86,7 @@ class LoginCard extends React.Component {
                     <Divider className={classes.divider}/>
                 </div>
                 <CardActions className={classes.cardActions}>
-                    <Button variant='raised' color='secondary' className={classes.signInButton}>
+                    <Button variant='raised' color='secondary' className={classes.signInButton} onClick={this.handleGithubSignIn}>
                         Sign In With Github
                     </Button>
                 </CardActions>
