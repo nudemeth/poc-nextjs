@@ -22,6 +22,12 @@ app
             app.render(req, res, actualPage, queryParams);
         });*/
 
+        server.get('/authentication', (req, res) => {
+            console.log(req.query.code)
+            //TODO: Send request for access token
+            return res.sendStatus(404)
+        })
+
         server.get('*', (req, res) => {
             return handle(req, res)
         })
