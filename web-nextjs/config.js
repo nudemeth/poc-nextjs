@@ -6,6 +6,9 @@ const config = {
     api: {
         catalog: {
             uri: `${protocal}://${dns}${port}/api/v1/catalog/`
+        },
+        identity: {
+            uri: `${protocal}://${dns}${port}/api/v1/identity/`
         }
     }
 }
