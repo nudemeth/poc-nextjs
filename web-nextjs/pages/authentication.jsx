@@ -1,18 +1,17 @@
 import React from 'react'
 //import PropTypes from 'prop-types'
+import { getAccessToken } from '../actions/identity.actions'
 
 class Authentication extends React.Component {
     constructor(props) {
         super(props)
     }
 
-    /*static async getInitialProps({ ctx: { query }}) {
-        if (query.code) {
-            return { code: query.code }
-        }
+    static async getInitialProps({ ctx: { store, query }}) {
+        store.dispatch(getAccessToken(query.issuer, query.code))
     }
 
-    static propTypes = {
+    /*static propTypes = {
         code: PropTypes.string.isRequired
     }*/
 

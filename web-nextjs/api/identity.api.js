@@ -7,8 +7,6 @@ class IdentityApi extends Api {
     }
 
     getAccessToken = async (issuer, code) => {
-        console.log(code)
-        console.log(issuer)
         if (!issuer || !code) {
             Promise.reject(new Error('Issuer or code is empty'))
         }

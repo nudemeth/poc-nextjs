@@ -16,6 +16,12 @@ server.get('/api/v1/catalog/items/:id/img', (req, res) => {
     const imgPath = path.join(__dirname, `${item.imagePath}`)
     res.sendFile(imgPath)
 })
+server.get('/api/v1/identity/token/:issuer', (req, res) => {
+    const issuer = req.params.issuer
+    const code = req.query.code
+    console.log(`Fake payload: issuer=${issuer}, code=${code}`)
+    res.send({ access_token: 'e72e16c7e42f292c6912e7710c838347ae178b4a', token_type: 'bearer' })
+})
 server.use(jsonServer.rewriter(routes))
 server.use(router)
 server.listen(5000, '0.0.0.0', () => {
