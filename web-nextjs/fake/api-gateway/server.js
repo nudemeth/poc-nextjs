@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 const path = require('path')
 const jsonServer = require('json-server')
-const http = require('http')
+const http = require('follow-redirects').http
 const server = jsonServer.create()
 const router = jsonServer.router(path.join(__dirname, 'db.json'))
 const middlewares = jsonServer.defaults()
@@ -20,28 +20,26 @@ server.get('/api/v1/catalog/items/:id/img', (req, res) => {
 server.get('/api/v1/identity/token/:issuer', (req, res) => {
     const issuer = req.params.issuer
     const code = req.query.code
-    console.log(`Fake payload: issuer=${issuer}, code=${code}`)
-    const data = JSON.stringify({
+    console.log(`payload: issuer=${issuer}, code=${code}`)
+    const data = {
         client_id: 'f4b44543204f5b40deec',
         client_secret: '9bc72fae341b431a1ff000d6ef12c7fcf45fc4de',
         code: code
-    })
+    }
     const options = {
         host: 'github.com',
-        port: 80,
-        path: '/login/oauth/access_token',
-        method: 'POST',
+        path: `/login/oauth/access_token?client_id=${data.client_id}&client_secret=${data.client_secret}&code=${data.code}`,
+        method: 'GET',
         headers: {
-            'Content-Type': 'application/json',
-            'Content-Length': Buffer.byteLength(data),
-            'Accept': 'application/json'
+            //'Content-Length': Buffer.byteLength(data),
+            'Accept': 'application/json',
         }
     }
-    console.log(`data: ${data}`)
+    console.log(`data: ${JSON.stringify(data)}`)
     const req2 = http.request(options, (res2) => {
         console.log(`Status: ${res2.statusCode}`)
         console.log(`Headers: ${JSON.stringify(res2.headers)}`)
-        res2.setEncoding('utf8')
+        //res2.setEncoding('utf8')
         res2.on('data', (chunk) => {
             console.log(`Body: ${chunk}`)
             res.send(chunk)
@@ -50,7 +48,7 @@ server.get('/api/v1/identity/token/:issuer', (req, res) => {
             console.log('No more data in response.')
         })
     })
-    req2.write(data)
+    //req2.write(data)
     req2.end()
     console.log('Check point 2')
     //res.send({ access_token: 'e72e16c7e42f292c6912e7710c838347ae178b4a', token_type: 'bearer' })
