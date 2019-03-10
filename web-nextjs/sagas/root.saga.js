@@ -4,7 +4,6 @@ import * as catalogSaga from './catalog.saga'
 import * as catalogTypeSaga from './catalogType.saga'
 import * as catalogBrandSaga from './catalogBrand.saga'
 import * as aboutSaga from './about.saga'
-import * as identitySaga from './identity.saga'
 
 function * rootWatcher() {
     yield effects.all([
@@ -14,8 +13,7 @@ function * rootWatcher() {
         effects.takeEvery(actionTypes.LOAD_CATALOG_TYPES, catalogTypeSaga.loadCatalogTypesWorker),
         effects.takeEvery(actionTypes.UPDATE_SELECTED_CATALOG_TYPE, catalogTypeSaga.updateSelectedCatalogType),
         effects.takeEvery(actionTypes.LOAD_CATALOG_BRANDS, catalogBrandSaga.loadCatalogBrandsWorker),
-        effects.takeEvery(actionTypes.UPDATE_SELECTED_CATALOG_BRAND, catalogBrandSaga.updateSelectedCatalogBrand),
-        effects.takeEvery(actionTypes.GET_ACCESS_TOKEN, identitySaga.getAccessTokenWorker)
+        effects.takeEvery(actionTypes.UPDATE_SELECTED_CATALOG_BRAND, catalogBrandSaga.updateSelectedCatalogBrand)
     ])
 }
 

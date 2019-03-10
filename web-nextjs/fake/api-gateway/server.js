@@ -21,7 +21,7 @@ server.get('/api/v1/catalog/items/:id/img', (req, res) => {
 server.get('/api/v1/identity/token/:issuer', (req, res) => {
     const issuer = req.params.issuer
     const code = req.query.code
-    console.log(`payload: issuer=${issuer}, code=${code}`)
+    console.log(`API payload: issuer=${issuer}, code=${code}`)
     const data = querystring.stringify({
         'client_id': 'f4b44543204f5b40deec',
         'client_secret': '9bc72fae341b431a1ff000d6ef12c7fcf45fc4de',
@@ -37,18 +37,17 @@ server.get('/api/v1/identity/token/:issuer', (req, res) => {
     }
     console.log(`data: ${data}`)
     const req2 = http.request(options, (res2) => {
-        console.log(`Status: ${res2.statusCode}`)
-        console.log(`Headers: ${JSON.stringify(res2.headers)}`)
+        console.log(`API Status: ${res2.statusCode}`)
+        console.log(`API Headers: ${JSON.stringify(res2.headers)}`)
         res2.on('data', (chunk) => {
-            console.log(`Body: ${chunk}`)
+            console.log(`API Body: ${chunk}`)
             res.send(chunk)
         })
         res2.on('end', () => {
-            console.log('No more data in response.')
+            console.log('API: No more data in response.')
         })
     })
     req2.end()
-    console.log('Check point 2')
 })
 server.use(jsonServer.rewriter(routes))
 server.use(router)
