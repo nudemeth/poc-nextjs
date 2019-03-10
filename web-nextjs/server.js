@@ -4,6 +4,7 @@ const next = require('next')
 const favicon = require('serve-favicon')
 const path = require('path')
 const http = require('http')
+const cookieParser = require('cookie-parser')
 
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
@@ -16,6 +17,7 @@ app
         const port = dev ? 3000 : 80
 
         server.use(favicon(path.join(__dirname, 'static', 'favicon.ico')))
+        server.use(cookieParser())
 
         /*server.get('/p/:id', (req, res) => {
             const actualPage = '/post';
@@ -43,9 +45,10 @@ app
                     console.log(`Server Body: ${chunk}`)
                     const data = JSON.parse(chunk)
                     console.log(`${issuer} token: ${data.access_token}`)
-                    res.cookie(`${issuer}-token`, data.access_token, {
+                    res.cookie('token', data.access_token, {
                         maxAge: 900000, //15 mins
-                        httpOnly: true
+                        httpOnly: true,
+                        secure: !dev
                     })
                     app.render(req, res, '/authentication')
                 })
@@ -54,6 +57,15 @@ app
                 })
             })
             req2.end()
+        })
+
+        server.get('/login', (req, res) => {
+            const token = req.cookies.token
+            if (!token) {
+                return handle(req, res)
+            }
+            console.log(`Server Login token: ${token}`)
+            app.render(req, res, '/login', { token: token })
         })
 
         server.get('*', (req, res) => {
