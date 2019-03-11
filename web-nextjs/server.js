@@ -29,7 +29,7 @@ app
             const issuer = req.query.issuer
             const code= req.query.code
             console.log(`Server payload: issuer=${issuer}, code=${code}`)
-            const options = {
+            const options2 = {
                 host: 'localhost',
                 port: 5000,
                 path: `/api/v1/identity/token/${issuer}?code=${code}`,
@@ -38,19 +38,37 @@ app
                     'Accept': 'application/json',
                 }
             }
-            const req2 = http.request(options, (res2) => {
-                console.log(`Server Status: ${res2.statusCode}`)
-                console.log(`Server Headers: ${JSON.stringify(res2.headers)}`)
-                res2.on('data', (chunk) => {
-                    console.log(`Server Body: ${chunk}`)
-                    const data = JSON.parse(chunk)
-                    console.log(`${issuer} token: ${data.access_token}`)
-                    res.cookie('token', data.access_token, {
-                        maxAge: 900000, //15 mins
-                        httpOnly: true,
-                        secure: !dev
+            const req2 = http.request(options2, (res2) => {
+                console.log(`Server Token Status: ${res2.statusCode}`)
+                console.log(`Server Token Headers: ${JSON.stringify(res2.headers)}`)
+                res2.on('data', (chunk2) => {
+                    console.log(`Server Token Body: ${chunk2}`)
+                    const data2 = JSON.parse(chunk2)
+                    console.log(`${issuer} token: ${data2.access_token}`)
+                    const options3 = {
+                        host: 'localhost',
+                        port: 5000,
+                        path: `/api/v1/identity/userinfo/${issuer}?token=${data2.access_token}`,
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                        }
+                    }
+                    const req3 = http.request(options3, (res3) => {
+                        //TODO: Store access toeken in db { login, issuer, access_token }
+                        console.log(`Server Userinfo Status: ${res2.statusCode}`)
+                        console.log(`Server Userinfo Headers: ${JSON.stringify(res2.headers)}`)
+                        res3.on('data', (chunk3) => {
+                            console.log(`Server Userinfo Body: ${chunk3}`)
+                            const data3 = JSON.parse(chunk3)
+                            res.cookie('user', data3.login, {
+                                httpOnly: true,
+                                secure: !dev
+                            })
+                            app.render(req, res, '/authentication')
+                        })
                     })
-                    app.render(req, res, '/authentication')
+                    req3.end()
                 })
                 res2.on('end', () => {
                     console.log('Server: No more data in response.')

@@ -37,14 +37,44 @@ server.get('/api/v1/identity/token/:issuer', (req, res) => {
     }
     console.log(`data: ${data}`)
     const req2 = http.request(options, (res2) => {
-        console.log(`API Status: ${res2.statusCode}`)
-        console.log(`API Headers: ${JSON.stringify(res2.headers)}`)
+        console.log(`API Token Status: ${res2.statusCode}`)
+        console.log(`API Token Headers: ${JSON.stringify(res2.headers)}`)
+        let chunks = []
         res2.on('data', (chunk) => {
-            console.log(`API Body: ${chunk}`)
-            res.send(chunk)
+            chunks.push(chunk)
         })
         res2.on('end', () => {
-            console.log('API: No more data in response.')
+            console.log('API Token: No more data in response.')
+            const data = Buffer.concat(chunks)
+            console.log(`API Token data: ${data}`)
+            res.send(data)
+        })
+    })
+    req2.end()
+})
+server.get('/api/v1/identity/userinfo/:issuer', (req, res) => {
+    const token = req.query.token
+    const options = {
+        host: 'api.github.com',
+        path: '/user',
+        method: 'GET',
+        headers: {
+            'Authorization': `token ${token}`,
+            'User-Agent': 'poc-microservice-dev'
+        }
+    }
+    const req2 = http.request(options, (res2) => {
+        console.log(`API Userinfo Status: ${res2.statusCode}`)
+        console.log(`API Userinfo Headers: ${JSON.stringify(res2.headers)}`)
+        let chunks = []
+        res2.on('data', (chunk) => {
+            chunks.push(chunk)
+        })
+        res2.on('end', () => {
+            console.log('API Userinfo: No more data in response.')
+            const data = Buffer.concat(chunks)
+            console.log(`API Userinfo data: ${data}`)
+            res.send(data)
         })
     })
     req2.end()
