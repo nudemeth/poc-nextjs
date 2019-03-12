@@ -3,12 +3,35 @@ const express = require('express')
 const next = require('next')
 const favicon = require('serve-favicon')
 const path = require('path')
-const http = require('http')
+const fetch = require('isomorphic-unfetch')
 const cookieParser = require('cookie-parser')
+const config = require('./config')
 
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
+
+const getToken = (issuer, code) => {
+    const options = {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+        }
+    }
+    return fetch(`${config.api.identity.uri}token/${issuer}?code=${code}`, options)
+        .then(r => r.json())
+}
+
+const getUserinfo = (issuer, token) => {
+    const options = {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+        }
+    }
+    return fetch(`${config.api.identity.uri}userinfo/${issuer}?token=${token}`, options)
+        .then(r => r.json())
+}
 
 app
     .prepare()
@@ -25,56 +48,20 @@ app
             app.render(req, res, actualPage, queryParams);
         });*/
 
-        server.get('/authentication', (req, res) => {
+        server.get('/authentication', async (req, res) => {
             const issuer = req.query.issuer
             const code= req.query.code
             console.log(`Server payload: issuer=${issuer}, code=${code}`)
-            const options2 = {
-                host: 'localhost',
-                port: 5000,
-                path: `/api/v1/identity/token/${issuer}?code=${code}`,
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                }
-            }
-            const req2 = http.request(options2, (res2) => {
-                console.log(`Server Token Status: ${res2.statusCode}`)
-                console.log(`Server Token Headers: ${JSON.stringify(res2.headers)}`)
-                res2.on('data', (chunk2) => {
-                    console.log(`Server Token Body: ${chunk2}`)
-                    const data2 = JSON.parse(chunk2)
-                    console.log(`${issuer} token: ${data2.access_token}`)
-                    const options3 = {
-                        host: 'localhost',
-                        port: 5000,
-                        path: `/api/v1/identity/userinfo/${issuer}?token=${data2.access_token}`,
-                        method: 'GET',
-                        headers: {
-                            'Accept': 'application/json',
-                        }
-                    }
-                    const req3 = http.request(options3, (res3) => {
-                        //TODO: Store access toeken in db { login, issuer, access_token }
-                        console.log(`Server Userinfo Status: ${res2.statusCode}`)
-                        console.log(`Server Userinfo Headers: ${JSON.stringify(res2.headers)}`)
-                        res3.on('data', (chunk3) => {
-                            console.log(`Server Userinfo Body: ${chunk3}`)
-                            const data3 = JSON.parse(chunk3)
-                            res.cookie('user', data3.login, {
-                                httpOnly: true,
-                                secure: !dev
-                            })
-                            app.render(req, res, '/authentication')
-                        })
-                    })
-                    req3.end()
-                })
-                res2.on('end', () => {
-                    console.log('Server: No more data in response.')
-                })
+
+            const token = await getToken(issuer, code)
+            const userinfo = await getUserinfo(issuer, token.access_token)
+
+            res.cookie('user', userinfo.login, {
+                httpOnly: true,
+                secure: !dev
             })
-            req2.end()
+            //TODO: Store access token in db { login, issuer, access_token }
+            app.render(req, res, '/authentication')
         })
 
         server.get('/login', (req, res) => {
