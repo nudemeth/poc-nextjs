@@ -1,12 +1,13 @@
 /* eslint-disable no-console */
-const express = require('express')
-const next = require('next')
-const favicon = require('serve-favicon')
-const path = require('path')
-const fetch = require('isomorphic-unfetch')
-const cookieParser = require('cookie-parser')
-const config = require('./config')
+import express from 'express'
+import next from 'next'
+import favicon from 'serve-favicon'
+import path from 'path'
+import fetch from 'isomorphic-unfetch'
+import cookieParser from 'cookie-parser'
+import config from './config'
 
+const __dirname = path.resolve()
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
