@@ -1,13 +1,16 @@
 /* eslint-disable no-console */
-const path = require('path')
-const jsonServer = require('json-server')
-const fetch = require('isomorphic-unfetch')
-const querystring = require('querystring')
+import path from 'path'
+import jsonServer from 'json-server'
+import fetch from 'isomorphic-unfetch'
+import querystring from 'querystring'
+import routes from './routes'
+import fake from './db'
+import { fileURLToPath } from 'url'
+
+const __dirname = path.dirname(fileURLToPath(new URL(import.meta.url)))
 const server = jsonServer.create()
 const router = jsonServer.router(path.join(__dirname, 'db.json'))
 const middlewares = jsonServer.defaults()
-const routes = require('./routes')
-const fake = require('./db.json')
 
 server.use(middlewares)
 server.get('/api/v1/catalog/items/:id/img', (req, res) => {
@@ -33,10 +36,8 @@ server.get('/api/v1/identity/token/:issuer', async (req, res) => {
             'Accept': 'application/json',
         }
     }
-    console.log(`data: ${paramz}`)
     const data = await fetch(`https://github.com/login/oauth/access_token?${paramz}`, options)
         .then(r => r.json())
-    console.log(`API Token data: ${JSON.stringify(data)}`)
     res.send(data)
 })
 server.get('/api/v1/identity/userinfo/:issuer', async (req, res) => {
@@ -50,7 +51,6 @@ server.get('/api/v1/identity/userinfo/:issuer', async (req, res) => {
     }
     const data = await fetch('https://api.github.com/user', options)
         .then(r => r.json())
-    console.log(`API Userinfo data: ${JSON.stringify(data)}`)
     res.send(data)
 })
 server.use(jsonServer.rewriter(routes))

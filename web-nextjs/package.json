@@ -11,7 +11,7 @@
     "build": "next build",
     "export": "next export",
     "analyze": "cross-env ANALYZE=1 next build",
-    "fake-api-gateway": "node ./fake/api-gateway/server.js"
+    "fake-api-gateway": "node --experimental-modules ./fake/api-gateway/server.mjs"
   },
   "dependencies": {
     "@material-ui/core": "^1.0.0",
