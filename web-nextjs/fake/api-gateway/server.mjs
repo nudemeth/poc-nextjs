@@ -36,6 +36,7 @@ server.get('/api/v1/identity/token/:issuer', async (req, res) => {
             'Accept': 'application/json',
         }
     }
+    //TODO: Change github to variable
     const data = await fetch(`https://github.com/login/oauth/access_token?${paramz}`, options)
         .then(r => r.json())
     res.send(data)
