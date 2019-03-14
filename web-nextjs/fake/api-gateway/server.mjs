@@ -12,6 +12,35 @@ const server = jsonServer.create()
 const router = jsonServer.router(path.join(__dirname, 'db.json'))
 const middlewares = jsonServer.defaults()
 
+//TODO: Isolate issuer function
+const getGithubToken = async function(code) {
+    const paramz = querystring.stringify({
+        'client_id': 'f4b44543204f5b40deec',
+        'client_secret': '9bc72fae341b431a1ff000d6ef12c7fcf45fc4de',
+        'code': code
+    })
+    const options = {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+        }
+    }
+    return await fetch(`https://github.com/login/oauth/access_token?${paramz}`, options)
+        .then(r => r.json())
+}
+
+const getGithubUserinfo = async function(token) {
+    const options = {
+        method: 'GET',
+        headers: {
+            'Authorization': `token ${token}`,
+            'User-Agent': 'poc-microservice-dev'
+        }
+    }
+    return await fetch('https://api.github.com/user', options)
+        .then(r => r.json())
+}
+
 server.use(middlewares)
 server.get('/api/v1/catalog/items/:id/img', (req, res) => {
     const id = req.params.id
@@ -24,34 +53,25 @@ server.get('/api/v1/catalog/items/:id/img', (req, res) => {
 server.get('/api/v1/identity/token/:issuer', async (req, res) => {
     const issuer = req.params.issuer
     const code = req.query.code
-    console.log(`API payload: issuer=${issuer}, code=${code}`)
-    const paramz = querystring.stringify({
-        'client_id': 'f4b44543204f5b40deec',
-        'client_secret': '9bc72fae341b431a1ff000d6ef12c7fcf45fc4de',
-        'code': code
-    })
-    const options = {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-        }
+    let data
+
+    switch (issuer) {
+    case 'github': data = await getGithubToken(code); break
+    default: throw new Error(`Invalid issuer: ${issuer}`)
     }
-    //TODO: Change github to variable
-    const data = await fetch(`https://github.com/login/oauth/access_token?${paramz}`, options)
-        .then(r => r.json())
+    
     res.send(data)
 })
 server.get('/api/v1/identity/userinfo/:issuer', async (req, res) => {
+    const issuer = req.params.issuer
     const token = req.query.token
-    const options = {
-        method: 'GET',
-        headers: {
-            'Authorization': `token ${token}`,
-            'User-Agent': 'poc-microservice-dev'
-        }
+    let data
+    
+    switch (issuer) {
+    case 'github': data = await getGithubUserinfo(token); break
+    default: throw new Error(`Invalid issuer: ${issuer}`)
     }
-    const data = await fetch('https://api.github.com/user', options)
-        .then(r => r.json())
+
     res.send(data)
 })
 server.use(jsonServer.rewriter(routes))
