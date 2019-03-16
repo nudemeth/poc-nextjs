@@ -66,12 +66,12 @@ app
         })
 
         server.get('/login', (req, res) => {
-            const token = req.cookies.token
-            if (!token) {
+            const user = req.cookies.user
+            if (!user) {
                 return handle(req, res)
             }
-            console.log(`Server Login token: ${token}`)
-            app.render(req, res, '/login', { token: token })
+            console.log(`Server Login user: ${user}`)
+            app.render(req, res, '/login', { user: user })
         })
 
         server.get('*', (req, res) => {

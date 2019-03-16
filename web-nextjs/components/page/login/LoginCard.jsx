@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import Divider from '@material-ui/core/Divider'
 import { withStyles } from '@material-ui/core/styles'
+import { connect } from 'react-redux'
 
 const styles = () => ({
     card: {
@@ -44,7 +45,8 @@ class LoginCard extends React.Component {
 
     static propTypes = {
         classes: PropTypes.object.isRequired,
-        theme: PropTypes.object.isRequired
+        theme: PropTypes.object.isRequired,
+        user: PropTypes.string
     }
 
     handleGithubSignIn = () => {
@@ -55,11 +57,12 @@ class LoginCard extends React.Component {
 
     render() {
         const { classes } = this.props
+        const user = this.props.user || ''
         return (
             <Card className={classes.card}>
                 <CardContent>
                     <Typography variant='headline' component='h2'>
-                        Sign in to your account
+                        {user === '' ? 'Sign in to your account' : user}
                     </Typography>
                     <TextField
                         id='username'
@@ -95,5 +98,7 @@ class LoginCard extends React.Component {
     }
 }
 
-export default withStyles(styles, { withTheme: true })(LoginCard)
+const mapStateToProps = ({ identityReducer: { user }}) => ({ user })
+
+export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(LoginCard))
 export { LoginCard }
