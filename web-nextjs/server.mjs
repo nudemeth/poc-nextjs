@@ -5,12 +5,21 @@ import favicon from 'serve-favicon'
 import path from 'path'
 import fetch from 'isomorphic-unfetch'
 import cookieParser from 'cookie-parser'
+import crypto from 'crypto'
 import config from './config'
 
 const __dirname = path.resolve()
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
+
+const algorithm = process.env.algorithm || 'aes-256-cbc'
+const secret = process.env.secret || 'this is my secret'
+const salt = process.env.salt || 'this is my salt'
+const key = crypto.scryptSync(secret, salt, 32)
+const iv = crypto.randomBytes(16)
+const cipher = crypto.createCipheriv(algorithm, key, iv)
+const decipher = crypto.createDecipheriv(algorithm, key, iv)
 
 const getToken = (issuer, code) => {
     const options = {
@@ -32,6 +41,18 @@ const getUserinfo = (issuer, token) => {
     }
     return fetch(`${config.api.identity.uri}userinfo/${issuer}?token=${token}`, options)
         .then(r => r.json())
+}
+
+const encrypt = (value) => {
+    let encrypted = cipher.update(value, 'utf8', 'hex')
+    encrypted += cipher.final('hex')
+    return encrypted
+}
+
+const decrypt = (value) => {
+    let decrypted = decipher.update(value, 'hex', 'utf8')
+    decrypted += decipher.final('utf8')
+    return decrypted
 }
 
 app
@@ -56,22 +77,24 @@ app
 
             const token = await getToken(issuer, code)
             const userinfo = await getUserinfo(issuer, token.access_token)
-
-            res.cookie('user', userinfo.login, {
+            const encrypted = encrypt(userinfo.login)
+            
+            res.cookie('user', encrypted, {
                 httpOnly: true,
                 secure: !dev
             })
+
             //TODO: Store access token in db { login, issuer, access_token }
             app.render(req, res, '/authentication')
         })
 
         server.get('/login', (req, res) => {
-            const user = req.cookies.user
-            if (!user) {
+            const encryptedUser = req.cookies.user
+            if (!encryptedUser) {
                 return handle(req, res)
             }
-            console.log(`Server Login user: ${user}`)
-            app.render(req, res, '/login', { user: user })
+            const decrypted = decrypt(encryptedUser)
+            app.render(req, res, '/login', { user: decrypted })
         })
 
         server.get('*', (req, res) => {

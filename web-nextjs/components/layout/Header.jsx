@@ -7,6 +7,7 @@ import Icon from '@material-ui/core/Icon'
 import Button from '@material-ui/core/Button'
 import Link from 'next/link'
 import { withStyles } from '@material-ui/core/styles'
+import { connect } from 'react-redux'
 
 const drawerWidth = 240
 const styles = theme => ({
@@ -38,11 +39,14 @@ class Header extends React.Component {
         classes: PropTypes.object.isRequired,
         theme: PropTypes.object.isRequired,
         handleDrawerToggle: PropTypes.func.isRequired,
-        children: PropTypes.any.isRequired
+        children: PropTypes.any.isRequired,
+        user: PropTypes.string
     }
 
     render() {
         const { classes } = this.props
+        const user = this.props.user
+        const loginOrUser = user ? <Button color='inherit'>{user}</Button> : <Link prefetch href='/login'><Button color='inherit'>Login</Button></Link>
         return (
             <AppBar className={classes.appBar}>
                 <ToolBar>
@@ -52,14 +56,14 @@ class Header extends React.Component {
                     <div className={classes.flex}>
                         {this.props.children}
                     </div>
-                    <Link prefetch href='/login'>
-                        <Button color='inherit'>Login</Button>
-                    </Link>
+                    {loginOrUser}
                 </ToolBar>
             </AppBar>
         )
     }
 }
 
-export default withStyles(styles, { withTheme: true })(Header)
+const mapStateToProps = ({ identityReducer: { user }}) => ({ user })
+
+export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(Header))
 export { Header }
