@@ -5,14 +5,18 @@ import Container from '../components/layout/Container'
 import Catalog from '../components/page/index/Catalog'
 import HeaderContent from '../components/page/index/HeaderContent'
 import { loadItems } from '../actions/catalog.actions'
+import { storeUser } from '../actions/identity.actions'
 
 class Index extends React.Component {
     constructor(props) {
         super(props)
     }
 
-    static async getInitialProps({ ctx: { store } }) {
+    static async getInitialProps({ ctx: { store, query } }) {
         store.dispatch(loadItems())
+        if (query.user) {
+            store.dispatch(storeUser(query.user))
+        }
     }
 
     static propTypes = {

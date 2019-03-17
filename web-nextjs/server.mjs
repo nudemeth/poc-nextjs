@@ -6,6 +6,7 @@ import path from 'path'
 import fetch from 'isomorphic-unfetch'
 import cookieParser from 'cookie-parser'
 import crypto from 'crypto'
+import { parse } from 'url'
 import config from './config'
 
 const __dirname = path.resolve()
@@ -17,9 +18,6 @@ const algorithm = process.env.algorithm || 'aes-256-cbc'
 const secret = process.env.secret || 'this is my secret'
 const salt = process.env.salt || 'this is my salt'
 const key = crypto.scryptSync(secret, salt, 32)
-const iv = crypto.randomBytes(16)
-const cipher = crypto.createCipheriv(algorithm, key, iv)
-const decipher = crypto.createDecipheriv(algorithm, key, iv)
 
 const getToken = (issuer, code) => {
     const options = {
@@ -44,15 +42,28 @@ const getUserinfo = (issuer, token) => {
 }
 
 const encrypt = (value) => {
+    const iv = crypto.randomBytes(16)
+    const ivStr = iv.toString('base64')
+    const cipher = crypto.createCipheriv(algorithm, key, iv)
     let encrypted = cipher.update(value, 'utf8', 'hex')
     encrypted += cipher.final('hex')
-    return encrypted
+    return `${encrypted}.${ivStr}`
 }
 
 const decrypt = (value) => {
-    let decrypted = decipher.update(value, 'hex', 'utf8')
-    decrypted += decipher.final('utf8')
-    return decrypted
+    try {
+        const portions = value.split('.')
+        const encryptedValue = portions[0]
+        const ivStr = portions[1]
+        const iv = Buffer.from(ivStr, 'base64')
+        const decipher = crypto.createDecipheriv(algorithm, key, iv)
+        let decrypted = decipher.update(encryptedValue, 'hex', 'utf8')
+        decrypted += decipher.final('utf8')
+        return decrypted
+    } catch (err) {
+        console.warn(`Unable to parse: ${value} (${err.message})`)
+        return null
+    }
 }
 
 app
@@ -88,17 +99,22 @@ app
             app.render(req, res, '/authentication')
         })
 
-        server.get('/login', (req, res) => {
+        server.get('*', (req, res) => {
             const encryptedUser = req.cookies.user
             if (!encryptedUser) {
                 return handle(req, res)
             }
-            const decrypted = decrypt(encryptedUser)
-            app.render(req, res, '/login', { user: decrypted })
-        })
 
-        server.get('*', (req, res) => {
-            return handle(req, res)
+            const decryptedUser = decrypt(encryptedUser)
+            if (!decryptedUser) {
+                res.clearCookie('user')
+                return handle(req, res)
+            }
+
+            const parsedUrl = parse(req.url, true)
+            const { pathname, query } = parsedUrl
+            const queryWithUser = { ...query, user: decryptedUser }
+            app.render(req, res, pathname, queryWithUser)
         })
 
         server.listen(port, (err) => {
