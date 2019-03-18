@@ -23,11 +23,11 @@ describe('Container component', () => {
 
     it('Should have Header component', () => {
         const wrapper = shallow(<Container classes={classes} theme={theme} title='' header={<div></div>}><h1/></Container>)
-        expect(wrapper.find('WithStyles(Header)').dive().find('Header').exists()).toBeTruthy()
+        expect(wrapper.find('Connect(WithStyles(Header))').exists()).toBeTruthy()
     })
 
     it('Should have Sidebar component', () => {
         const wrapper = shallow(<Container classes={classes} theme={theme} title='' header={<div></div>}><h1/></Container>)
-        expect(wrapper.find('WithStyles(SideBar)').dive().find('SideBar').exists()).toBeTruthy()
+        expect(wrapper.find('WithStyles(SideBar)').exists()).toBeTruthy()
     })
 })
