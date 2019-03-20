@@ -8,7 +8,8 @@ import (
 )
 
 type Config struct {
-	CatalogBaseURL string
+	CatalogBaseURL  string
+	IdentityBaseURL string
 }
 
 func (config *Config) CreateRouter() *mux.Router {
@@ -16,6 +17,7 @@ func (config *Config) CreateRouter() *mux.Router {
 	service := api.Service{Client: &http.Client{}, BaseURL: config.CatalogBaseURL}
 
 	r.PathPrefix("/api/v1/catalog").HandlerFunc(wrapper(&service, catalog))
+	r.PathPrefix("/api/v1/identity").HandlerFunc(wrapper(&service, identity))
 	r.HandleFunc("/healthz", healthz)
 	return r
 }

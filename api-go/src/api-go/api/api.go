@@ -10,6 +10,10 @@ type CatalogService interface {
 	GetCatalog(url string, userAgent string) ([]byte, error)
 }
 
+type IdentityService interface {
+	GetIdentity(url string, userAgent string) ([]byte, error)
+}
+
 type Service struct {
 	Client  *http.Client
 	BaseURL string
@@ -42,4 +46,8 @@ func (service *Service) GetCatalog(url string, userAgent string) ([]byte, error)
 	}
 
 	return body, nil
+}
+
+func (service *Service) GetIdentity(url string, userAgent string) ([]byte, error) {
+	return nil, nil
 }
