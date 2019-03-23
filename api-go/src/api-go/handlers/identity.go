@@ -7,7 +7,8 @@ import (
 )
 
 func identity(w http.ResponseWriter, req *http.Request, service *api.Service) {
-	res, err := service.GetIdentity(req.URL.Path, req.UserAgent())
+
+	res, err := service.GetIdentity(req.URL.Path, req.Header)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

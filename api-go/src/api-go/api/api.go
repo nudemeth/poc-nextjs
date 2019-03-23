@@ -48,6 +48,31 @@ func (service *Service) GetCatalog(url string, userAgent string) ([]byte, error)
 	return body, nil
 }
 
-func (service *Service) GetIdentity(url string, userAgent string) ([]byte, error) {
-	return nil, nil
+func (service *Service) GetIdentity(url string, header http.Header) ([]byte, error) {
+	req, err := http.NewRequest("GET", service.BaseURL+url, nil)
+	req.Header = header
+
+	if err != nil {
+		log.Printf("Error occur when creating request: service=%s, URI=%s\n%s", "Identity", url, err.Error())
+		return nil, err
+	}
+
+	res, err := service.Client.Do(req)
+
+	if err != nil {
+		log.Printf("Error occur when requesting: service=%s, URI=%s\n%s", "Identity", url, err.Error())
+		return nil, err
+	}
+
+	defer res.Body.Close()
+
+	log.Printf("Redirect to: service=%s, URI=%s", "Identity", url)
+	body, err := ioutil.ReadAll(res.Body)
+
+	if err != nil {
+		log.Printf("Error occur when requesting: service=%s, URI=%s\n%s", "Identity", url, err.Error())
+		return nil, err
+	}
+
+	return body, nil
 }
