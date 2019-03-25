@@ -48,8 +48,8 @@ func (service *Service) GetCatalog(url string, userAgent string) ([]byte, error)
 	return body, nil
 }
 
-func (service *Service) GetIdentity(url string, header http.Header) ([]byte, error) {
-	req, err := http.NewRequest("GET", service.BaseURL+url, nil)
+func (service *Service) GetIdentity(url string, method string, header http.Header) ([]byte, error) {
+	req, err := http.NewRequest(method, service.BaseURL+url, nil)
 	req.Header = header
 
 	if err != nil {
