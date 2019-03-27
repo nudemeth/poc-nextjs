@@ -77,10 +77,7 @@ func (service *Service) GetIdentity(url string, header http.Header) ([]byte, err
 	return body, nil
 }
 
-func (service *Service) GetGitHubToken(code string) ([]byte, error) {
-	clientID := "f4b44543204f5b40deec"
-	clientSecret := "9bc72fae341b431a1ff000d6ef12c7fcf45fc4de"
-	url := "https://github.com/login/oauth/access_token?client_id=" + clientID + "&client_secret=" + clientSecret + "&code=" + code
+func (service *Service) GetIdentityToken(url string) ([]byte, error) {
 	req, err := http.NewRequest("POST", url, nil)
 	req.Header.Add("Accept", "application/json")
 

@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 )
 
@@ -16,8 +17,12 @@ func TestIdentityRouter(t *testing.T) {
 	}))
 	defer server.Close()
 
+	os.Setenv("GITHUB_CLIENT_ID", "testclientid")
+	os.Setenv("GITHUB_SECRET", "testclientsecret")
+	os.Setenv("GITHUB_TOKEN_URL", server.URL+"?client_id=%s&client_secret=%s&code=%s")
+
 	service := &api.Service{Client: server.Client(), BaseURL: server.URL}
-	req := httptest.NewRequest("GET", "/", nil)
+	req := httptest.NewRequest("GET", "/token/github?code=1234567890", nil)
 	identity(w, req, service)
 
 	resp := w.Result()
