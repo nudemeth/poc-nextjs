@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func TestIdentityRouter(t *testing.T) {
+func TestIdentityToken(t *testing.T) {
 	w := httptest.NewRecorder()
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)

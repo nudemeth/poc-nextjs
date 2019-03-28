@@ -14,8 +14,13 @@ func identity(w http.ResponseWriter, req *http.Request, service *api.Service) {
 	if strings.HasPrefix(req.URL.Path, "/token") {
 		issuer := strings.Replace(req.URL.Path, "/token/", "", 1)
 		code := req.URL.Query().Get("code")
-		url := getUrl(issuer, code)
+		url := getTokenURL(issuer, code)
 		res, err = service.GetIdentityToken(url)
+	} else if strings.HasPrefix(req.URL.Path, "/userinfo") {
+		issuer := strings.Replace(req.URL.Path, "/userinfo/", "", 1)
+		token := req.URL.Query().Get("token")
+		url := getUserInfoURL(issuer)
+		res, err = service.GetIdentityUserInfo(url, token)
 	} else {
 		//res, err = service.GetIdentity(req.URL.Path, req.Header)
 		w.WriteHeader(http.StatusNotFound)
@@ -30,7 +35,7 @@ func identity(w http.ResponseWriter, req *http.Request, service *api.Service) {
 	w.Write(res)
 }
 
-func getUrl(issuer string, code string) string {
+func getTokenURL(issuer string, code string) string {
 	var url string
 	switch strings.ToLower(issuer) {
 	case "github":
@@ -38,6 +43,16 @@ func getUrl(issuer string, code string) string {
 		clientSecret := os.Getenv("GITHUB_SECRET")
 		tokenURL := os.Getenv("GITHUB_TOKEN_URL")
 		url = fmt.Sprintf(tokenURL, clientID, clientSecret, code)
+	}
+
+	return url
+}
+
+func getUserInfoURL(issuer string) string {
+	var url string
+	switch strings.ToLower(issuer) {
+	case "github":
+		url = os.Getenv("GITHUB_USER_INFO_URL")
 	}
 
 	return url
