@@ -22,7 +22,6 @@ func identity(w http.ResponseWriter, req *http.Request, service *api.Service) {
 		url := getUserInfoURL(issuer)
 		res, err = service.GetIdentityUserInfo(url, token)
 	} else {
-		//res, err = service.GetIdentity(req.URL.Path, req.Header)
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
