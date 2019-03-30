@@ -1,12 +1,17 @@
 import { initialState } from './root.reducer'
 import actionTypes from '../actions/actionTypes'
 
-export default function getAboutReducer(state = initialState, action) {
+export default function identityReducer(state = initialState, action) {
     switch (action.type) {
     case actionTypes.STORE_USER:
         return {
             ...state,
             ...{ user: action.user }
+        }
+    case actionTypes.STORE_AUTH_SITES:
+        return {
+            ...state,
+            ...{ sites: action.sites }
         }
     default: return state
     }

@@ -1,8 +1,6 @@
 /* eslint-disable no-console */
 import path from 'path'
 import jsonServer from 'json-server'
-import fetch from 'isomorphic-unfetch'
-import querystring from 'querystring'
 import routes from './routes'
 import fake from './db'
 import { fileURLToPath } from 'url'
@@ -14,31 +12,14 @@ const middlewares = jsonServer.defaults()
 
 //TODO: Isolate issuer function
 const getGithubToken = async function(code) {
-    const paramz = querystring.stringify({
-        'client_id': 'f4b44543204f5b40deec',
-        'client_secret': '9bc72fae341b431a1ff000d6ef12c7fcf45fc4de',
-        'code': code
-    })
-    const options = {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-        }
-    }
-    return await fetch(`https://github.com/login/oauth/access_token?${paramz}`, options)
-        .then(r => r.json())
+    const fakeToken = `12345-${code}-67890`
+    return await { access_token: fakeToken }
 }
 
 const getGithubUserinfo = async function(token) {
-    const options = {
-        method: 'GET',
-        headers: {
-            'Authorization': `token ${token}`,
-            'User-Agent': 'poc-microservice-dev'
-        }
-    }
-    return await fetch('https://api.github.com/user', options)
-        .then(r => r.json())
+    token
+    const fakeLogin = 'nudemeth'
+    return await { login: fakeLogin }
 }
 
 server.use(middlewares)

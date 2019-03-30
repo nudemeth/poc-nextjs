@@ -12,7 +12,7 @@ import config from './config'
 const __dirname = path.resolve()
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
-const handle = app.getRequestHandler()
+//const handle = app.getRequestHandler()
 
 const algorithm = process.env.algorithm || 'aes-256-cbc'
 const secret = process.env.secret || 'this is my secret'
@@ -84,8 +84,6 @@ app
         server.get('/authentication', async (req, res) => {
             const issuer = req.query.issuer
             const code= req.query.code
-            console.log(`Server payload: issuer=${issuer}, code=${code}`)
-
             const token = await getToken(issuer, code)
             const userinfo = await getUserinfo(issuer, token.access_token)
             const encrypted = encrypt(userinfo.login)
@@ -101,20 +99,25 @@ app
 
         server.get('*', (req, res) => {
             const encryptedUser = req.cookies.user
+            const sites = [
+                { name: 'github', url: process.env.GITHUB_AUTH_URL || null }
+            ]
+            const parsedUrl = parse(req.url, true)
+            const { pathname, query } = parsedUrl
+            const queryWithSites = { ...query, sites: sites }
+
             if (!encryptedUser) {
-                return handle(req, res)
+                return app.render(req, res, pathname, queryWithSites)
             }
 
             const decryptedUser = decrypt(encryptedUser)
             if (!decryptedUser) {
                 res.clearCookie('user')
-                return handle(req, res)
+                return app.render(req, res, pathname, queryWithSites)
             }
-
-            const parsedUrl = parse(req.url, true)
-            const { pathname, query } = parsedUrl
-            const queryWithUser = { ...query, user: decryptedUser }
-            app.render(req, res, pathname, queryWithUser)
+            
+            const queryWithUser = { ...queryWithSites, user: decryptedUser }
+            return app.render(req, res, pathname, queryWithUser)
         })
 
         server.listen(port, (err) => {

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React from 'react'
 import PropTypes from 'prop-types'
 import Card from '@material-ui/core/Card'
@@ -8,6 +9,7 @@ import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import Divider from '@material-ui/core/Divider'
 import { withStyles } from '@material-ui/core/styles'
+import { connect } from 'react-redux'
 
 const styles = () => ({
     card: {
@@ -45,12 +47,17 @@ class LoginCard extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
         theme: PropTypes.object.isRequired,
-        user: PropTypes.string
+        user: PropTypes.string,
+        sites: PropTypes.arrayOf(PropTypes.shape({
+            name: PropTypes.string,
+            url: PropTypes.string
+        })).isRequired
     }
 
     handleGithubSignIn = () => {
         if (window) {
-            window.open('https://github.com/login/oauth/authorize?client_id=f4b44543204f5b40deec')
+            const site = this.props.sites.find((s) => s.name === 'github')
+            window.open(site.url)
         }
     }
 
@@ -96,5 +103,7 @@ class LoginCard extends React.Component {
     }
 }
 
-export default withStyles(styles, { withTheme: true })(LoginCard)
+const mapStateToProps = ({ identityReducer: { sites }}) => ({ sites })
+
+export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(LoginCard))
 export { LoginCard }

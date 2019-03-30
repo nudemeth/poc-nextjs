@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Container from '../components/layout/Container'
 import LoginCard from '../components/page/login/LoginCard'
-import { storeUser } from '../actions/identity.actions'
+import { storeUser, storeAuthSites } from '../actions/identity.actions'
 
 class Login extends React.Component {
     constructor(props) {
@@ -14,6 +14,9 @@ class Login extends React.Component {
     static async getInitialProps({ ctx: { store, query } }) {
         if (query.user) {
             store.dispatch(storeUser(query.user))
+        }
+        if (query.sites) {
+            store.dispatch(storeAuthSites(query.sites))
         }
     }
 

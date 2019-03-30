@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import Container from '../components/layout/Container'
 import { loadCatalogBrands } from '../actions/catalogBrand.actions'
 import CatalogBrandList from '../components/page/catalogBrand/CatalogBrandList'
-import { storeUser } from '../actions/identity.actions'
+import { storeUser, storeAuthSites } from '../actions/identity.actions'
 
 class CatalogBrand extends React.Component {
     constructor(props) {
@@ -15,6 +15,9 @@ class CatalogBrand extends React.Component {
         store.dispatch(loadCatalogBrands())
         if (query.user) {
             store.dispatch(storeUser(query.user))
+        }
+        if (query.sites) {
+            store.dispatch(storeAuthSites(query.sites))
         }
     }
 

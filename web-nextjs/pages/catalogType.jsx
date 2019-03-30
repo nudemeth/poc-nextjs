@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import Container from '../components/layout/Container'
 import { loadCatalogTypes } from '../actions/catalogType.actions'
 import CatalogTypeList from '../components/page/catalogType/CatalogTypeList'
-import { storeUser } from '../actions/identity.actions'
+import { storeUser, storeAuthSites } from '../actions/identity.actions'
 
 class CatalogType extends React.Component {
     constructor(props) {
@@ -15,6 +15,9 @@ class CatalogType extends React.Component {
         store.dispatch(loadCatalogTypes())
         if (query.user) {
             store.dispatch(storeUser(query.user))
+        }
+        if (query.sites) {
+            store.dispatch(storeAuthSites(query.sites))
         }
     }
 
