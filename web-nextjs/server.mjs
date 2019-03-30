@@ -18,6 +18,9 @@ const algorithm = process.env.algorithm || 'aes-256-cbc'
 const secret = process.env.secret || 'this is my secret'
 const salt = process.env.salt || 'this is my salt'
 const key = crypto.scryptSync(secret, salt, 32)
+const authSites = [
+    { name: 'github', url: process.env.GITHUB_AUTH_URL || null }
+]
 
 const getToken = (issuer, code) => {
     const options = {
@@ -84,6 +87,11 @@ app
         server.get('/authentication', async (req, res) => {
             const issuer = req.query.issuer
             const code= req.query.code
+
+            if (!issuer || !code) {
+                return res.sendStatus(404)
+            }
+
             const token = await getToken(issuer, code)
             const userinfo = await getUserinfo(issuer, token.access_token)
             const encrypted = encrypt(userinfo.login)
@@ -93,31 +101,28 @@ app
                 secure: !dev
             })
 
+            const parsedUrl = parse(req.url, true)
+            const { query } = parsedUrl
             //TODO: Store access token in db { login, issuer, access_token }
-            app.render(req, res, '/authentication')
+            app.render(req, res, '/authentication', { ...query, sites: authSites, user: userinfo.login })
         })
 
         server.get('*', (req, res) => {
             const encryptedUser = req.cookies.user
-            const sites = [
-                { name: 'github', url: process.env.GITHUB_AUTH_URL || null }
-            ]
             const parsedUrl = parse(req.url, true)
             const { pathname, query } = parsedUrl
-            const queryWithSites = { ...query, sites: sites }
 
             if (!encryptedUser) {
-                return app.render(req, res, pathname, queryWithSites)
+                return app.render(req, res, pathname, { ...query, sites: authSites, user: null })
             }
 
             const decryptedUser = decrypt(encryptedUser)
             if (!decryptedUser) {
                 res.clearCookie('user')
-                return app.render(req, res, pathname, queryWithSites)
+                return app.render(req, res, pathname, { ...query, sites: authSites, user: null })
             }
             
-            const queryWithUser = { ...queryWithSites, user: decryptedUser }
-            return app.render(req, res, pathname, queryWithUser)
+            return app.render(req, res, pathname, { ...query, sites: authSites, user: decryptedUser })
         })
 
         server.listen(port, (err) => {

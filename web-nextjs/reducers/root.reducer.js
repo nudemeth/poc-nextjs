@@ -11,7 +11,8 @@ export const initialState = {
         items: [],
         item: {},
         catalogTypes: [],
-        user: null
+        user: null,
+        sites: []
     },
     greeting: ''
 }

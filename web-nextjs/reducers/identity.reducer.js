@@ -6,12 +6,12 @@ export default function identityReducer(state = initialState, action) {
     case actionTypes.STORE_USER:
         return {
             ...state,
-            ...{ user: action.user }
+            ...{ user: action.payload.user }
         }
     case actionTypes.STORE_AUTH_SITES:
         return {
             ...state,
-            ...{ sites: action.sites }
+            ...{ sites: action.payload.sites }
         }
     default: return state
     }
