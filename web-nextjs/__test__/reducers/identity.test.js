@@ -9,9 +9,16 @@ describe('CatalogTypes reducers tests', () => {
     })
 
     it('Should handle STORE_USER action type', () => {
-        const action = { user: 'test user', type: actionTypes.STORE_USER }
+        const action = { payload: { user: 'test user' }, type: actionTypes.STORE_USER }
         const state = {}
-        const result = { user: action.user }
+        const result = { user: action.payload.user }
+        expect(reducer(state, action)).toEqual(result)
+    })
+
+    it('Should handle STORE_AUTH_SITES action type', () => {
+        const action = { payload: { sites: [ { name: 'github', url: 'https://github.com/login/oauth/authorize'} ] }, type: actionTypes.STORE_AUTH_SITES }
+        const state = {}
+        const result = { sites: action.payload.sites }
         expect(reducer(state, action)).toEqual(result)
     })
 })
