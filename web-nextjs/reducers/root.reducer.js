@@ -6,14 +6,12 @@ import aboutReducer from './about.reducer'
 import identityReducer from './identity.reducer'
 
 export const initialState = {
-    payload: {
-        error: false,
-        items: [],
-        item: {},
-        catalogTypes: [],
-        user: null,
-        sites: []
-    },
+    error: false,
+    items: [],
+    item: {},
+    catalogTypes: [],
+    user: null,
+    sites: [],
     greeting: ''
 }
 
