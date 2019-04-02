@@ -15,11 +15,12 @@ func main() {
 
 	port := getEnvValue("SERVICE_PORT", "8000")
 	catalogBaseURL := getEnvValue("CATALOG_BASE_URL", "http://localhost:5000")
+	identityBaseURL := getEnvValue("IDENTITY_BASE_URL", "http://localhost:5100")
 
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
 
-	handler := handlers.Config{CatalogBaseURL: catalogBaseURL}
+	handler := handlers.Config{CatalogBaseURL: catalogBaseURL, IdentityBaseURL: identityBaseURL}
 	router := handler.CreateRouter()
 	srv := &http.Server{
 		Addr:    ":" + port,
