@@ -14,9 +14,9 @@ const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 //const handle = app.getRequestHandler()
 
-const algorithm = process.env.algorithm || 'aes-256-cbc'
-const secret = process.env.secret || 'this is my secret'
-const salt = process.env.salt || 'this is my salt'
+const algorithm = process.env.ENCRYPTION_ALGORITHM || 'aes-256-cbc'
+const secret = process.env.ENCRYPTION_SECRET || 'this is my secret'
+const salt = process.env.ENCRYPTION_SALT || 'this is my salt'
 const key = crypto.scryptSync(secret, salt, 32)
 const authSites = [
     { name: 'github', url: process.env.GITHUB_AUTH_URL || null }
