@@ -22,7 +22,7 @@ func TestIdentityToken(t *testing.T) {
 	os.Setenv("GITHUB_TOKEN_URL", server.URL+"?client_id=%s&client_secret=%s&code=%s")
 
 	service := &api.Service{Client: server.Client(), BaseURL: server.URL}
-	req := httptest.NewRequest("GET", "/token/github?code=1234567890", nil)
+	req := httptest.NewRequest("GET", "/token?issuer=github&code=1234567890", nil)
 	identity(w, req, service)
 
 	resp := w.Result()
@@ -54,7 +54,7 @@ func TestIdentityUserInfo(t *testing.T) {
 	os.Setenv("GITHUB_USER_INFO_URL", server.URL)
 
 	service := &api.Service{Client: server.Client(), BaseURL: server.URL}
-	req := httptest.NewRequest("GET", "/userinfo/github?token=1234567890", nil)
+	req := httptest.NewRequest("GET", "/userinfo?issuer=github&token=1234567890", nil)
 	identity(w, req, service)
 
 	resp := w.Result()

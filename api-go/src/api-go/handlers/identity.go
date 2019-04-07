@@ -3,6 +3,7 @@ package handlers
 import (
 	"api-go/api"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -11,17 +12,18 @@ import (
 func identity(w http.ResponseWriter, req *http.Request, service *api.Service) {
 	var res []byte
 	var err error
-	if strings.HasPrefix(req.URL.Path, "/token") {
-		issuer := strings.Replace(req.URL.Path, "/token/", "", 1)
+	if strings.Index(req.URL.Path, "/token") > -1 {
+		issuer := req.URL.Query().Get("issuer")
 		code := req.URL.Query().Get("code")
 		url := getTokenURL(issuer, code)
 		res, err = service.GetIdentityToken(url)
-	} else if strings.HasPrefix(req.URL.Path, "/userinfo") {
-		issuer := strings.Replace(req.URL.Path, "/userinfo/", "", 1)
+	} else if strings.Index(req.URL.Path, "/userinfo") > -1 {
+		issuer := req.URL.Query().Get("issuer")
 		token := req.URL.Query().Get("token")
 		url := getUserInfoURL(issuer)
 		res, err = service.GetIdentityUserInfo(url, token)
 	} else {
+		log.Printf("Cannot map route: service=%s, URI=%s", "Identity", req.URL.Path)
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}

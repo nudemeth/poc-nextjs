@@ -42,7 +42,7 @@ func (service *Service) GetCatalog(url string, userAgent string) ([]byte, error)
 	body, err := ioutil.ReadAll(res.Body)
 
 	if err != nil {
-		log.Printf("Error occur when requesting: service=%s, URI=%s\n%s", "Catalog", url, err.Error())
+		log.Printf("Error occur when reading response: service=%s, URI=%s\n%s", "Catalog", url, err.Error())
 		return nil, err
 	}
 
@@ -71,7 +71,7 @@ func (service *Service) GetIdentity(url string, header http.Header) ([]byte, err
 	body, err := ioutil.ReadAll(res.Body)
 
 	if err != nil {
-		log.Printf("Error occur when requesting: service=%s, URI=%s\n%s", "Identity", url, err.Error())
+		log.Printf("Error occur when reading response: service=%s, URI=%s\n%s", "Identity", url, err.Error())
 		return nil, err
 	}
 
@@ -100,7 +100,7 @@ func (service *Service) GetIdentityToken(url string) ([]byte, error) {
 	body, err := ioutil.ReadAll(res.Body)
 
 	if err != nil {
-		log.Printf("Error occur when requesting: service=%s, URI=%s\n%s", "Identity", url, err.Error())
+		log.Printf("Error occur when reading response: service=%s, URI=%s\n%s", "Identity", url, err.Error())
 		return nil, err
 	}
 

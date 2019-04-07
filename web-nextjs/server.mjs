@@ -29,7 +29,7 @@ const getToken = (issuer, code) => {
             'Accept': 'application/json',
         }
     }
-    return fetch(`${config.api.identity.uri}token/${issuer}?code=${code}`, options)
+    return fetch(`${config.api.identity.uri}token?issuer=${issuer}&code=${code}`, options)
         .then(r => r.json())
 }
 
@@ -40,7 +40,7 @@ const getUserinfo = (issuer, token) => {
             'Accept': 'application/json',
         }
     }
-    return fetch(`${config.api.identity.uri}userinfo/${issuer}?token=${token}`, options)
+    return fetch(`${config.api.identity.uri}userinfo?issuer=${issuer}&token=${token}`, options)
         .then(r => r.json())
 }
 

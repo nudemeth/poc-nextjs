@@ -14,10 +14,11 @@ type Config struct {
 
 func (config *Config) CreateRouter() *mux.Router {
 	r := mux.NewRouter()
-	service := api.Service{Client: &http.Client{}, BaseURL: config.CatalogBaseURL}
+	catalogService := api.Service{Client: &http.Client{}, BaseURL: config.CatalogBaseURL}
+	identityService := api.Service{Client: &http.Client{}, BaseURL: config.IdentityBaseURL}
 
-	r.PathPrefix("/api/v1/catalog").HandlerFunc(wrapper(&service, catalog))
-	r.PathPrefix("/api/v1/identity").HandlerFunc(wrapper(&service, identity))
+	r.PathPrefix("/api/v1/catalog").HandlerFunc(wrapper(&catalogService, catalog))
+	r.PathPrefix("/api/v1/identity").HandlerFunc(wrapper(&identityService, identity))
 	r.HandleFunc("/healthz", healthz)
 	return r
 }

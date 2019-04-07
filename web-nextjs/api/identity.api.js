@@ -10,7 +10,7 @@ class IdentityApi extends Api {
         if (!issuer || !code) {
             Promise.reject(new Error('Issuer or code is empty'))
         }
-        return await this.tryFetch(`${this.host}token/${issuer}?code=${code}`)
+        return await this.tryFetch(`${this.host}token?issuer=${issuer}&code=${code}`)
     }
 }
 

@@ -31,8 +31,8 @@ server.get('/api/v1/catalog/items/:id/img', (req, res) => {
     const imgPath = path.join(__dirname, `${item.imagePath}`)
     res.sendFile(imgPath)
 })
-server.get('/api/v1/identity/token/:issuer', async (req, res) => {
-    const issuer = req.params.issuer
+server.get('/api/v1/identity/token', async (req, res) => {
+    const issuer = req.query.issuer
     const code = req.query.code
     let data
 
@@ -43,8 +43,8 @@ server.get('/api/v1/identity/token/:issuer', async (req, res) => {
     
     res.send(data)
 })
-server.get('/api/v1/identity/userinfo/:issuer', async (req, res) => {
-    const issuer = req.params.issuer
+server.get('/api/v1/identity/userinfo', async (req, res) => {
+    const issuer = req.query.issuer
     const token = req.query.token
     let data
     
