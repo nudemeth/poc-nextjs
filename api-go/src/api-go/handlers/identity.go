@@ -40,10 +40,8 @@ func getTokenURL(issuer string, code string) string {
 	var url string
 	switch strings.ToLower(issuer) {
 	case "github":
-		clientID := os.Getenv("GITHUB_CLIENT_ID")
-		clientSecret := os.Getenv("GITHUB_SECRET")
 		tokenURL := os.Getenv("GITHUB_TOKEN_URL")
-		url = fmt.Sprintf(tokenURL, clientID, clientSecret, code)
+		url = fmt.Sprintf(tokenURL, code)
 	}
 
 	return url

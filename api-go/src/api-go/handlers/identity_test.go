@@ -17,9 +17,7 @@ func TestIdentityToken(t *testing.T) {
 	}))
 	defer server.Close()
 
-	os.Setenv("GITHUB_CLIENT_ID", "testclientid")
-	os.Setenv("GITHUB_SECRET", "testclientsecret")
-	os.Setenv("GITHUB_TOKEN_URL", server.URL+"?client_id=%s&client_secret=%s&code=%s")
+	os.Setenv("GITHUB_TOKEN_URL", server.URL+"?client_id=testclientid&client_secret=testclientsecret&code=%s")
 
 	service := &api.Service{Client: server.Client(), BaseURL: server.URL}
 	req := httptest.NewRequest("GET", "/token?issuer=github&code=1234567890", nil)
