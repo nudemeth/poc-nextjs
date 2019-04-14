@@ -12,10 +12,6 @@ import nudemeth.poc.identity.viewmodel.LoginViewModel;
 @RestController
 public class AccountController {
 
-    public AccountController() {
-
-    }
-
     @GetMapping(path = "/user", produces = { MediaType.APPLICATION_JSON_VALUE })
     public String getUser(@RequestParam(value = "login", required = true) String login) {
         return "";
