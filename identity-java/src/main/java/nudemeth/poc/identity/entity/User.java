@@ -12,50 +12,57 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID Id;
-    private String Name;
-    private String UserName;
-    private String Email;
+    private UUID id;
+    private String name;
+    private String userName;
+    private String email;
+
+    public User(String name, String userName, String email) {
+        this.name = name;
+        this.userName = userName;
+        this.email = email;
+    }
 
     /**
      * @return the name
      */
     public String getName() {
-        return Name;
-    }
-
-    /**
-     * @return the email
-     */
-    public String getEmail() {
-        return Email;
-    }
-
-    /**
-     * @param email the email to set
-     */
-    public void setEmail(String email) {
-        this.Email = email;
-    }
-
-    /**
-     * @return the userName
-     */
-    public String getUserName() {
-        return UserName;
-    }
-
-    /**
-     * @param userName the userName to set
-     */
-    public void setUserName(String userName) {
-        this.UserName = userName;
+        return name;
     }
 
     /**
      * @param name the name to set
      */
     public void setName(String name) {
-        this.Name = name;
+        this.name = name;
     }
+
+    /**
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * @param email the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * @return the userName
+     */
+    public String getUserName() {
+        return userName;
+    }
+
+    /**
+     * @param userName the userName to set
+     */
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
 }
