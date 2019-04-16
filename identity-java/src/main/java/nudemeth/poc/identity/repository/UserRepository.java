@@ -5,9 +5,9 @@ import java.util.UUID;
 
 import org.springframework.data.repository.CrudRepository;
 
-import nudemeth.poc.identity.entity.User;
+import nudemeth.poc.identity.entity.UserEntity;;
 
-public interface UserRepository extends CrudRepository<User, UUID> {
-    List<User> findByUserName(String userName);
-    List<User> findByEmail(String email);
+public interface UserRepository extends CrudRepository<UserEntity, UUID> {
+    UserEntity findByUserName(String userName);
+    List<UserEntity> findByEmail(String email);
 }
