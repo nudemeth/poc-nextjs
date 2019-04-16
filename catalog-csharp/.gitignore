@@ -2,9 +2,6 @@
 logs
 *.log
 
-# vscode
-.vscode/
-
 # dotnet
 bin
 obj
