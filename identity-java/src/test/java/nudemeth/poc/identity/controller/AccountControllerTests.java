@@ -10,6 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.UUID;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import nudemeth.poc.identity.entity.UserEntity;
+import nudemeth.poc.identity.model.UserModel;
 import nudemeth.poc.identity.service.AccountService;
 
 @RunWith(SpringRunner.class)
@@ -34,30 +36,31 @@ public class AccountControllerTests {
     private AccountService mockAccountService;
 
     @Test
-    public void getUser_WhenNoLoginQueryParam_ShouldReturnBadRequest() throws Exception {
+    public void getUser_WhenNoLoginPathParam_ShouldReturnMethodNotAllowed() throws Exception {
         this.mockMvc.perform(get("/user"))
             .andDo(print())
-            .andExpect(status().isBadRequest())
-            .andExpect(status().reason("Required String parameter 'login' is not present"));
+            .andExpect(status().isMethodNotAllowed())
+            .andExpect(status().reason("Request method 'GET' not supported"));
 
         verify(mockAccountService, never()).getUser(anyString());
     }
 
     @Test
-    public void getUser_WhenWithLoginQueryParam_ShouldReturnJsonUser() throws Exception {
+    public void getUser_WhenWithLoginPathParam_ShouldReturnJsonUser() throws Exception {
+        UUID id = UUID.randomUUID();
         String login = "testLogin";
         String name = "Test Name";
-        String userName = "Test UserName";
         String email = "Test.Email@test.com";
-        UserEntity user = new UserEntity(name, userName, email);
+        UserModel user = new UserModel(id, login, name, email);
 
         when(mockAccountService.getUser(login)).thenReturn(user);
         
-        this.mockMvc.perform(get("/user").param("login", login))
+        this.mockMvc.perform(get(String.format("/user/%s", login)))
             .andDo(print())
             .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(id.toString()))
+            .andExpect(jsonPath("$.login").value(login))
             .andExpect(jsonPath("$.name").value(name))
-            .andExpect(jsonPath("$.userName").value(userName))
             .andExpect(jsonPath("$.email").value(email));
 
         verify(mockAccountService, atLeastOnce()).getUser(anyString());

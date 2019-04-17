@@ -1,7 +1,7 @@
 package nudemeth.poc.identity.service;
 
-import nudemeth.poc.identity.entity.UserEntity;
+import nudemeth.poc.identity.model.UserModel;
 
 public interface AccountService {
-    UserEntity getUser(String login);
+    UserModel getUser(String login);
 }

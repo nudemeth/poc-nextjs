@@ -8,6 +8,6 @@ import org.springframework.data.repository.CrudRepository;
 import nudemeth.poc.identity.entity.UserEntity;;
 
 public interface UserRepository extends CrudRepository<UserEntity, UUID> {
-    UserEntity findByUserName(String userName);
+    UserEntity findByLogin(String login);
     List<UserEntity> findByEmail(String email);
 }

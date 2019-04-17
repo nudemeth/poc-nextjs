@@ -16,13 +16,27 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String name;
-    private String userName;
+    private String login;
     private String email;
 
-    public UserEntity(String name, String userName, String email) {
+    public UserEntity(String name, String login, String email) {
         this.name = name;
-        this.userName = userName;
+        this.login = login;
         this.email = email;
+    }
+
+    /**
+     * @return the login
+     */
+    public String getLogin() {
+        return login;
+    }
+
+    /**
+     * @param login the login to set
+     */
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     /**
@@ -51,20 +65,6 @@ public class UserEntity {
      */
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    /**
-     * @return the userName
-     */
-    public String getUserName() {
-        return userName;
-    }
-
-    /**
-     * @param userName the userName to set
-     */
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
 }
