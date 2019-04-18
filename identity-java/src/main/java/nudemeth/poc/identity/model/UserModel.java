@@ -8,11 +8,29 @@ public class UserModel {
     private String name;
     private UUID id;
 
+    public UserModel() {
+        
+    }
+
     public UserModel(UUID id, String login, String name, String email) {
-        this.id = id;
+        this.setId(id);
         this.email = email;
         this.login = login;
         this.name = name;
+    }
+
+    /**
+     * @return the id
+     */
+    public UUID getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     /**

@@ -19,6 +19,10 @@ public class UserEntity {
     private String login;
     private String email;
 
+    public UserEntity() {
+        
+    }
+
     public UserEntity(String name, String login, String email) {
         this.name = name;
         this.login = login;
