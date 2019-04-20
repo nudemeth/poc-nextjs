@@ -1,15 +1,35 @@
 package nudemeth.poc.identity.mapper;
 
-import org.mapstruct.InjectionStrategy;
-import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
+import org.springframework.stereotype.Component;
 
 import nudemeth.poc.identity.entity.UserEntity;
 import nudemeth.poc.identity.model.UserModel;
-import nudemeth.poc.identity.service.AccountService;
 
-@Mapper( unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring", uses = AccountService.class, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
-public interface UserMapper {
-    UserModel mapToModel(UserEntity entity);
-    UserEntity mapToEntity(UserModel model);
+@Component
+public class UserMapper implements Mapper<UserModel, UserEntity> {
+
+    @Override
+    public UserEntity convertToEntity(UserModel model) {
+        if (model == null) {
+            return null;
+        }
+        return new UserEntity(
+            model.getLogin(),
+            model.getName(),
+            model.getEmail()
+        );
+    }
+
+    @Override
+    public UserModel convertToModel(UserEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+        return new UserModel(
+            entity.getId(),
+            entity.getLogin(),
+            entity.getName(),
+            entity.getEmail()
+        );
+    }
 }

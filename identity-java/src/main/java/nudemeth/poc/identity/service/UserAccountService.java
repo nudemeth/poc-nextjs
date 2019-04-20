@@ -19,7 +19,7 @@ public class UserAccountService implements AccountService {
 
     public UserModel getUser(String login) {
         UserEntity entity = userRepo.findByLogin(login);
-        UserModel model = userMapper.mapToModel(entity);
+        UserModel model = userMapper.convertToModel(entity);
         return model;
     }
 

@@ -15,18 +15,21 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    private String name;
     private String login;
+    private String name;
     private String email;
 
-    public UserEntity() {
-        
+    public UserEntity(String login, String name, String email) {
+        this.login = login;
+        this.name = name;
+        this.email = email;
     }
 
-    public UserEntity(String name, String login, String email) {
-        this.name = name;
-        this.login = login;
-        this.email = email;
+    /**
+     * @return the id
+     */
+    public UUID getId() {
+        return id;
     }
 
     /**
