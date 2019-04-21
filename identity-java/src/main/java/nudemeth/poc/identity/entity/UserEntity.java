@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +20,9 @@ import lombok.ToString;
 @Table(name = "USER")
 @RequiredArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @ToString
 public class UserEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
