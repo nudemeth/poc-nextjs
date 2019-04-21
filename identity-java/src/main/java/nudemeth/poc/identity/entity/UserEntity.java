@@ -19,6 +19,11 @@ public class UserEntity {
     private String name;
     private String email;
 
+    public UserEntity(UUID id, String login, String name, String email) {
+        this(login, name, email);
+        this.id = id;
+    }
+
     public UserEntity(String login, String name, String email) {
         this.login = login;
         this.name = name;

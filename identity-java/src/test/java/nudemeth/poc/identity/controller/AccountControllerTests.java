@@ -42,7 +42,7 @@ public class AccountControllerTests {
             .andExpect(status().isMethodNotAllowed())
             .andExpect(status().reason("Request method 'GET' not supported"));
 
-        verify(mockAccountService, never()).getUser(anyString());
+        verify(mockAccountService, never()).getUserFromLogin(anyString());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class AccountControllerTests {
         String email = "Test.Email@test.com";
         UserModel user = new UserModel(id, login, name, email);
 
-        when(mockAccountService.getUser(login)).thenReturn(user);
+        when(mockAccountService.getUserFromLogin(login)).thenReturn(user);
         
         this.mockMvc.perform(get(String.format("/user/%s", login)))
             .andDo(print())
@@ -63,7 +63,7 @@ public class AccountControllerTests {
             .andExpect(jsonPath("$.name").value(name))
             .andExpect(jsonPath("$.email").value(email));
 
-        verify(mockAccountService, atLeastOnce()).getUser(anyString());
+        verify(mockAccountService, atLeastOnce()).getUserFromLogin(anyString());
     }
 
 }

@@ -3,16 +3,20 @@ package nudemeth.poc.identity.model;
 import java.util.UUID;
 
 public class UserModel {
+    private UUID id;
     private String email;
     private String login;
     private String name;
-    private UUID id;
 
-    public UserModel(UUID id, String login, String name, String email) {
-        this.id = id;
-        this.email = email;
+    public UserModel(String login, String name, String email) {
         this.login = login;
         this.name = name;
+        this.email = email;
+    }
+
+    public UserModel(UUID id, String login, String name, String email) {
+        this(login, name, email);
+        this.id = id;
     }
 
     /**

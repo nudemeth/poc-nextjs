@@ -14,12 +14,16 @@ import nudemeth.poc.identity.service.AccountService;
 @RestController
 public class AccountController {
 
-    @Autowired
     private AccountService accountService;
+
+    @Autowired
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
+    }
 
     @GetMapping(path = "/user/{login}", produces = { MediaType.APPLICATION_JSON_VALUE })
     public UserModel getUser(@PathVariable(required = true) String login) {
-        return accountService.getUser(login);
+        return accountService.getUserFromLogin(login);
     }
 
     @PostMapping(path = "/user", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })

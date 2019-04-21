@@ -11,13 +11,16 @@ import nudemeth.poc.identity.repository.UserRepository;
 @Service
 public class UserAccountService implements AccountService {
 
-    @Autowired
     private UserRepository userRepo;
-
-    @Autowired
     private UserMapper userMapper;
 
-    public UserModel getUser(String login) {
+    @Autowired
+    public UserAccountService(UserRepository userRepo, UserMapper userMapper) {
+        this.userRepo = userRepo;
+        this.userMapper = userMapper;
+    }
+
+    public UserModel getUserFromLogin(String login) {
         UserEntity entity = userRepo.findByLogin(login);
         UserModel model = userMapper.convertToModel(entity);
         return model;
