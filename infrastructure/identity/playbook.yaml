@@ -1,0 +1,17 @@
+- name: Provisioning
+  hosts: all
+  become: true
+  tasks:
+  - name: Update apt packages
+    apt:
+      update_cache: yes
+
+  - name: Uninstall Postgresql package
+    apt:
+      name: postgresql
+      state: absent
+
+  - name: Install Postgresql package
+    apt:
+      name: postgresql
+      state: present

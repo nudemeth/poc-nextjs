@@ -38,4 +38,23 @@ Vagrant.configure("2") do |config|
         end
     end
 
+    config.vm.define "identity-db" do |identity|
+        identity.vm.box = "bento/ubuntu-16.04"
+        identity.vm.hostname = "identity-db"
+        identity.vm.network "forwarded_port", guest: 5432, host: 5432
+        identity.vm.synced_folder "./identity", "/provision", type: "smb"
+
+        identity.ssh.username = "vagrant"
+        identity.ssh.password = "vagrant"
+
+        identity.vm.provider "hyperv" do |h|
+            h.memory = 2048
+            h.vmname = "identity-db"
+        end
+
+        identity.vm.provision "ansible_local" do |ansible|
+            ansible.playbook = "/provision/playbook.yaml"
+        end
+    end
+
 end
