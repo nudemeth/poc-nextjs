@@ -11,7 +11,23 @@
       name: postgresql
       state: absent
 
+  - name: Uninstall Postgresql contrib package
+    apt:
+      name: postgresql-contrib
+      state: absent
+
   - name: Install Postgresql package
     apt:
       name: postgresql
       state: present
+
+  - name: Install Postgresql contrib package
+    apt:
+      name: postgresql-contrib
+      state: present
+
+  - name: Create Postgresql role
+    become: true
+    become_user: postgres
+    become_method: sudo
+    command: psql /provision/seed.psql

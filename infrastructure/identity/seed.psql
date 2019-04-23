@@ -1,0 +1,12 @@
+CREATE DATABASE IDENTITY;
+CREATE USER sa WITH ENCRYPTED PASSWORD 'P@ssw0rd';
+GRANT ALL PRIVILEGES ON DATABASE IDENTITY TO sa;
+
+\connect sa
+
+CREATE TABLE IF NOT EXISTS user (
+    id      UUID            PRIMARY KEY ,
+    login   VARCHAR(50)                 ,
+    name    VARCHAR(100)                ,
+    email   VARCHAR(100)
+);
