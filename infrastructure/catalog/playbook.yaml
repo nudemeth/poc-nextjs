@@ -60,4 +60,4 @@
       extra_path: /opt/mssql-tools/bin
 
   - name: Run seed script
-    shell: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'P@ssw0rd' -i '/vagrant/catalog/seed.sql'
+    shell: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'P@ssw0rd' -i '/provision/seed.sql'
