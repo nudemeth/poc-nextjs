@@ -1,12 +1,14 @@
-CREATE DATABASE IDENTITY;
-CREATE USER sa WITH ENCRYPTED PASSWORD 'P@ssw0rd';
-GRANT ALL PRIVILEGES ON DATABASE IDENTITY TO sa;
+CREATE DATABASE "identity";
+CREATE USER "identity_owner" WITH ENCRYPTED PASSWORD 'P@ssw0rd';
+GRANT ALL PRIVILEGES ON DATABASE "identity" TO "identity_owner";
 
-\connect sa
+\connect identity;
 
-CREATE TABLE IF NOT EXISTS user (
-    id      UUID            PRIMARY KEY ,
-    login   VARCHAR(50)                 ,
-    name    VARCHAR(100)                ,
-    email   VARCHAR(100)
+CREATE TABLE IF NOT EXISTS "user" (
+    "id"      UUID            PRIMARY KEY ,
+    "login"   VARCHAR(50)                 ,
+    "name"    VARCHAR(100)                ,
+    "email"   VARCHAR(100)
 );
+
+INSERT INTO "user" (id, login, "name", email) VALUES ('2f17c7e4-a6b6-4ba0-a1eb-9b4f6d2ce4df', 'testlogin', 'Test Test', 'test@test.com');

@@ -30,4 +30,4 @@
     become: true
     become_user: postgres
     become_method: sudo
-    command: psql /provision/seed.psql
+    command: psql -f /provision/seed.psql
