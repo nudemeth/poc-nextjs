@@ -2,7 +2,7 @@ CREATE DATABASE "identity";
 CREATE USER "identity_owner" WITH ENCRYPTED PASSWORD 'P@ssw0rd';
 GRANT ALL PRIVILEGES ON DATABASE "identity" TO "identity_owner";
 
-\connect identity;
+\connect "identity";
 
 CREATE TABLE IF NOT EXISTS "user" (
     "id"      UUID            PRIMARY KEY ,
@@ -12,3 +12,5 @@ CREATE TABLE IF NOT EXISTS "user" (
 );
 
 INSERT INTO "user" (id, login, "name", email) VALUES ('2f17c7e4-a6b6-4ba0-a1eb-9b4f6d2ce4df', 'testlogin', 'Test Test', 'test@test.com');
+
+ALTER TABLE public."user" OWNER TO "identity_owner";
