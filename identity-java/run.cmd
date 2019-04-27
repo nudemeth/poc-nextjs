@@ -1,2 +1,2 @@
 call "./gradlew.bat" "build"
-call "./gradlew.bat" "bootRun"
+call "./gradlew.bat" "bootRun" %1

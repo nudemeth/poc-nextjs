@@ -18,13 +18,49 @@
 
   - name: Install Postgresql package
     apt:
-      name: postgresql
+      name: postgresql=9.5*
       state: present
 
   - name: Install Postgresql contrib package
     apt:
-      name: postgresql-contrib
+      name: postgresql-contrib=9.5*
       state: present
+
+  - name: Stop Postgresql
+    service:
+      name: postgresql
+      state: stopped
+
+  - debug: msg="ip address {{ ansible_eth0.ipv4.address }}"
+
+  - name: Set listening addresses
+    replace:
+      path: /etc/postgresql/9.5/main/postgresql.conf
+      regexp: "^#listen_addresses = 'localhost'"
+      replace: "listen_addresses = '*'"
+
+  - name: Set IPv4 connection
+    replace:
+      path: /etc/postgresql/9.5/main/pg_hba.conf
+      regexp: "host    all             all             127.0.0.1/32            md5"
+      replace: "host    all             all             0.0.0.0/0               md5"
+
+  - name: Set IPv6 connection
+    replace:
+      path: /etc/postgresql/9.5/main/pg_hba.conf
+      regexp: "host    all             all             ::1/128                 md5"
+      replace: "host    all             all             ::/0                    md5"
+
+  - name: Start Postgresql
+    service:
+      name: postgresql
+      state: started
+
+  - name: Wait for Postgresql running
+    command: pg_isready
+    register: pg_status
+    retries: 5
+    until: pg_status.stdout.find("accepting connections") != -1
 
   - name: Create Postgresql role
     become: true
