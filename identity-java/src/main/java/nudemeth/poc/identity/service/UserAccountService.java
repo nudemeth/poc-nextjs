@@ -1,5 +1,7 @@
 package nudemeth.poc.identity.service;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +22,18 @@ public class UserAccountService implements AccountService {
         this.userMapper = userMapper;
     }
 
+    @Override
     public UserModel getUserFromLogin(String login) {
         UserEntity entity = userRepo.findByLogin(login);
         UserModel model = userMapper.convertToModel(entity);
         return model;
+    }
+
+    @Override
+    public UUID createUser(UserModel model) {
+        UserEntity entity = userMapper.convertToEntity(model);
+        UserEntity createdEntity = userRepo.save(entity);
+        return createdEntity.getId();
     }
 
 }
