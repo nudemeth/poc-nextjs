@@ -14,6 +14,7 @@ public class UserMapper implements Mapper<UserModel, UserEntity> {
             return null;
         }
         return new UserEntity(
+            model.getId(),
             model.getLogin(),
             model.getName(),
             model.getEmail()
