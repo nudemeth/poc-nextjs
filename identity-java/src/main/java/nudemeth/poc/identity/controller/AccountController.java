@@ -25,13 +25,19 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @GetMapping(path = "/user/{login}", produces = { MediaType.APPLICATION_JSON_VALUE })
-    public UserModel getUser(@PathVariable(required = true) String login) {
-        return accountService.getUserFromLogin(login);
+    @GetMapping(path = "/users/login/{login}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    public UserModel getUserByLogin(@PathVariable(required = true) String login) {
+        return accountService.getUserByLogin(login);
+    }
+
+    @GetMapping(path = "/users/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    public UserModel getUser(@PathVariable(required = true) String id) {
+        UUID uuid = UUID.fromString(id);
+        return accountService.getUser(uuid);
     }
 
     @ResponseStatus(code = HttpStatus.CREATED)
-    @PostMapping(path = "/user", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    @PostMapping(path = "/users", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public UUID createUser(@RequestBody UserModel model) {
         return accountService.createUser(model);
     }

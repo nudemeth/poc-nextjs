@@ -37,25 +37,25 @@ public class AccountControllerTests {
 
     @Test
     public void getUser_WhenNoLoginPathParam_ShouldReturnMethodNotAllowed() throws Exception {
-        this.mockMvc.perform(get("/user"))
+        this.mockMvc.perform(get("/users"))
             .andDo(print())
             .andExpect(status().isMethodNotAllowed())
             .andExpect(status().reason("Request method 'GET' not supported"));
 
-        verify(mockAccountService, never()).getUserFromLogin(anyString());
+        verify(mockAccountService, never()).getUserByLogin(anyString());
     }
 
     @Test
-    public void getUser_WhenWithLoginPathParam_ShouldReturnJsonUser() throws Exception {
+    public void getUserByLogin_WhenWithLoginPathParam_ShouldReturnJsonUser() throws Exception {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
         String name = "Test Name";
         String email = "Test.Email@test.com";
         UserModel user = new UserModel(id, login, name, email);
 
-        when(mockAccountService.getUserFromLogin(login)).thenReturn(user);
+        when(mockAccountService.getUserByLogin(login)).thenReturn(user);
         
-        this.mockMvc.perform(get(String.format("/user/%s", login)))
+        this.mockMvc.perform(get(String.format("/users/login/%s", login)))
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(id.toString()))
@@ -63,7 +63,7 @@ public class AccountControllerTests {
             .andExpect(jsonPath("$.name").value(name))
             .andExpect(jsonPath("$.email").value(email));
 
-        verify(mockAccountService, atLeastOnce()).getUserFromLogin(anyString());
+        verify(mockAccountService, atLeastOnce()).getUserByLogin(anyString());
     }
 
 }

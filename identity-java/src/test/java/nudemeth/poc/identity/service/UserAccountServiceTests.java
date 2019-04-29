@@ -34,7 +34,7 @@ public class UserAccountServiceTests {
     }
 
     @Test
-    public void getUserFromLogin_WhenFound_ShouldReturnUserModel() {
+    public void getUserByLogin_WhenFound_ShouldReturnUserModel() {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
         String name = "Test Name";
@@ -44,7 +44,7 @@ public class UserAccountServiceTests {
 
         when(mockUserRepo.findByLogin(login)).thenReturn(entity);
 
-        UserModel actual = userAccountService.getUserFromLogin(login);
+        UserModel actual = userAccountService.getUserByLogin(login);
         
         Assert.assertThat(actual, samePropertyValuesAs(expected));
     }
