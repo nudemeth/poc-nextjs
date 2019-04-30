@@ -2,6 +2,8 @@ package nudemeth.poc.identity.controller;
 
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,8 +33,14 @@ public class AccountController {
     }
 
     @GetMapping(path = "/users/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
-    public UserModel getUser(@PathVariable(required = true) String id) {
-        UUID uuid = UUID.fromString(id);
+    public UserModel getUser(@PathVariable(required = true) String id, HttpServletResponse response) {
+        UUID uuid;
+        try {
+            uuid = UUID.fromString(id);
+        } catch (IllegalArgumentException ex) {
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            return null;
+        }
         return accountService.getUser(uuid);
     }
 
