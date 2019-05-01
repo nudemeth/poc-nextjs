@@ -8,4 +8,5 @@ public interface AccountService {
     UserModel getUser(UUID id);
     UserModel getUserByLogin(String login);
     UUID createUser(UserModel model);
+    void deleteUser(UUID id);
 }

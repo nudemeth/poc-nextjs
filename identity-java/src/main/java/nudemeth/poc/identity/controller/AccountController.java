@@ -7,12 +7,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import nudemeth.poc.identity.model.UserModel;
 import nudemeth.poc.identity.service.AccountService;
@@ -34,13 +36,7 @@ public class AccountController {
 
     @GetMapping(path = "/users/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
     public UserModel getUser(@PathVariable(required = true) String id, HttpServletResponse response) {
-        UUID uuid;
-        try {
-            uuid = UUID.fromString(id);
-        } catch (IllegalArgumentException ex) {
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            return null;
-        }
+        UUID uuid = getUuidFromString(id);
         return accountService.getUser(uuid);
     }
 
@@ -48,5 +44,20 @@ public class AccountController {
     @PostMapping(path = "/users", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public UUID createUser(@RequestBody UserModel model) {
         return accountService.createUser(model);
+    }
+
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    @DeleteMapping(path = "/users/{id}")
+    public void deleteUser(@PathVariable(required = true) String id, HttpServletResponse response) {
+        UUID uuid = getUuidFromString(id);
+        accountService.deleteUser(uuid);
+    }
+
+    private UUID getUuidFromString(String id) throws ResponseStatusException {
+        try {
+            return UUID.fromString(id);
+        } catch (IllegalArgumentException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        }
     }
 }

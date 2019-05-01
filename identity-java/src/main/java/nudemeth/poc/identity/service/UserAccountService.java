@@ -44,4 +44,9 @@ public class UserAccountService implements AccountService {
         return createdEntity.getId();
     }
 
+    @Override
+    public void deleteUser(UUID id) {
+        userRepo.deleteById(id);
+    }
+
 }
