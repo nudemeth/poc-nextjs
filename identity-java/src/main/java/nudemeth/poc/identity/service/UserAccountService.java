@@ -24,16 +24,16 @@ public class UserAccountService implements AccountService {
     }
 
     @Override
-    public UserModel getUser(UUID id) {
+    public Optional<UserModel> getUser(UUID id) {
         Optional<UserEntity> entity = userRepo.findById(id);
-        UserModel model = userMapper.convertToModel(entity.orElse(null));
+        Optional<UserModel> model = userMapper.convertToModel(entity);
         return model;
     }
 
     @Override
-    public UserModel getUserByLogin(String login) {
-        UserEntity entity = userRepo.findByLogin(login);
-        UserModel model = userMapper.convertToModel(entity);
+    public Optional<UserModel> getUserByLogin(String login) {
+        Optional<UserEntity> entity = userRepo.findByLogin(login);
+        Optional<UserModel> model = userMapper.convertToModel(entity);
         return model;
     }
 
@@ -47,6 +47,14 @@ public class UserAccountService implements AccountService {
     @Override
     public void deleteUser(UUID id) {
         userRepo.deleteById(id);
+    }
+
+    @Override
+    public UserModel updateUser(UserModel model) {
+        UserEntity entity = userMapper.convertToEntity(model);
+        UserEntity updatedEntity = userRepo.save(entity);
+        UserModel updatedModel = userMapper.convertToModel(updatedEntity);
+        return updatedModel;
     }
 
 }

@@ -1,5 +1,7 @@
 package nudemeth.poc.identity.mapper;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
 import nudemeth.poc.identity.entity.UserEntity;
@@ -13,12 +15,7 @@ public class UserMapper implements Mapper<UserModel, UserEntity> {
         if (model == null) {
             return null;
         }
-        return new UserEntity(
-            model.getId(),
-            model.getLogin(),
-            model.getName(),
-            model.getEmail()
-        );
+        return new UserEntity(model.getId(), model.getLogin(), model.getName(), model.getEmail());
     }
 
     @Override
@@ -26,11 +23,16 @@ public class UserMapper implements Mapper<UserModel, UserEntity> {
         if (entity == null) {
             return null;
         }
-        return new UserModel(
-            entity.getId(),
-            entity.getLogin(),
-            entity.getName(),
-            entity.getEmail()
-        );
+        return new UserModel(entity.getId(), entity.getLogin(), entity.getName(), entity.getEmail());
+    }
+
+    @Override
+    public Optional<UserEntity> convertToEntity(Optional<UserModel> model) {
+        return model.map(m -> convertToEntity(m));
+    }
+
+    @Override
+    public Optional<UserModel> convertToModel(Optional<UserEntity> entity) {
+        return entity.map(e -> convertToModel(e));
     }
 }

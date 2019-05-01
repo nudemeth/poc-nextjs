@@ -1,6 +1,7 @@
 package nudemeth.poc.identity.mapper;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public interface Mapper<M, E> {
@@ -15,4 +16,6 @@ public interface Mapper<M, E> {
 
     E convertToEntity(final M model);
     M convertToModel(final E entity);
+    Optional<E> convertToEntity(final Optional<M> model);
+    Optional<M> convertToModel(final Optional<E> entity);
 }

@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.Test;
@@ -51,7 +52,7 @@ public class AccountControllerTests {
         String login = "testLogin";
         String name = "Test Name";
         String email = "Test.Email@test.com";
-        UserModel user = new UserModel(id, login, name, email);
+        Optional<UserModel> user = Optional.of(new UserModel(id, login, name, email));
 
         when(mockAccountService.getUserByLogin(login)).thenReturn(user);
         

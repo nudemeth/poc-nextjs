@@ -1,5 +1,6 @@
 package nudemeth.poc.identity.controller;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,12 +32,12 @@ public class AccountController {
     }
 
     @GetMapping(path = "/users/login/{login}", produces = { MediaType.APPLICATION_JSON_VALUE })
-    public UserModel getUserByLogin(@PathVariable(required = true) String login) {
+    public Optional<UserModel> getUserByLogin(@PathVariable(required = true) String login) {
         return accountService.getUserByLogin(login);
     }
 
     @GetMapping(path = "/users/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
-    public UserModel getUser(@PathVariable(required = true) String id, HttpServletResponse response) {
+    public Optional<UserModel> getUser(@PathVariable(required = true) String id) {
         UUID uuid = getUuidFromString(id);
         return accountService.getUser(uuid);
     }
@@ -46,9 +48,18 @@ public class AccountController {
         return accountService.createUser(model);
     }
 
+    @PutMapping(path = "/users/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public UserModel updateUser(@PathVariable(required = true) String id, @RequestBody UserModel model) {
+        UUID uuid = getUuidFromString(id);
+        if (!uuid.equals(model.getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid updating id");
+        }
+        return accountService.updateUser(model);
+    }
+
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "/users/{id}")
-    public void deleteUser(@PathVariable(required = true) String id, HttpServletResponse response) {
+    public void deleteUser(@PathVariable(required = true) String id) {
         UUID uuid = getUuidFromString(id);
         accountService.deleteUser(uuid);
     }

@@ -3,6 +3,7 @@ package nudemeth.poc.identity.service;
 import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.Assert;
@@ -39,13 +40,13 @@ public class UserAccountServiceTests {
         String login = "testLogin";
         String name = "Test Name";
         String email = "Test.Email@test.com";
-        UserEntity entity = new UserEntity(id, login, name, email);
-        UserModel expected = new UserModel(id, login, name, email);
+        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, name, email));
+        Optional<UserModel> expected = Optional.of(new UserModel(id, login, name, email));
 
         when(mockUserRepo.findByLogin(login)).thenReturn(entity);
 
-        UserModel actual = userAccountService.getUserByLogin(login);
+        Optional<UserModel> actual = userAccountService.getUserByLogin(login);
         
-        Assert.assertThat(actual, samePropertyValuesAs(expected));
+        Assert.assertThat(actual.get(), samePropertyValuesAs(expected.get()));
     }
 }
