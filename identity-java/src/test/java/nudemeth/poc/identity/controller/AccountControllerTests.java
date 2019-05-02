@@ -67,4 +67,25 @@ public class AccountControllerTests {
         verify(mockAccountService, atLeastOnce()).getUserByLogin(anyString());
     }
 
+    @Test
+    public void getUserByEmail_WhenWithEmailPathParam_ShouldReturnJsonUser() throws Exception {
+        UUID id = UUID.randomUUID();
+        String login = "testLogin";
+        String name = "Test Name";
+        String email = "Test.Email@test.com";
+        Optional<UserModel> user = Optional.of(new UserModel(id, login, name, email));
+
+        when(mockAccountService.getUserByEmail(email)).thenReturn(user);
+        
+        this.mockMvc.perform(get(String.format("/users/email/%s", email)))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(id.toString()))
+            .andExpect(jsonPath("$.login").value(login))
+            .andExpect(jsonPath("$.name").value(name))
+            .andExpect(jsonPath("$.email").value(email));
+
+        verify(mockAccountService, atLeastOnce()).getUserByEmail(anyString());
+    }
+
 }

@@ -38,6 +38,13 @@ public class UserAccountService implements AccountService {
     }
 
     @Override
+    public Optional<UserModel> getUserByEmail(String email) {
+        Optional<UserEntity> entity = userRepo.findByEmail(email);
+        Optional<UserModel> model = userMapper.convertToModel(entity);
+        return model;
+    }
+
+    @Override
     public UUID createUser(UserModel model) {
         UserEntity entity = userMapper.convertToEntity(model);
         UserEntity createdEntity = userRepo.save(entity);
@@ -56,5 +63,4 @@ public class UserAccountService implements AccountService {
         UserModel updatedModel = userMapper.convertToModel(updatedEntity);
         return updatedModel;
     }
-
 }

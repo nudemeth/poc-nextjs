@@ -49,4 +49,20 @@ public class UserAccountServiceTests {
         
         Assert.assertThat(actual.get(), samePropertyValuesAs(expected.get()));
     }
+
+    @Test
+    public void getUserByEmail_WhenFound_ShouldReturnUserModel() {
+        UUID id = UUID.randomUUID();
+        String login = "testLogin";
+        String name = "Test Name";
+        String email = "Test.Email@test.com";
+        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, name, email));
+        Optional<UserModel> expected = Optional.of(new UserModel(id, login, name, email));
+
+        when(mockUserRepo.findByEmail(email)).thenReturn(entity);
+
+        Optional<UserModel> actual = userAccountService.getUserByEmail(email);
+        
+        Assert.assertThat(actual.get(), samePropertyValuesAs(expected.get()));
+    }
 }

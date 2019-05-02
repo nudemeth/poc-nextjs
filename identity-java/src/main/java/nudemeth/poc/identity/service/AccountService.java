@@ -8,6 +8,7 @@ import nudemeth.poc.identity.model.UserModel;
 public interface AccountService {
     Optional<UserModel> getUser(UUID id);
     Optional<UserModel> getUserByLogin(String login);
+    Optional<UserModel> getUserByEmail(String email);
     UUID createUser(UserModel model);
     void deleteUser(UUID id);
     UserModel updateUser(UserModel model);

@@ -3,8 +3,6 @@ package nudemeth.poc.identity.controller;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,6 +32,11 @@ public class AccountController {
     @GetMapping(path = "/users/login/{login}", produces = { MediaType.APPLICATION_JSON_VALUE })
     public Optional<UserModel> getUserByLogin(@PathVariable(required = true) String login) {
         return accountService.getUserByLogin(login);
+    }
+
+    @GetMapping(path = "/users/email/{email}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Optional<UserModel> getUserByEmail(@PathVariable(required = true) String email) {
+        return accountService.getUserByEmail(email);
     }
 
     @GetMapping(path = "/users/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
