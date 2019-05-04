@@ -151,4 +151,92 @@ public class AccountControllerTests {
         verify(mockAccountService, atLeastOnce()).createUser(user);
     }
 
+    @Test
+    public void createUser_WhenNoUserModel_ShouldReturnBadRequest() throws Exception {
+        this.mockMvc.perform(
+                post("/users")
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+            )
+            .andDo(print())
+            .andExpect(status().isBadRequest());
+
+        verify(mockAccountService, never()).createUser(any());
+    }
+
+    @Test
+    public void updateUser_WhenWithIdAndUserModel_ShouldReturnUpdatedModel() throws Exception {
+        UUID id = UUID.randomUUID();
+        String login = "testLogin";
+        String name = "Test Name";
+        String email = "Test.Email@test.com";
+        UserModel updatingUser = new UserModel(id, login, name, email);
+        UserModel updatedUser = new UserModel(id, login, name, email);
+        String jsonUser = mapper.writeValueAsString(updatingUser);
+        
+        when(mockAccountService.updateUser(updatingUser)).thenReturn(updatedUser);
+        
+        this.mockMvc.perform(
+                put(String.format("/users/%s", id.toString()))
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(jsonUser)
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(jsonPath("$.id").value(id.toString()))
+            .andExpect(jsonPath("$.login").value(login))
+            .andExpect(jsonPath("$.name").value(name))
+            .andExpect(jsonPath("$.email").value(email));
+
+        verify(mockAccountService, atLeastOnce()).updateUser(updatingUser);
+    }
+
+    @Test
+    public void updateUser_WhenPathIdAndModelIdNotMatched_ShouldReturnBadRequest() throws Exception {
+        UUID id1 = UUID.randomUUID();
+        UUID id2 = UUID.randomUUID();
+        String login = "testLogin";
+        String name = "Test Name";
+        String email = "Test.Email@test.com";
+        UserModel updatingUser = new UserModel(id1, login, name, email);
+        String jsonUser = mapper.writeValueAsString(updatingUser);
+        
+        this.mockMvc.perform(
+                put(String.format("/users/%s", id2.toString()))
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(jsonUser)
+            )
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(status().reason(String.format("Invalid updating id: %s and %s", id2.toString(), id1.toString())));
+
+        verify(mockAccountService, never()).updateUser(updatingUser);
+    }
+
+    @Test
+    public void updateUser_WhenWithInvalidIdPathParam_ShouldReturnBadRequest() throws Exception {
+        String id = "some-invalid-uuid";
+        UUID uuid = UUID.randomUUID();
+        String login = "testLogin";
+        String name = "Test Name";
+        String email = "Test.Email@test.com";
+        UserModel updatingUser = new UserModel(uuid, login, name, email);
+        String jsonUser = mapper.writeValueAsString(updatingUser);
+
+        this.mockMvc.perform(
+                put(String.format("/users/%s", id))
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(jsonUser)
+            )
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(status().reason(String.format("Invalid UUID string: %s", id)));
+
+        verify(mockAccountService, never()).updateUser(any());
+    }
+
 }

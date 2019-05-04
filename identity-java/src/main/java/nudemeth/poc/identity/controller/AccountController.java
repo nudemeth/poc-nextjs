@@ -55,7 +55,7 @@ public class AccountController {
     public UserModel updateUser(@PathVariable(required = true) String id, @RequestBody UserModel model) {
         UUID uuid = getUuidFromString(id);
         if (!uuid.equals(model.getId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid updating id");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("Invalid updating id: %s and %s", id, model.getId().toString()));
         }
         return accountService.updateUser(model);
     }
