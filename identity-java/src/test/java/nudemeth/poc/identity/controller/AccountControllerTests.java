@@ -42,13 +42,13 @@ public class AccountControllerTests {
     private AccountService mockAccountService;
 
     @Test
-    public void getUser_WhenNoLoginPathParam_ShouldReturnMethodNotAllowed() throws Exception {
+    public void getUser_WhenNoIdPathParam_ShouldReturnMethodNotAllowed() throws Exception {
         this.mockMvc.perform(get("/users"))
             .andDo(print())
             .andExpect(status().isMethodNotAllowed())
             .andExpect(status().reason("Request method 'GET' not supported"));
 
-        verify(mockAccountService, never()).getUserByLogin(anyString());
+        verify(mockAccountService, never()).getUser(any());
     }
 
     @Test
@@ -165,6 +165,18 @@ public class AccountControllerTests {
     }
 
     @Test
+    public void updateUser_WhenNoIdPathParam_ShouldReturnMethodNotAllowed() throws Exception {
+        this.mockMvc.perform(
+                put("/users")
+            )
+            .andDo(print())
+            .andExpect(status().isMethodNotAllowed())
+            .andExpect(status().reason("Request method 'PUT' not supported"));
+
+        verify(mockAccountService, never()).updateUser(any());
+    }
+
+    @Test
     public void updateUser_WhenWithIdAndUserModel_ShouldReturnUpdatedModel() throws Exception {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
@@ -254,10 +266,6 @@ public class AccountControllerTests {
     @Test
     public void deleteUser_WhenWithIdPathParam_ShouldReturnJsonUser() throws Exception {
         UUID id = UUID.randomUUID();
-        String login = "testLogin";
-        String name = "Test Name";
-        String email = "Test.Email@test.com";
-        Optional<UserModel> user = Optional.of(new UserModel(id, login, name, email));
 
         this.mockMvc.perform(
                 delete(String.format("/users/%s", id.toString()))
