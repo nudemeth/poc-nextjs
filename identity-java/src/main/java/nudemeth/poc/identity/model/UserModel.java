@@ -3,7 +3,6 @@ package nudemeth.poc.identity.model;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -15,7 +14,7 @@ import lombok.ToString;
 
 @ToString
 @EqualsAndHashCode
-@RequiredArgsConstructor(onConstructor = @__({@JsonCreator}))
+@RequiredArgsConstructor(onConstructor = @__({@JsonCreator})) //Always put @RequiredArgsConstructor before @AllArgsConstructor. Otherwise, json parsing will be failed
 @AllArgsConstructor(onConstructor = @__({@JsonCreator}))
 public class UserModel {
     @Getter

@@ -81,7 +81,7 @@ public class AccountControllerTests {
             .andExpect(status().isBadRequest())
             .andExpect(status().reason(String.format("Invalid UUID string: %s", id)));
 
-        verify(mockAccountService, never()).getUser(any(UUID.class));
+        verify(mockAccountService, never()).getUser(any());
     }
 
     @Test
@@ -237,6 +237,49 @@ public class AccountControllerTests {
             .andExpect(status().reason(String.format("Invalid UUID string: %s", id)));
 
         verify(mockAccountService, never()).updateUser(any());
+    }
+
+    @Test
+    public void deleteUser_WhenNoLoginPathParam_ShouldReturnMethodNotAllowed() throws Exception {
+        this.mockMvc.perform(
+                delete("/users")
+            )
+            .andDo(print())
+            .andExpect(status().isMethodNotAllowed())
+            .andExpect(status().reason("Request method 'DELETE' not supported"));
+
+        verify(mockAccountService, never()).deleteUser(any());
+    }
+
+    @Test
+    public void deleteUser_WhenWithIdPathParam_ShouldReturnJsonUser() throws Exception {
+        UUID id = UUID.randomUUID();
+        String login = "testLogin";
+        String name = "Test Name";
+        String email = "Test.Email@test.com";
+        Optional<UserModel> user = Optional.of(new UserModel(id, login, name, email));
+
+        this.mockMvc.perform(
+                delete(String.format("/users/%s", id.toString()))
+            )
+            .andDo(print())
+            .andExpect(status().isNoContent());
+
+        verify(mockAccountService, atLeastOnce()).deleteUser(id);
+    }
+
+    @Test
+    public void deleteUser_WhenWithInvalidIdPathParam_ShouldReturnBadRequest() throws Exception {
+        String id = "some-invalid-uuid";
+        
+        this.mockMvc.perform(
+                delete(String.format("/users/%s", id))
+            )
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(status().reason(String.format("Invalid UUID string: %s", id)));
+
+        verify(mockAccountService, never()).deleteUser(any());
     }
 
 }
