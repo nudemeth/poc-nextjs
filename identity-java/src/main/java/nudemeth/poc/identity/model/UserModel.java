@@ -2,6 +2,9 @@ package nudemeth.poc.identity.model;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -11,9 +14,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 @ToString
-@RequiredArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode
+@RequiredArgsConstructor(onConstructor = @__({@JsonCreator}))
+@AllArgsConstructor(onConstructor = @__({@JsonCreator}))
 public class UserModel {
     @Getter
     private UUID id;

@@ -8,8 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -140,13 +139,14 @@ public class AccountControllerTests {
         
         this.mockMvc.perform(
                 post("/users")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(jsonUser)
             )
             .andDo(print())
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.id").value(id.toString()));
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(content().string(mapper.writeValueAsString(id)));
 
         verify(mockAccountService, atLeastOnce()).createUser(user);
     }

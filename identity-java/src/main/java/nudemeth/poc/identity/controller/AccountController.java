@@ -29,29 +29,29 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @GetMapping(path = "/users/login/{login}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    @GetMapping(path = "/users/login/{login}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
     public Optional<UserModel> getUserByLogin(@PathVariable(required = true) String login) {
         return accountService.getUserByLogin(login);
     }
 
-    @GetMapping(path = "/users/email/{email}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    @GetMapping(path = "/users/email/{email}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
     public Optional<UserModel> getUserByEmail(@PathVariable(required = true) String email) {
         return accountService.getUserByEmail(email);
     }
 
-    @GetMapping(path = "/users/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    @GetMapping(path = "/users/{id}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
     public Optional<UserModel> getUser(@PathVariable(required = true) String id) {
         UUID uuid = getUuidFromString(id);
         return accountService.getUser(uuid);
     }
 
     @ResponseStatus(code = HttpStatus.CREATED)
-    @PostMapping(path = "/users", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    @PostMapping(path = "/users", consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE }, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
     public UUID createUser(@RequestBody UserModel model) {
         return accountService.createUser(model);
     }
 
-    @PutMapping(path = "/users/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    @PutMapping(path = "/users/{id}", consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE }, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
     public UserModel updateUser(@PathVariable(required = true) String id, @RequestBody UserModel model) {
         UUID uuid = getUuidFromString(id);
         if (!uuid.equals(model.getId())) {
