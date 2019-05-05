@@ -1,6 +1,10 @@
 package nudemeth.poc.identity.service;
 
 import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -35,6 +39,38 @@ public class UserAccountServiceTests {
     }
 
     @Test
+    public void getUser_WhenFound_ShouldReturnUserModel() {
+        UUID id = UUID.randomUUID();
+        String login = "testLogin";
+        String name = "Test Name";
+        String email = "Test.Email@test.com";
+        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, name, email));
+        Optional<UserModel> expected = Optional.of(new UserModel(id, login, name, email));
+
+        when(mockUserRepo.findById(id)).thenReturn(entity);
+
+        Optional<UserModel> actual = userAccountService.getUser(id);
+        
+        Assert.assertThat(actual.get(), samePropertyValuesAs(expected.get()));
+
+        verify(mockUserRepo, only()).findById(id);
+    }
+
+    @Test
+    public void getUser_WhenNotFound_ShouldReturnEmptyUserModel() {
+        UUID id = UUID.randomUUID();
+        Optional<UserEntity> entity = Optional.empty();
+        
+        when(mockUserRepo.findById(id)).thenReturn(entity);
+
+        Optional<UserModel> actual = userAccountService.getUser(id);
+        
+        Assert.assertFalse(actual.isPresent());
+
+        verify(mockUserRepo, only()).findById(id);
+    }
+
+    @Test
     public void getUserByLogin_WhenFound_ShouldReturnUserModel() {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
@@ -48,6 +84,22 @@ public class UserAccountServiceTests {
         Optional<UserModel> actual = userAccountService.getUserByLogin(login);
         
         Assert.assertThat(actual.get(), samePropertyValuesAs(expected.get()));
+
+        verify(mockUserRepo, only()).findByLogin(login);
+    }
+
+    @Test
+    public void getUserByLogin_WhenNotFound_ShouldReturnEmptyUserModel() {
+        String login = "testLogin";
+        Optional<UserEntity> entity = Optional.empty();
+        
+        when(mockUserRepo.findByLogin(login)).thenReturn(entity);
+
+        Optional<UserModel> actual = userAccountService.getUserByLogin(login);
+        
+        Assert.assertFalse(actual.isPresent());
+
+        verify(mockUserRepo, only()).findByLogin(login);
     }
 
     @Test
@@ -64,5 +116,68 @@ public class UserAccountServiceTests {
         Optional<UserModel> actual = userAccountService.getUserByEmail(email);
         
         Assert.assertThat(actual.get(), samePropertyValuesAs(expected.get()));
+
+        verify(mockUserRepo, only()).findByEmail(email);
+    }
+
+    @Test
+    public void getUserByEmail_WhenNotFound_ShouldReturnEmptyUserModel() {
+        String email = "Test.Email@test.com";
+        Optional<UserEntity> entity = Optional.empty();
+        
+        when(mockUserRepo.findByEmail(email)).thenReturn(entity);
+
+        Optional<UserModel> actual = userAccountService.getUserByEmail(email);
+        
+        Assert.assertFalse(actual.isPresent());
+
+        verify(mockUserRepo, only()).findByEmail(email);
+    }
+
+    @Test
+    public void createUser_WhenSuccess_ShouldReturnUUID() {
+        UUID id = UUID.randomUUID();
+        String login = "testLogin";
+        String name = "Test Name";
+        String email = "Test.Email@test.com";
+        UserEntity entity = new UserEntity(id, login, name, email);
+        UserModel model = new UserModel(login, name, email);
+
+        when(mockUserRepo.save(any(UserEntity.class))).thenReturn(entity);
+
+        UUID actual = userAccountService.createUser(model);
+
+        Assert.assertEquals(id, actual);
+
+        verify(mockUserRepo, only()).save(any(UserEntity.class));
+    }
+
+    @Test
+    public void deleteUser_WhenSuccess_ShouldReturnNothing() {
+        UUID id = UUID.randomUUID();
+
+        doNothing().when(mockUserRepo).deleteById(id);
+
+        userAccountService.deleteUser(id);
+
+        verify(mockUserRepo, only()).deleteById(id);
+    }
+
+    @Test
+    public void updateUser_WhenSuccess_ShouldReturnUserModel() {
+        UUID id = UUID.randomUUID();
+        String login = "testLogin";
+        String name = "Test Name";
+        String email = "Test.Email@test.com";
+        UserEntity entity = new UserEntity(id, login, name, email);
+        UserModel model = new UserModel(id, login, name, email);
+
+        when(mockUserRepo.save(any(UserEntity.class))).thenReturn(entity);
+
+        UserModel actual = userAccountService.updateUser(model);
+
+        Assert.assertThat(actual, samePropertyValuesAs(model));
+
+        verify(mockUserRepo, only()).save(entity);
     }
 }
