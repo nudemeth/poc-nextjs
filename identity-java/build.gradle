@@ -1,5 +1,4 @@
 plugins {
-    id 'java'
     id 'org.springframework.boot'           version "2.1.4.RELEASE"
     id 'io.spring.dependency-management'    version "1.0.7.RELEASE"
 }
@@ -7,14 +6,18 @@ plugins {
 group 'nudemeth'
 version '0.1-SNAPSHOT'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-repositories {
-    mavenCentral()
+allprojects {
+    apply plugin: 'java'
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+    repositories {
+        mavenCentral()
+    }
 }
 
 dependencies {
+    compile                 project(':identity-model')
+
     compile                 group: 'org.springframework.boot',  name: 'spring-boot-starter-web',        version: '2.1.4.RELEASE'
     compile                 group: 'org.springframework.boot',  name: 'spring-boot-starter-data-jpa',   version: '2.1.4.RELEASE'
     compile                 group: 'org.postgresql',            name: 'postgresql',                     version: '42.2.5'
