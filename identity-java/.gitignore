@@ -6,5 +6,5 @@
 .settings
 .classpath
 .project
-/build
-/bin
+**/build
+**/bin
