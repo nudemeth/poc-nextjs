@@ -1,3 +1,4 @@
 rootProject.name = 'identity-api'
 include 'identity-model'
 include 'identity-service'
+include 'identity-dao'
