@@ -16,14 +16,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import nudemeth.poc.identity.entity.UserEntity;
 import nudemeth.poc.identity.mapper.UserMapper;
 import nudemeth.poc.identity.model.UserModel;
 import nudemeth.poc.identity.repository.UserRepository;
 
-@RunWith(SpringRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class UserAccountServiceTests {
 
     @Mock
