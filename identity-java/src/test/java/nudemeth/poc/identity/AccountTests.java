@@ -1,4 +1,4 @@
-package nudemeth.poc.identity.controller;
+package nudemeth.poc.identity;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -31,7 +31,7 @@ import nudemeth.poc.identity.service.AccountService;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AccountControllerTests {
+public class AccountTests {
 
     @Autowired
     private MockMvc mockMvc;
