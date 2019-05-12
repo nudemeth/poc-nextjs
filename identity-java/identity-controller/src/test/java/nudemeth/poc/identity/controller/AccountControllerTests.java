@@ -68,7 +68,7 @@ public class AccountControllerTests {
     private static <T> void assertThrows(Supplier<T> throwableMethod, Class<?> expectedException, String expectedMessage) {
         try {
             throwableMethod.get();
-            Assert.fail();
+            Assert.fail(String.format("No exception has been thrown: expected: %s with message [%s]", expectedException.getName(), expectedMessage));
         } catch (Exception ex) {
             Assert.assertEquals(expectedException.getName(), ex.getClass().getName());
             Assert.assertEquals(expectedMessage, ex.getMessage());
