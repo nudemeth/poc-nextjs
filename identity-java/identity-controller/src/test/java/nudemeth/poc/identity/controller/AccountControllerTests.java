@@ -65,6 +65,42 @@ public class AccountControllerTests {
         verify(mockAccountService, never()).getUser(any());
     }
 
+    @Test
+    public void getUserByLogin_WhenWithLoginParam_ShouldReturnUserModel() throws Exception {
+        UUID id = UUID.randomUUID();
+        String login = "testLogin";
+        String name = "Test Name";
+        String email = "Test.Email@test.com";
+        Optional<UserModel> user = Optional.of(new UserModel(id, login, name, email));
+        Optional<UserModel> expected = Optional.of(new UserModel(id, login, name, email));
+
+        when(mockAccountService.getUserByLogin(login)).thenReturn(user);
+        
+        Optional<UserModel> actual = accountController.getUserByLogin(login);
+
+        Assert.assertThat(actual.get(), samePropertyValuesAs(expected.get()));
+
+        verify(mockAccountService, only()).getUserByLogin(login);
+    }
+
+    @Test
+    public void getUserByEmail_WhenWithEmailParam_ShouldReturnUserModel() throws Exception {
+        UUID id = UUID.randomUUID();
+        String login = "testLogin";
+        String name = "Test Name";
+        String email = "Test.Email@test.com";
+        Optional<UserModel> user = Optional.of(new UserModel(id, login, name, email));
+        Optional<UserModel> expected = Optional.of(new UserModel(id, login, name, email));
+
+        when(mockAccountService.getUserByEmail(email)).thenReturn(user);
+        
+        Optional<UserModel> actual = accountController.getUserByEmail(email);
+
+        Assert.assertThat(actual.get(), samePropertyValuesAs(expected.get()));
+
+        verify(mockAccountService, only()).getUserByEmail(email);
+    }
+
     private static <T> void assertThrows(Supplier<T> throwableMethod, Class<?> expectedException, String expectedMessage) {
         try {
             throwableMethod.get();
