@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,7 +68,7 @@ public class AccountControllerTests {
     }
 
     @Test
-    public void getUserByLogin_WhenWithLoginParam_ShouldReturnUserModel() throws Exception {
+    public void getUserByLogin_WhenWithLogin_ShouldReturnUserModel() throws Exception {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
         String name = "Test Name";
@@ -84,7 +86,7 @@ public class AccountControllerTests {
     }
 
     @Test
-    public void getUserByEmail_WhenWithEmailParam_ShouldReturnUserModel() throws Exception {
+    public void getUserByEmail_WhenWithEmail_ShouldReturnUserModel() throws Exception {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
         String name = "Test Name";
@@ -99,6 +101,23 @@ public class AccountControllerTests {
         Assert.assertThat(actual.get(), samePropertyValuesAs(expected.get()));
 
         verify(mockAccountService, only()).getUserByEmail(email);
+    }
+
+    @Test
+    public void createUser_WhenWithUserModel_ShouldReturnUUIDWith() throws Exception {
+        UUID id = UUID.randomUUID();
+        String login = "testLogin";
+        String name = "Test Name";
+        String email = "Test.Email@test.com";
+        UserModel user = new UserModel(login, name, email);
+        
+        when(mockAccountService.createUser(user)).thenReturn(id);
+
+        UUID actual = accountController.createUser(user);
+
+        Assert.assertEquals(id, actual);
+        
+        verify(mockAccountService, only()).createUser(user);
     }
 
     private static <T> void assertThrows(Supplier<T> throwableMethod, Class<?> expectedException, String expectedMessage) {
