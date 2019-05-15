@@ -7,8 +7,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -118,6 +116,45 @@ public class AccountControllerTests {
         Assert.assertEquals(id, actual);
         
         verify(mockAccountService, only()).createUser(user);
+    }
+
+    @Test
+    public void updateUser_WhenWithIdAndUserModel_ShouldReturnUserModel() throws Exception {
+        UUID id = UUID.randomUUID();
+        String login = "testLogin";
+        String name = "Test Name";
+        String email = "Test.Email@test.com";
+        UserModel updatingUser = new UserModel(id, login, name, email);
+        UserModel updatedUser = new UserModel(id, login, name, email);
+        
+        when(mockAccountService.updateUser(updatingUser)).thenReturn(updatedUser);
+
+        UserModel actual = accountController.updateUser(id.toString(), updatingUser);
+
+        Assert.assertThat(actual, samePropertyValuesAs(updatedUser));
+        
+        verify(mockAccountService, only()).updateUser(updatingUser);
+    }
+
+    @Test
+    public void updateUser_WhenIdAndModelIdNotMatched_ShouldThrowResponseStatusException() throws Exception {
+        UUID id = UUID.randomUUID();
+        UUID id2 = UUID.randomUUID();
+        String login = "testLogin";
+        String name = "Test Name";
+        String email = "Test.Email@test.com";
+        UserModel updatingUser = new UserModel(id, login, name, email);
+        Supplier<UserModel> method = () -> {
+            return accountController.updateUser(id2.toString(), updatingUser);
+        };
+        
+        ResponseStatusException expectedEx = new ResponseStatusException(HttpStatus.BAD_REQUEST,
+            String.format("Invalid updating id: %s and %s", id2.toString(), id.toString())
+        );
+
+        assertThrows(method, expectedEx.getClass(), expectedEx.getMessage());
+        
+        verify(mockAccountService, never()).updateUser(updatingUser);
     }
 
     private static <T> void assertThrows(Supplier<T> throwableMethod, Class<?> expectedException, String expectedMessage) {
