@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.junit.Assert;
@@ -55,8 +56,8 @@ public class AccountControllerTests {
     @Test
     public void getUser_WhenWithInvalidId_ShouldThrowResponseStatusException() throws Exception {
         String id = "some-invalid-id";
-        Supplier<Optional<UserModel>> method = () -> {
-            return accountController.getUser(id);
+        Runnable method = () -> {
+            accountController.getUser(id);
         };
         IllegalArgumentException innerEx = new IllegalArgumentException(String.format("Invalid UUID string: %s", id));
         ResponseStatusException expectedEx = new ResponseStatusException(HttpStatus.BAD_REQUEST, innerEx.getMessage(), innerEx);
@@ -144,8 +145,8 @@ public class AccountControllerTests {
         String name = "Test Name";
         String email = "Test.Email@test.com";
         UserModel updatingUser = new UserModel(id, login, name, email);
-        Supplier<UserModel> method = () -> {
-            return accountController.updateUser(id2.toString(), updatingUser);
+        Runnable method = () -> {
+            accountController.updateUser(id2.toString(), updatingUser);
         };
         
         ResponseStatusException expectedEx = new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -157,9 +158,33 @@ public class AccountControllerTests {
         verify(mockAccountService, never()).updateUser(updatingUser);
     }
 
-    private static <T> void assertThrows(Supplier<T> throwableMethod, Class<?> expectedException, String expectedMessage) {
+    @Test
+    public void deleteUser_WhenWithId_ShouldReturnNothing() throws Exception {
+        UUID id = UUID.randomUUID();
+        
+        accountController.deleteUser(id.toString());
+
+        verify(mockAccountService, only()).deleteUser(id);
+    }
+
+    @Test
+    public void deleteUser_WhenWithInvalidId_ShouldThrowResponseStatusException() throws Exception {
+        String id = "some-invalid-uuid";
+        Runnable method = () -> {
+            accountController.deleteUser(id);
+        };
+        
+        IllegalArgumentException innerEx = new IllegalArgumentException(String.format("Invalid UUID string: %s", id));
+        ResponseStatusException expectedEx = new ResponseStatusException(HttpStatus.BAD_REQUEST, innerEx.getMessage(), innerEx);
+
+        assertThrows(method, expectedEx.getClass(), expectedEx.getMessage());
+
+        verify(mockAccountService, never()).deleteUser(any());
+    }
+
+    private static <T> void assertThrows(Runnable throwableMethod, Class<?> expectedException, String expectedMessage) {
         try {
-            throwableMethod.get();
+            throwableMethod.run();
             Assert.fail(String.format("No exception has been thrown: expected: %s with message [%s]", expectedException.getName(), expectedMessage));
         } catch (Exception ex) {
             Assert.assertEquals(expectedException.getName(), ex.getClass().getName());
