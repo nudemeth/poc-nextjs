@@ -5,8 +5,6 @@ import static org.mockito.Mockito.*;
 
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import org.junit.Assert;
 import org.junit.Before;
