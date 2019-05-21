@@ -5,10 +5,23 @@ GRANT ALL PRIVILEGES ON DATABASE "identity" TO "identity_owner";
 \connect "identity";
 
 CREATE TABLE IF NOT EXISTS "user" (
-    "id"      UUID            PRIMARY KEY ,
-    "login"   VARCHAR(50)                 ,
-    "name"    VARCHAR(100)                ,
-    "email"   VARCHAR(100)
+    "user_id" UUID              PRIMARY KEY     ,
+    "login"   VARCHAR(50)       UNIQUE NOT NULL ,
+    "name"    VARCHAR(200)      NOT NULL        ,
+    "email"   VARCHAR(100)      UNIQUE NOT NULL ,
+);
+
+CREATE TABLE IF NOT EXISTS "address" (
+    "user_id"       UUID                        ,
+    "address"       VARCHAR(500)                ,
+    "city"          VARCHAR(200)                ,
+    "state"         VARCHAR(200)                ,
+    "country"       VARCHAR(200)                ,
+    "zip_code"      VARCHAR(100)                ,
+    "is_default"    BOOLEAN                     ,
+    CONSTRAINT "address_user_id_fk" FOREIGN KEY (user_id)
+    REFERENCES "user" (user_id) MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 INSERT INTO "user" (id, login, "name", email) VALUES ('2f17c7e4-a6b6-4ba0-a1eb-9b4f6d2ce4df', 'testlogin', 'Test Test', 'test@test.com');
