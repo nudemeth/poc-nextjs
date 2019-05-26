@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
+	"strings"
 )
 
 type CatalogService interface {
@@ -13,6 +15,9 @@ type CatalogService interface {
 
 type IdentityService interface {
 	GetIdentity(url string, userAgent string) ([]byte, error)
+	GetIdentityToken(url string) ([]byte, error)
+	GetIdentityUserInfo(url string, token string) ([]byte, error)
+	CreateIdentityUserInfo(requestUrl string, issuer string, token string, login string) (int, error)
 }
 
 type Service struct {
@@ -136,4 +141,37 @@ func (service *Service) GetIdentityUserInfo(url string, token string) ([]byte, e
 	}
 
 	return body, nil
+}
+
+func (service *Service) CreateIdentityUserInfo(requestUrl string, issuer string, token string, login string) (int, error) {
+	data := url.Values{}
+	data.Set("issuer", issuer)
+	data.Set("token", token)
+	data.Set("login", login)
+	dataReader := strings.NewReader(data.Encode())
+
+	req, err := http.NewRequest("POST", requestUrl, dataReader)
+	req.Header.Add("Accept", "application/json;charset=UTF-8")
+
+	if err != nil {
+		log.Printf("Error occur when creating request: service=%s, URI=%s\n%s", "Identity", requestUrl, err.Error())
+		return 500, err
+	}
+
+	res, err := service.Client.Do(req)
+
+	if err != nil {
+		log.Printf("Error occur when requesting: service=%s, URI=%s\n%s", "Identity", requestUrl, err.Error())
+		return 500, err
+	}
+
+	log.Printf("Status: service=%s, URI=%s, code=%d", "Identity", requestUrl, res.StatusCode)
+	code := res.StatusCode
+
+	if err != nil {
+		log.Printf("Error occur when requesting: service=%s, URI=%s\n%s", "Identity", requestUrl, err.Error())
+		return 500, err
+	}
+
+	return code, nil
 }
