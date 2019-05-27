@@ -2,14 +2,18 @@ package nudemeth.poc.identity.model;
 
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
 @EqualsAndHashCode
 public class UserModel {
@@ -17,20 +21,8 @@ public class UserModel {
     private UUID id;
     @Getter @Setter @NonNull
     private String login;
-    @Getter @Setter @NonNull
+    @Getter @Setter
     private String name;
-    @Getter @Setter @NonNull
+    @Getter @Setter
     private String email;
-
-    //The generated constructor code has some problems when using Jackon annotaion with Lombok annotation. Need to do it manually.
-    public UserModel(@JsonProperty("login") String login, @JsonProperty("name") String name, @JsonProperty("email") String email) {
-        this(null, login, name, email);
-    }
-
-    public UserModel(@JsonProperty("id") UUID id, @JsonProperty("login") String login, @JsonProperty("name") String name, @JsonProperty("email") String email) {
-        this.id = id;
-        this.login = login;
-        this.name = name;
-        this.email = email;
-    }
 }

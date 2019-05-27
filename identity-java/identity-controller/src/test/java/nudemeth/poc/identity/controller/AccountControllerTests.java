@@ -106,7 +106,9 @@ public class AccountControllerTests {
         String login = "testLogin";
         String name = "Test Name";
         String email = "Test.Email@test.com";
-        UserModel user = new UserModel(login, name, email);
+        UserModel user = new UserModel(login);
+        user.setName(name);
+        user.setEmail(email);
         
         when(mockAccountService.createUser(user)).thenReturn(id);
 

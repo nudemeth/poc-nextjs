@@ -31,8 +31,8 @@ public class UserEntity {
     private UUID id;
     @Getter @Setter @NonNull
     private String login;
-    @Getter @Setter @NonNull
+    @Getter @Setter
     private String name;
-    @Getter @Setter @NonNull
+    @Getter @Setter
     private String email;
 }

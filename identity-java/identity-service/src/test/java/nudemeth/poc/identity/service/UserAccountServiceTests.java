@@ -141,7 +141,9 @@ public class UserAccountServiceTests {
         String name = "Test Name";
         String email = "Test.Email@test.com";
         UserEntity entity = new UserEntity(id, login, name, email);
-        UserModel model = new UserModel(login, name, email);
+        UserModel model = new UserModel(login);
+        model.setName(name);
+        model.setEmail(email);
 
         when(mockUserRepo.save(any(UserEntity.class))).thenReturn(entity);
 
