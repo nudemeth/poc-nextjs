@@ -44,6 +44,23 @@ const getUserinfo = (issuer, token) => {
         .then(r => r.json())
 }
 
+const saveUserinfo = (issuer, token, login) => {
+    const data = {
+        issuer,
+        token,
+        login
+    }
+    const options = {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(data)
+    }
+    return fetch(`${config.api.identity.uri}userinfo`, options)
+        .then(r => r.json())
+}
+
 const encrypt = (value) => {
     const iv = crypto.randomBytes(16)
     const ivStr = iv.toString('base64')
@@ -94,6 +111,7 @@ app
 
             const token = await getToken(issuer, code)
             const userinfo = await getUserinfo(issuer, token.access_token)
+            await saveUserinfo(issuer, token, userinfo.login)
             const encrypted = encrypt(userinfo.login)
             
             res.cookie('user', encrypted, {
