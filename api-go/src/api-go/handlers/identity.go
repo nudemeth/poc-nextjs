@@ -12,16 +12,23 @@ import (
 func identity(w http.ResponseWriter, req *http.Request, service *api.Service) {
 	var res []byte
 	var err error
-	if strings.Index(req.URL.Path, "/token") > -1 {
+	var status int
+	if strings.Index(req.URL.Path, "/token") > -1 && req.Method == "GET" {
 		issuer := req.URL.Query().Get("issuer")
 		code := req.URL.Query().Get("code")
 		url := getTokenURL(issuer, code)
-		res, err = service.GetIdentityToken(url)
-	} else if strings.Index(req.URL.Path, "/userinfo") > -1 {
+		res, status, err = service.GetIdentityToken(url)
+	} else if strings.Index(req.URL.Path, "/userinfo") > -1 && req.Method == "GET" {
 		issuer := req.URL.Query().Get("issuer")
 		token := req.URL.Query().Get("token")
 		url := getUserInfoURL(issuer)
-		res, err = service.GetIdentityUserInfo(url, token)
+		res, status, err = service.GetIdentityUserInfo(url, token)
+	} else if strings.Index(req.URL.Path, "/userinfo") > -1 && req.Method == "POST" {
+		issuer := req.FormValue("issuer")
+		token := req.FormValue("token")
+		login := req.FormValue("login")
+		url := getUserInfoURL(issuer)
+		res, status, err = service.CreateIdentityUserInfo(url, issuer, token, login)
 	} else {
 		log.Printf("Cannot map route: service=%s, URI=%s", "Identity", req.URL.Path)
 		w.WriteHeader(http.StatusNotFound)
@@ -33,6 +40,7 @@ func identity(w http.ResponseWriter, req *http.Request, service *api.Service) {
 		return
 	}
 
+	w.WriteHeader(status)
 	w.Write(res)
 }
 

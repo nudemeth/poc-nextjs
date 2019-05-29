@@ -10,14 +10,14 @@ import (
 )
 
 type CatalogService interface {
-	GetCatalog(url string, userAgent string) ([]byte, error)
+	GetCatalog(url string, userAgent string) ([]byte, int, error)
 }
 
 type IdentityService interface {
-	GetIdentity(url string, userAgent string) ([]byte, error)
-	GetIdentityToken(url string) ([]byte, error)
-	GetIdentityUserInfo(url string, token string) ([]byte, error)
-	CreateIdentityUserInfo(requestUrl string, issuer string, token string, login string) (int, error)
+	GetIdentity(url string, userAgent string) ([]byte, int, error)
+	GetIdentityToken(url string) ([]byte, int, error)
+	GetIdentityUserInfo(url string, token string) ([]byte, int, error)
+	CreateIdentityUserInfo(requestUrl string, issuer string, token string, login string) ([]byte, int, error)
 }
 
 type Service struct {
@@ -25,94 +25,97 @@ type Service struct {
 	BaseURL string
 }
 
-func (service *Service) GetCatalog(url string, userAgent string) ([]byte, error) {
+func (service *Service) GetCatalog(url string, userAgent string) ([]byte, int, error) {
 	req, err := http.NewRequest("GET", service.BaseURL+url, nil)
 	req.Header.Add("User-Agent", userAgent)
 
 	if err != nil {
 		log.Printf("Error occur when creating request: service=%s, URI=%s\n%s", "Catalog", url, err.Error())
-		return nil, err
+		return nil, 500, err
 	}
 
 	res, err := service.Client.Do(req)
 
 	if err != nil {
 		log.Printf("Error occur when requesting: service=%s, URI=%s\n%s", "Catalog", url, err.Error())
-		return nil, err
+		return nil, 500, err
 	}
 
 	defer res.Body.Close()
 
 	log.Printf("Redirect to: service=%s, URI=%s", "Catalog", url)
 	body, err := ioutil.ReadAll(res.Body)
+	code := res.StatusCode
 
 	if err != nil {
 		log.Printf("Error occur when reading response: service=%s, URI=%s\n%s", "Catalog", url, err.Error())
-		return nil, err
+		return nil, 500, err
 	}
 
-	return body, nil
+	return body, code, nil
 }
 
-func (service *Service) GetIdentity(url string, header http.Header) ([]byte, error) {
+func (service *Service) GetIdentity(url string, header http.Header) ([]byte, int, error) {
 	req, err := http.NewRequest("GET", service.BaseURL+url, nil)
 	req.Header = header
 
 	if err != nil {
 		log.Printf("Error occur when creating request: service=%s, URI=%s\n%s", "Identity", url, err.Error())
-		return nil, err
+		return nil, 500, err
 	}
 
 	res, err := service.Client.Do(req)
 
 	if err != nil {
 		log.Printf("Error occur when requesting: service=%s, URI=%s\n%s", "Identity", url, err.Error())
-		return nil, err
+		return nil, 500, err
 	}
 
 	defer res.Body.Close()
 
 	log.Printf("Redirect to: service=%s, URI=%s", "Identity", url)
 	body, err := ioutil.ReadAll(res.Body)
+	code := res.StatusCode
 
 	if err != nil {
 		log.Printf("Error occur when reading response: service=%s, URI=%s\n%s", "Identity", url, err.Error())
-		return nil, err
+		return nil, 500, err
 	}
 
-	return body, nil
+	return body, code, nil
 }
 
-func (service *Service) GetIdentityToken(url string) ([]byte, error) {
+func (service *Service) GetIdentityToken(url string) ([]byte, int, error) {
 	req, err := http.NewRequest("POST", url, nil)
 	req.Header.Add("Accept", "application/json")
 
 	if err != nil {
 		log.Printf("Error occur when creating request: service=%s, URI=%s\n%s", "Identity", url, err.Error())
-		return nil, err
+		return nil, 500, err
 	}
 
 	res, err := service.Client.Do(req)
 
 	if err != nil {
 		log.Printf("Error occur when requesting: service=%s, URI=%s\n%s", "Identity", url, err.Error())
-		return nil, err
+		return nil, 500, err
 	}
 
 	defer res.Body.Close()
 
 	log.Printf("Redirect to: service=%s, URI=%s", "Identity", url)
 	body, err := ioutil.ReadAll(res.Body)
+	code := res.StatusCode
 
 	if err != nil {
 		log.Printf("Error occur when reading response: service=%s, URI=%s\n%s", "Identity", url, err.Error())
-		return nil, err
+		return nil, 500, err
 	}
 
-	return body, nil
+	return body, code, nil
 }
 
-func (service *Service) GetIdentityUserInfo(url string, token string) ([]byte, error) {
+func (service *Service) GetIdentityUserInfo(url string, token string) ([]byte, int, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Authorization", fmt.Sprintf("token %s", token))
@@ -120,30 +123,31 @@ func (service *Service) GetIdentityUserInfo(url string, token string) ([]byte, e
 
 	if err != nil {
 		log.Printf("Error occur when creating request: service=%s, URI=%s\n%s", "Identity", url, err.Error())
-		return nil, err
+		return nil, 500, err
 	}
 
 	res, err := service.Client.Do(req)
 
 	if err != nil {
 		log.Printf("Error occur when requesting: service=%s, URI=%s\n%s", "Identity", url, err.Error())
-		return nil, err
+		return nil, 500, err
 	}
 
 	defer res.Body.Close()
 
 	log.Printf("Redirect to: service=%s, URI=%s", "Identity", url)
 	body, err := ioutil.ReadAll(res.Body)
+	code := res.StatusCode
 
 	if err != nil {
 		log.Printf("Error occur when requesting: service=%s, URI=%s\n%s", "Identity", url, err.Error())
-		return nil, err
+		return nil, 500, err
 	}
 
-	return body, nil
+	return body, code, nil
 }
 
-func (service *Service) CreateIdentityUserInfo(requestUrl string, issuer string, token string, login string) (int, error) {
+func (service *Service) CreateIdentityUserInfo(requestUrl string, issuer string, token string, login string) ([]byte, int, error) {
 	data := url.Values{}
 	data.Set("issuer", issuer)
 	data.Set("token", token)
@@ -155,23 +159,24 @@ func (service *Service) CreateIdentityUserInfo(requestUrl string, issuer string,
 
 	if err != nil {
 		log.Printf("Error occur when creating request: service=%s, URI=%s\n%s", "Identity", requestUrl, err.Error())
-		return 500, err
+		return nil, 500, err
 	}
 
 	res, err := service.Client.Do(req)
 
 	if err != nil {
 		log.Printf("Error occur when requesting: service=%s, URI=%s\n%s", "Identity", requestUrl, err.Error())
-		return 500, err
+		return nil, 500, err
 	}
 
 	log.Printf("Status: service=%s, URI=%s, code=%d", "Identity", requestUrl, res.StatusCode)
+	body, err := ioutil.ReadAll(res.Body)
 	code := res.StatusCode
 
 	if err != nil {
 		log.Printf("Error occur when requesting: service=%s, URI=%s\n%s", "Identity", requestUrl, err.Error())
-		return 500, err
+		return nil, 500, err
 	}
 
-	return code, nil
+	return body, code, nil
 }
