@@ -111,7 +111,12 @@ app
 
             const token = await getToken(issuer, code)
             const userinfo = await getUserinfo(issuer, token.access_token)
-            await saveUserinfo(issuer, token, userinfo.login)
+            const result = await saveUserinfo(issuer, token, userinfo.login)
+
+            if (!result) {
+                return res.status(500).send('Authentication process failed.')
+            }
+
             const encrypted = encrypt(userinfo.login)
             
             res.cookie('user', encrypted, {
