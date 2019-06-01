@@ -32,6 +32,8 @@ public class UserEntity {
     @Getter @Setter @NonNull
     private String login;
     @Getter @Setter
+    private String issuer;
+    @Getter @Setter
     private String name;
     @Getter @Setter
     private String email;

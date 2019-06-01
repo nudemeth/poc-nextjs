@@ -39,8 +39,9 @@ public class AccountControllerTests {
         String login = "testLogin";
         String name = "Test Name";
         String email = "Test.Email@test.com";
-        Optional<UserModel> user = Optional.of(new UserModel(uuid, login, name, email));
-        Optional<UserModel> expected = Optional.of(new UserModel(uuid, login, name, email));
+        String issuer = "Test Issuer";
+        Optional<UserModel> user = Optional.of(new UserModel(uuid, login, issuer, name, email));
+        Optional<UserModel> expected = Optional.of(new UserModel(uuid, login, issuer, name, email));
 
         when(mockAccountService.getUser(uuid)).thenReturn(user);
 
@@ -70,8 +71,9 @@ public class AccountControllerTests {
         String login = "testLogin";
         String name = "Test Name";
         String email = "Test.Email@test.com";
-        Optional<UserModel> user = Optional.of(new UserModel(id, login, name, email));
-        Optional<UserModel> expected = Optional.of(new UserModel(id, login, name, email));
+        String issuer = "Test Issuer";
+        Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, name, email));
+        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, name, email));
 
         when(mockAccountService.getUserByLogin(login)).thenReturn(user);
         
@@ -88,8 +90,9 @@ public class AccountControllerTests {
         String login = "testLogin";
         String name = "Test Name";
         String email = "Test.Email@test.com";
-        Optional<UserModel> user = Optional.of(new UserModel(id, login, name, email));
-        Optional<UserModel> expected = Optional.of(new UserModel(id, login, name, email));
+        String issuer = "Test Issuer";
+        Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, name, email));
+        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, name, email));
 
         when(mockAccountService.getUserByEmail(email)).thenReturn(user);
         
@@ -125,8 +128,9 @@ public class AccountControllerTests {
         String login = "testLogin";
         String name = "Test Name";
         String email = "Test.Email@test.com";
-        UserModel updatingUser = new UserModel(id, login, name, email);
-        UserModel updatedUser = new UserModel(id, login, name, email);
+        String issuer = "Test Issuer";
+        UserModel updatingUser = new UserModel(id, login, issuer, name, email);
+        UserModel updatedUser = new UserModel(id, login, issuer, name, email);
         
         when(mockAccountService.updateUser(updatingUser)).thenReturn(updatedUser);
 
@@ -144,7 +148,8 @@ public class AccountControllerTests {
         String login = "testLogin";
         String name = "Test Name";
         String email = "Test.Email@test.com";
-        UserModel updatingUser = new UserModel(id, login, name, email);
+        String issuer = "Test Issuer";
+        UserModel updatingUser = new UserModel(id, login, issuer, name, email);
         Runnable method = () -> {
             accountController.updateUser(id2.toString(), updatingUser);
         };
