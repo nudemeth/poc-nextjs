@@ -126,7 +126,7 @@ app
 
             const parsedUrl = parse(req.url, true)
             const { query } = parsedUrl
-            //TODO: Store access token in db { login, issuer, access_token }
+            
             app.render(req, res, '/authentication', { ...query, sites: authSites, user: userinfo.login })
         })
 

@@ -147,9 +147,10 @@ func (service *Service) GetIdentityUserInfo(url string, token string) ([]byte, i
 	return body, code, nil
 }
 
-func (service *Service) CreateIdentityUserInfo(requestUrl string, issuer string, login string) ([]byte, int, error) {
+func (service *Service) CreateIdentityUserInfo(requestUrl string, issuer string, token string, login string) ([]byte, int, error) {
 	data := url.Values{}
 	data.Set("issuer", issuer)
+	data.Set("token", token)
 	data.Set("login", login)
 	dataReader := strings.NewReader(data.Encode())
 

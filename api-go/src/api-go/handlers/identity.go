@@ -25,9 +25,10 @@ func identity(w http.ResponseWriter, req *http.Request, service *api.Service) {
 		res, status, err = service.GetIdentityUserInfo(url, token)
 	} else if strings.Index(req.URL.Path, "/userinfo") > -1 && req.Method == "POST" {
 		issuer := req.FormValue("issuer")
+		token := req.FormValue("token")
 		login := req.FormValue("login")
 		url := getUserInfoURL(issuer)
-		res, status, err = service.CreateIdentityUserInfo(url, issuer, login)
+		res, status, err = service.CreateIdentityUserInfo(url, issuer, token, login)
 	} else {
 		log.Printf("Cannot map route: service=%s, URI=%s", "Identity", req.URL.Path)
 		w.WriteHeader(http.StatusNotFound)
