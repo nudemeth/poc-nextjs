@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS "user" (
     "user_id"           UUID            PRIMARY KEY     ,
     "login"             VARCHAR(50)     UNIQUE NOT NULL ,
     "issuer"            VARCHAR(50)                     ,
+    "token"             VARCHAR(3000)                   ,
     "name"              VARCHAR(200)                    ,
     "email"             VARCHAR(100)                    ,
     "email_confirmed"   BOOLEAN         NOT NULL

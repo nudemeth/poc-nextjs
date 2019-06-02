@@ -45,8 +45,9 @@ public class UserAccountServiceTests {
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
-        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, name, email));
-        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, name, email));
+        String token = "abc";
+        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, token, name, email));
+        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email));
 
         when(mockUserRepo.findById(id)).thenReturn(entity);
 
@@ -78,8 +79,9 @@ public class UserAccountServiceTests {
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
-        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, name, email));
-        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, name, email));
+        String token = "abc";
+        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, token, name, email));
+        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email));
 
         when(mockUserRepo.findByLogin(login)).thenReturn(entity);
 
@@ -111,8 +113,9 @@ public class UserAccountServiceTests {
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
-        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, name, email));
-        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, name, email));
+        String token = "abc";
+        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, token, name, email));
+        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email));
 
         when(mockUserRepo.findByEmail(email)).thenReturn(entity);
 
@@ -144,7 +147,8 @@ public class UserAccountServiceTests {
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
-        UserEntity entity = new UserEntity(id, login, issuer, name, email);
+        String token = "abc";
+        UserEntity entity = new UserEntity(id, login, issuer, token, name, email);
         UserModel model = new UserModel(login);
         model.setName(name);
         model.setEmail(email);
@@ -176,8 +180,9 @@ public class UserAccountServiceTests {
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
-        UserEntity entity = new UserEntity(id, login, issuer, name, email);
-        UserModel model = new UserModel(id, login, issuer, name, email);
+        String token = "abc";
+        UserEntity entity = new UserEntity(id, login, issuer, token, name, email);
+        UserModel model = new UserModel(id, login, issuer, token, name, email);
 
         when(mockUserRepo.save(any(UserEntity.class))).thenReturn(entity);
 

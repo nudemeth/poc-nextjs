@@ -40,8 +40,9 @@ public class AccountControllerTests {
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
-        Optional<UserModel> user = Optional.of(new UserModel(uuid, login, issuer, name, email));
-        Optional<UserModel> expected = Optional.of(new UserModel(uuid, login, issuer, name, email));
+        String token = "abc";
+        Optional<UserModel> user = Optional.of(new UserModel(uuid, login, issuer, token, name, email));
+        Optional<UserModel> expected = Optional.of(new UserModel(uuid, login, issuer, token, name, email));
 
         when(mockAccountService.getUser(uuid)).thenReturn(user);
 
@@ -72,8 +73,9 @@ public class AccountControllerTests {
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
-        Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, name, email));
-        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, name, email));
+        String token = "abc";
+        Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, token, name, email));
+        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email));
 
         when(mockAccountService.getUserByLogin(login)).thenReturn(user);
         
@@ -91,8 +93,9 @@ public class AccountControllerTests {
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
-        Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, name, email));
-        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, name, email));
+        String token = "abc";
+        Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, token, name, email));
+        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email));
 
         when(mockAccountService.getUserByEmail(email)).thenReturn(user);
         
@@ -129,8 +132,9 @@ public class AccountControllerTests {
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
-        UserModel updatingUser = new UserModel(id, login, issuer, name, email);
-        UserModel updatedUser = new UserModel(id, login, issuer, name, email);
+        String token = "abc";
+        UserModel updatingUser = new UserModel(id, login, issuer, token, name, email);
+        UserModel updatedUser = new UserModel(id, login, issuer, token, name, email);
         
         when(mockAccountService.updateUser(updatingUser)).thenReturn(updatedUser);
 
@@ -149,7 +153,8 @@ public class AccountControllerTests {
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
-        UserModel updatingUser = new UserModel(id, login, issuer, name, email);
+        String token = "abc";
+        UserModel updatingUser = new UserModel(id, login, issuer, token, name, email);
         Runnable method = () -> {
             accountController.updateUser(id2.toString(), updatingUser);
         };

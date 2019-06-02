@@ -15,7 +15,7 @@ public class UserMapper implements Mapper<UserModel, UserEntity> {
         if (model == null) {
             return null;
         }
-        return new UserEntity(model.getId(), model.getLogin(), model.getIssuer(), model.getName(), model.getEmail());
+        return new UserEntity(model.getId(), model.getLogin(), model.getIssuer(), model.getToken(), model.getName(), model.getEmail());
     }
 
     @Override
@@ -23,7 +23,7 @@ public class UserMapper implements Mapper<UserModel, UserEntity> {
         if (entity == null) {
             return null;
         }
-        return new UserModel(entity.getId(), entity.getLogin(), entity.getIssuer(), entity.getName(), entity.getEmail());
+        return new UserModel(entity.getId(), entity.getLogin(), entity.getIssuer(), entity.getToken(), entity.getName(), entity.getEmail());
     }
 
     @Override

@@ -24,6 +24,8 @@ public class UserModel {
     @Getter @Setter
     private String issuer;
     @Getter @Setter
+    private String token;
+    @Getter @Setter
     private String name;
     @Getter @Setter
     private String email;
