@@ -59,7 +59,8 @@ public class AccountTests {
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
-        Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, token, name, email));
+        boolean isEmailConfirmed = false;
+        Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
 
         when(mockAccountService.getUser(id)).thenReturn(user);
         
@@ -94,7 +95,8 @@ public class AccountTests {
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
-        Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, token, name, email));
+        boolean isEmailConfirmed = false;
+        Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
 
         when(mockAccountService.getUserByLogin(login)).thenReturn(user);
         
@@ -117,7 +119,8 @@ public class AccountTests {
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
-        Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, token, name, email));
+        boolean isEmailConfirmed = false;
+        Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
 
         when(mockAccountService.getUserByEmail(email)).thenReturn(user);
         
@@ -192,8 +195,9 @@ public class AccountTests {
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
-        UserModel updatingUser = new UserModel(id, login, issuer, token, name, email);
-        UserModel updatedUser = new UserModel(id, login, issuer, token, name, email);
+        boolean isEmailConfirmed = false;
+        UserModel updatingUser = new UserModel(id, login, issuer, token, name, email, isEmailConfirmed);
+        UserModel updatedUser = new UserModel(id, login, issuer, token, name, email, isEmailConfirmed);
         String jsonUser = mapper.writeValueAsString(updatingUser);
         
         when(mockAccountService.updateUser(updatingUser)).thenReturn(updatedUser);
@@ -224,7 +228,8 @@ public class AccountTests {
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
-        UserModel updatingUser = new UserModel(id1, login, issuer, token, name, email);
+        boolean isEmailConfirmed = false;
+        UserModel updatingUser = new UserModel(id1, login, issuer, token, name, email, isEmailConfirmed);
         String jsonUser = mapper.writeValueAsString(updatingUser);
         
         this.mockMvc.perform(
@@ -249,7 +254,8 @@ public class AccountTests {
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
-        UserModel updatingUser = new UserModel(uuid, login, issuer, token, name, email);
+        boolean isEmailConfirmed = false;
+        UserModel updatingUser = new UserModel(uuid, login, issuer, token, name, email, isEmailConfirmed);
         String jsonUser = mapper.writeValueAsString(updatingUser);
 
         this.mockMvc.perform(

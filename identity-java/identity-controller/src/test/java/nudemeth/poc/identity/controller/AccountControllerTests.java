@@ -41,8 +41,9 @@ public class AccountControllerTests {
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
-        Optional<UserModel> user = Optional.of(new UserModel(uuid, login, issuer, token, name, email));
-        Optional<UserModel> expected = Optional.of(new UserModel(uuid, login, issuer, token, name, email));
+        boolean isEmailConfirmed = false;
+        Optional<UserModel> user = Optional.of(new UserModel(uuid, login, issuer, token, name, email, isEmailConfirmed));
+        Optional<UserModel> expected = Optional.of(new UserModel(uuid, login, issuer, token, name, email, isEmailConfirmed));
 
         when(mockAccountService.getUser(uuid)).thenReturn(user);
 
@@ -74,8 +75,9 @@ public class AccountControllerTests {
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
-        Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, token, name, email));
-        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email));
+        boolean isEmailConfirmed = false;
+        Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
+        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
 
         when(mockAccountService.getUserByLogin(login)).thenReturn(user);
         
@@ -94,8 +96,9 @@ public class AccountControllerTests {
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
-        Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, token, name, email));
-        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email));
+        boolean isEmailConfirmed = false;
+        Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
+        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
 
         when(mockAccountService.getUserByEmail(email)).thenReturn(user);
         
@@ -133,8 +136,9 @@ public class AccountControllerTests {
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
-        UserModel updatingUser = new UserModel(id, login, issuer, token, name, email);
-        UserModel updatedUser = new UserModel(id, login, issuer, token, name, email);
+        boolean isEmailConfirmed = false;
+        UserModel updatingUser = new UserModel(id, login, issuer, token, name, email, isEmailConfirmed);
+        UserModel updatedUser = new UserModel(id, login, issuer, token, name, email, isEmailConfirmed);
         
         when(mockAccountService.updateUser(updatingUser)).thenReturn(updatedUser);
 
@@ -154,7 +158,8 @@ public class AccountControllerTests {
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
-        UserModel updatingUser = new UserModel(id, login, issuer, token, name, email);
+        boolean isEmailConfirmed = false;
+        UserModel updatingUser = new UserModel(id, login, issuer, token, name, email, isEmailConfirmed);
         Runnable method = () -> {
             accountController.updateUser(id2.toString(), updatingUser);
         };

@@ -2,6 +2,7 @@ package nudemeth.poc.identity.entity;
 
 import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,8 +28,10 @@ import lombok.ToString;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
     @Getter
     private UUID id;
+    @Column(unique = true, nullable = false)
     @Getter @Setter @NonNull
     private String login;
     @Getter @Setter
@@ -39,4 +42,7 @@ public class UserEntity {
     private String name;
     @Getter @Setter
     private String email;
+    @Column(name = "email_confirmed", nullable = false)
+    @Getter @Setter
+    private boolean isEmailConfirmed;
 }

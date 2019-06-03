@@ -46,8 +46,9 @@ public class UserAccountServiceTests {
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
-        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, token, name, email));
-        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email));
+        boolean isEmailConfirmed = false;
+        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, token, name, email, isEmailConfirmed));
+        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
 
         when(mockUserRepo.findById(id)).thenReturn(entity);
 
@@ -80,8 +81,9 @@ public class UserAccountServiceTests {
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
-        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, token, name, email));
-        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email));
+        boolean isEmailConfirmed = false;
+        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, token, name, email, isEmailConfirmed));
+        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
 
         when(mockUserRepo.findByLogin(login)).thenReturn(entity);
 
@@ -114,8 +116,9 @@ public class UserAccountServiceTests {
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
-        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, token, name, email));
-        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email));
+        boolean isEmailConfirmed = false;
+        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, token, name, email, isEmailConfirmed));
+        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
 
         when(mockUserRepo.findByEmail(email)).thenReturn(entity);
 
@@ -148,7 +151,8 @@ public class UserAccountServiceTests {
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
-        UserEntity entity = new UserEntity(id, login, issuer, token, name, email);
+        boolean isEmailConfirmed = false;
+        UserEntity entity = new UserEntity(id, login, issuer, token, name, email, isEmailConfirmed);
         UserModel model = new UserModel(login);
         model.setName(name);
         model.setEmail(email);
@@ -181,8 +185,9 @@ public class UserAccountServiceTests {
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
-        UserEntity entity = new UserEntity(id, login, issuer, token, name, email);
-        UserModel model = new UserModel(id, login, issuer, token, name, email);
+        boolean isEmailConfirmed = false;
+        UserEntity entity = new UserEntity(id, login, issuer, token, name, email, isEmailConfirmed);
+        UserModel model = new UserModel(id, login, issuer, token, name, email, isEmailConfirmed);
 
         when(mockUserRepo.save(any(UserEntity.class))).thenReturn(entity);
 

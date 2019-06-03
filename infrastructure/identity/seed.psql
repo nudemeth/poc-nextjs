@@ -27,6 +27,6 @@ CREATE TABLE IF NOT EXISTS "address" (
     ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
-INSERT INTO "user" (user_id, login, issuer, "name", email) VALUES ('2f17c7e4-a6b6-4ba0-a1eb-9b4f6d2ce4df', 'testlogin', 'Test Issuer', 'Test Test', 'test@test.com');
+INSERT INTO "user" (user_id, login, issuer, "name", email, email_confirmed) VALUES ('2f17c7e4-a6b6-4ba0-a1eb-9b4f6d2ce4df', 'testlogin', 'Test Issuer', 'Test Test', 'test@test.com', false);
 
 ALTER TABLE public."user" OWNER TO "identity_owner";

@@ -29,4 +29,6 @@ public class UserModel {
     private String name;
     @Getter @Setter
     private String email;
+    @Getter @Setter
+    private boolean isEmailConfirmed;
 }
