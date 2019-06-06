@@ -28,6 +28,19 @@ services:
     networks:
       - microservices-net
 
+  identity-java:
+    container_name: identity-java.localhost
+    build:
+      context: ./identity-java
+    environment:
+      - "API_BASE_URL=http://api-go.localhost"
+      - "API_BASE_URL_TLS=https://api-go.localhost"
+      - "SPRING_PROFILES_ACTIVE=prod"
+    ports:
+      - "5432:5432"
+    networks:
+      - microservices-net
+
   api-go:
     container_name: api-go.localhost
     build:
