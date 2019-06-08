@@ -33,7 +33,7 @@ const getToken = (issuer, code) => {
         .then(r => r.json())
 }
 
-const getUserinfo = (issuer, token) => {
+const getUserInfo = (issuer, token) => {
     const options = {
         method: 'GET',
         headers: {
@@ -44,7 +44,7 @@ const getUserinfo = (issuer, token) => {
         .then(r => r.json())
 }
 
-const saveUserinfo = (issuer, token, login) => {
+const createUser = (issuer, token, login) => {
     const data = {
         issuer,
         token,
@@ -57,7 +57,7 @@ const saveUserinfo = (issuer, token, login) => {
         },
         body: JSON.stringify(data)
     }
-    return fetch(`${config.api.identity.uri}userinfo`, options)
+    return fetch(`${config.api.identity.uri}user`, options)
         .then(r => r.json())
 }
 
@@ -110,8 +110,8 @@ app
             }
 
             const token = await getToken(issuer, code)
-            const userinfo = await getUserinfo(issuer, token.access_token)
-            const result = await saveUserinfo(issuer, token, userinfo.login)
+            const userinfo = await getUserInfo(issuer, token.access_token)
+            const result = await createUser(issuer, token, userinfo.login)
 
             if (!result) {
                 return res.status(500).send('Authentication process failed.')
