@@ -56,17 +56,23 @@ func (service *Service) GetCatalog(url string, userAgent string) ([]byte, int, e
 }
 
 func (service *Service) GetUser(path string, login string, issuer string) ([]byte, int, error) {
-	req, err := http.NewRequest("GET", service.BaseURL+path, nil)
+	pathWithParams := fmt.Sprintf(path+"/%s", login)
+	log.Printf("login=%s", login)
+	req, err := http.NewRequest("GET", service.BaseURL+pathWithParams, nil)
 
 	if err != nil {
 		log.Printf("Error occur when creating request: service=%s, URI=%s\n%s", "Identity", path, err.Error())
 		return nil, 500, err
 	}
 
+	queryString := req.URL.Query()
+	queryString.Add("issuer", issuer)
+	req.URL.RawQuery = queryString.Encode()
+
 	res, err := service.Client.Do(req)
 
 	if err != nil {
-		log.Printf("Error occur when requesting: service=%s, URI=%s\n%s", "Identity", path, err.Error())
+		log.Printf("Error occur when requesting: service=%s, URI=%s\n%s", "Identity", pathWithParams, err.Error())
 		return nil, 500, err
 	}
 
