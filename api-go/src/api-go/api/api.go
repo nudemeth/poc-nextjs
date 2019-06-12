@@ -59,6 +59,8 @@ func (service *Service) GetUser(path string, login string, issuer string) ([]byt
 	pathWithParams := fmt.Sprintf(path+"/%s", login)
 	log.Printf("login=%s", login)
 	req, err := http.NewRequest("GET", service.BaseURL+pathWithParams, nil)
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Accept", "application/json")
 
 	if err != nil {
 		log.Printf("Error occur when creating request: service=%s, URI=%s\n%s", "Identity", path, err.Error())
@@ -92,6 +94,7 @@ func (service *Service) GetUser(path string, login string, issuer string) ([]byt
 
 func (service *Service) GetIdentityToken(url string) ([]byte, int, error) {
 	req, err := http.NewRequest("POST", url, nil)
+	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Accept", "application/json")
 
 	if err != nil {
@@ -123,6 +126,7 @@ func (service *Service) GetIdentityToken(url string) ([]byte, int, error) {
 func (service *Service) GetIdentityUserInfo(url string, token string) ([]byte, int, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	req.Header.Add("Accept", "application/json")
+	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", fmt.Sprintf("token %s", token))
 	req.Header.Add("User-Agent", "poc-microservice-dev")
 
@@ -160,7 +164,8 @@ func (service *Service) CreateUser(path string, issuer string, token string, log
 	dataReader := strings.NewReader(data.Encode())
 
 	req, err := http.NewRequest("POST", service.BaseURL+path, dataReader)
-	req.Header.Add("Accept", "application/json;charset=UTF-8")
+	req.Header.Add("Accept", "application/json")
+	req.Header.Add("Content-Type", "application/json")
 
 	if err != nil {
 		log.Printf("Error occur when creating request: service=%s, URI=%s\n%s", "Identity", path, err.Error())
