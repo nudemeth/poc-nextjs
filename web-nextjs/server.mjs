@@ -57,7 +57,7 @@ const createUser = (issuer, token, login) => {
         },
         body: JSON.stringify(data)
     }
-    return fetch(`${config.api.identity.uri}user`, options)
+    return fetch(`${config.api.identity.uri}users`, options)
         .then(r => r.json())
 }
 
