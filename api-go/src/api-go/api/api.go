@@ -1,12 +1,12 @@
 package api
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
-	"strings"
 )
 
 type CatalogService interface {
@@ -157,13 +157,17 @@ func (service *Service) GetIdentityUserInfo(url string, token string) ([]byte, i
 }
 
 func (service *Service) CreateUser(path string, issuer string, token string, login string) ([]byte, int, error) {
-	data := url.Values{}
-	data.Set("issuer", issuer)
-	data.Set("token", token)
-	data.Set("login", login)
-	dataReader := strings.NewReader(data.Encode())
+	data := map[string]string{
+		"issuer": issuer,
+		"token":  token,
+		"login":  login}
+	jsonValue, err := json.Marshal(data)
 
-	req, err := http.NewRequest("POST", service.BaseURL+path, dataReader)
+	if err != nil {
+		log.Printf("Error occur when parsing request: service=%s, URI=%s\n%s", "Identity", path, err.Error())
+	}
+
+	req, err := http.NewRequest("POST", service.BaseURL+path, bytes.NewBuffer(jsonValue))
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
 
