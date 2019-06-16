@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"api-go/api"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -9,6 +10,16 @@ import (
 	"path"
 	"strings"
 )
+
+type UserModel struct {
+	ID               string `json:"id"`
+	Login            string `json:"login"`
+	Issuer           string `json:"issuer"`
+	Token            string `json:"token"`
+	Name             string `json:"name"`
+	Email            string `json:"email"`
+	IsEmailConfirmed bool   `json:"isEmailConfirmed"`
+}
 
 func identity(w http.ResponseWriter, req *http.Request, service *api.Service) {
 	var res []byte
@@ -24,11 +35,18 @@ func identity(w http.ResponseWriter, req *http.Request, service *api.Service) {
 		token := req.URL.Query().Get("token")
 		url := getUserInfoURL(issuer)
 		res, status, err = service.GetIdentityUserInfo(url, token)
-	} else if strings.Index(req.URL.Path, "/users") > -1 && req.Method == "POST" {
-		issuer := req.FormValue("issuer")
-		token := req.FormValue("token")
-		login := req.FormValue("login")
-		res, status, err = service.CreateUser("/api/v1/identity/users", issuer, token, login)
+	} else if strings.Index(req.URL.Path, "/users") > -1 && req.Method == "POST" && req.Body != nil {
+		decoder := json.NewDecoder(req.Body)
+		var user UserModel
+		err := decoder.Decode(&user)
+
+		if err == nil {
+			issuer := user.Issuer
+			token := user.Token
+			login := user.Login
+			res, status, err = service.CreateUser("/api/v1/identity/users", issuer, token, login)
+		}
+
 	} else if strings.Index(req.URL.Path, "/users/login") > -1 && req.Method == "GET" {
 		login := path.Base(req.URL.Path)
 		issuer := req.URL.Query().Get("issuer")
@@ -44,6 +62,7 @@ func identity(w http.ResponseWriter, req *http.Request, service *api.Service) {
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	w.Write(res)
 }
