@@ -3,16 +3,18 @@ package nudemeth.poc.identity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-public class Configurer implements WebMvcConfigurer {
+@Configuration
+public class CorsConfigurer implements WebMvcConfigurer {
 
     @Autowired
     private Environment environment;
 
-    private Logger logger = LoggerFactory.getLogger(Configurer.class);
+    private Logger logger = LoggerFactory.getLogger(CorsConfigurer.class);
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
