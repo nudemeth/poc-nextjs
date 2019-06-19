@@ -24,6 +24,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import nudemeth.poc.identity.model.UserModel;
 import nudemeth.poc.identity.service.AccountService;
@@ -100,8 +101,12 @@ public class AccountTests {
 
         when(mockAccountService.getUserByLogin(login)).thenReturn(user);
         
-        this.mockMvc.perform(get(String.format("/users/login/%s", login)))
+        MvcResult result = this.mockMvc.perform(get(String.format("/users/login/%s", login)))
+            .andExpect(request().asyncStarted())
             .andDo(print())
+            .andReturn();
+        
+        this.mockMvc.perform(asyncDispatch(result))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(id.toString()))
             .andExpect(jsonPath("$.login").value(login))

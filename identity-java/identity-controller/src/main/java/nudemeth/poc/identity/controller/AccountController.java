@@ -2,10 +2,12 @@ package nudemeth.poc.identity.controller;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,9 +31,10 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+    @Async("asyncExecutor")
     @GetMapping(path = "/users/login/{login}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-    public Optional<UserModel> getUserByLogin(@PathVariable(required = true) String login) {
-        return accountService.getUserByLogin(login);
+    public CompletableFuture<Optional<UserModel>> getUserByLogin(@PathVariable(required = true) String login) {
+        return CompletableFuture.completedFuture(accountService.getUserByLogin(login));
     }
 
     @GetMapping(path = "/users/email/{email}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })

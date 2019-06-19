@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -81,9 +82,9 @@ public class AccountControllerTests {
 
         when(mockAccountService.getUserByLogin(login)).thenReturn(user);
         
-        Optional<UserModel> actual = accountController.getUserByLogin(login);
-
-        Assert.assertThat(actual.get(), samePropertyValuesAs(expected.get()));
+        CompletableFuture<Optional<UserModel>> actual = accountController.getUserByLogin(login);
+        
+        Assert.assertThat(actual.get().get(), samePropertyValuesAs(expected.get()));
 
         verify(mockAccountService, only()).getUserByLogin(login);
     }
