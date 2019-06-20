@@ -37,15 +37,17 @@ public class AccountController {
         return CompletableFuture.completedFuture(accountService.getUserByLogin(login));
     }
 
+    @Async("asyncExecutor")
     @GetMapping(path = "/users/email/{email}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-    public Optional<UserModel> getUserByEmail(@PathVariable(required = true) String email) {
-        return accountService.getUserByEmail(email);
+    public CompletableFuture<Optional<UserModel>> getUserByEmail(@PathVariable(required = true) String email) {
+        return CompletableFuture.completedFuture(accountService.getUserByEmail(email));
     }
 
+    @Async("asyncExecutor")
     @GetMapping(path = "/users/{id}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-    public Optional<UserModel> getUser(@PathVariable(required = true) String id) {
+    public CompletableFuture<Optional<UserModel>> getUser(@PathVariable(required = true) String id) {
         UUID uuid = getUuidFromString(id);
-        return accountService.getUser(uuid);
+        return CompletableFuture.completedFuture(accountService.getUser(uuid));
     }
 
     @ResponseStatus(code = HttpStatus.CREATED)

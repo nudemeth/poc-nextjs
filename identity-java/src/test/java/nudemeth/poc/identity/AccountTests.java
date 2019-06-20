@@ -65,7 +65,11 @@ public class AccountTests {
 
         when(mockAccountService.getUser(id)).thenReturn(user);
         
-        this.mockMvc.perform(get(String.format("/users/%s", id.toString())))
+        MvcResult asyncResult = this.mockMvc.perform(get(String.format("/users/%s", id.toString())))
+            .andExpect(request().asyncStarted())
+            .andReturn();
+
+        this.mockMvc.perform(asyncDispatch(asyncResult))
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(id.toString()))
@@ -80,7 +84,11 @@ public class AccountTests {
     public void getUser_WhenWithInvalidIdPathParam_ShouldReturnBadRequest() throws Exception {
         String id = "some-invalid-uuid";
         
-        this.mockMvc.perform(get(String.format("/users/%s", id)))
+        MvcResult asyncResult = this.mockMvc.perform(get(String.format("/users/%s", id)))
+            .andExpect(request().asyncStarted())
+            .andReturn();
+
+        this.mockMvc.perform(asyncDispatch(asyncResult))
             .andDo(print())
             .andExpect(status().isBadRequest())
             .andExpect(status().reason(String.format("Invalid UUID string: %s", id)));
@@ -101,12 +109,12 @@ public class AccountTests {
 
         when(mockAccountService.getUserByLogin(login)).thenReturn(user);
         
-        MvcResult result = this.mockMvc.perform(get(String.format("/users/login/%s", login)))
+        MvcResult asyncResult = this.mockMvc.perform(get(String.format("/users/login/%s", login)))
             .andExpect(request().asyncStarted())
-            .andDo(print())
             .andReturn();
         
-        this.mockMvc.perform(asyncDispatch(result))
+        this.mockMvc.perform(asyncDispatch(asyncResult))
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(id.toString()))
             .andExpect(jsonPath("$.login").value(login))
@@ -129,7 +137,11 @@ public class AccountTests {
 
         when(mockAccountService.getUserByEmail(email)).thenReturn(user);
         
-        this.mockMvc.perform(get(String.format("/users/email/%s", email)))
+        MvcResult asyncResult = this.mockMvc.perform(get(String.format("/users/email/%s", email)))
+            .andExpect(request().asyncStarted())
+            .andReturn();
+
+        this.mockMvc.perform(asyncDispatch(asyncResult))
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(id.toString()))

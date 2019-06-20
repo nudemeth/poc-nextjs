@@ -48,9 +48,9 @@ public class AccountControllerTests {
 
         when(mockAccountService.getUser(uuid)).thenReturn(user);
 
-        Optional<UserModel> actual = accountController.getUser(id);
+        CompletableFuture<Optional<UserModel>> actual = accountController.getUser(id);
 
-        Assert.assertThat(actual.get(), samePropertyValuesAs(expected.get()));
+        Assert.assertThat(actual.get().get(), samePropertyValuesAs(expected.get()));
 
         verify(mockAccountService, only()).getUser(uuid);
     }
@@ -103,9 +103,9 @@ public class AccountControllerTests {
 
         when(mockAccountService.getUserByEmail(email)).thenReturn(user);
         
-        Optional<UserModel> actual = accountController.getUserByEmail(email);
+        CompletableFuture<Optional<UserModel>> actual = accountController.getUserByEmail(email);
 
-        Assert.assertThat(actual.get(), samePropertyValuesAs(expected.get()));
+        Assert.assertThat(actual.get().get(), samePropertyValuesAs(expected.get()));
 
         verify(mockAccountService, only()).getUserByEmail(email);
     }
