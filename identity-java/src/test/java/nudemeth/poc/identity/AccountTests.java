@@ -165,12 +165,16 @@ public class AccountTests {
         
         when(mockAccountService.createUser(user)).thenReturn(id);
         
-        this.mockMvc.perform(
+        MvcResult asyncResult = this.mockMvc.perform(
                 post("/users")
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(jsonUser)
             )
+            .andExpect(request().asyncStarted())
+            .andReturn();
+        
+        this.mockMvc.perform(asyncDispatch(asyncResult))
             .andDo(print())
             .andExpect(status().isCreated())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -219,12 +223,16 @@ public class AccountTests {
         
         when(mockAccountService.updateUser(updatingUser)).thenReturn(updatedUser);
         
-        this.mockMvc.perform(
+        MvcResult asyncResult = this.mockMvc.perform(
                 put(String.format("/users/%s", id.toString()))
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(jsonUser)
             )
+            .andExpect(request().asyncStarted())
+            .andReturn();
+
+        this.mockMvc.perform(asyncDispatch(asyncResult))
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -249,12 +257,16 @@ public class AccountTests {
         UserModel updatingUser = new UserModel(id1, login, issuer, token, name, email, isEmailConfirmed);
         String jsonUser = mapper.writeValueAsString(updatingUser);
         
-        this.mockMvc.perform(
+        MvcResult asyncResult = this.mockMvc.perform(
                 put(String.format("/users/%s", id2.toString()))
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(jsonUser)
             )
+            .andExpect(request().asyncStarted())
+            .andReturn();
+        
+        this.mockMvc.perform(asyncDispatch(asyncResult))
             .andDo(print())
             .andExpect(status().isBadRequest())
             .andExpect(status().reason(String.format("Invalid updating id: %s and %s", id2.toString(), id1.toString())));
@@ -275,12 +287,16 @@ public class AccountTests {
         UserModel updatingUser = new UserModel(uuid, login, issuer, token, name, email, isEmailConfirmed);
         String jsonUser = mapper.writeValueAsString(updatingUser);
 
-        this.mockMvc.perform(
+        MvcResult asyncResult = this.mockMvc.perform(
                 put(String.format("/users/%s", id))
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(jsonUser)
             )
+            .andExpect(request().asyncStarted())
+            .andReturn();
+            
+        this.mockMvc.perform(asyncDispatch(asyncResult))
             .andDo(print())
             .andExpect(status().isBadRequest())
             .andExpect(status().reason(String.format("Invalid UUID string: %s", id)));
@@ -304,9 +320,13 @@ public class AccountTests {
     public void deleteUser_WhenWithIdPathParam_ShouldReturnJsonUser() throws Exception {
         UUID id = UUID.randomUUID();
 
-        this.mockMvc.perform(
+        MvcResult asyncResult = this.mockMvc.perform(
                 delete(String.format("/users/%s", id.toString()))
             )
+            .andExpect(request().asyncStarted())
+            .andReturn();
+            
+        this.mockMvc.perform(asyncDispatch(asyncResult))
             .andDo(print())
             .andExpect(status().isNoContent());
 
@@ -317,9 +337,13 @@ public class AccountTests {
     public void deleteUser_WhenWithInvalidIdPathParam_ShouldReturnBadRequest() throws Exception {
         String id = "some-invalid-uuid";
         
-        this.mockMvc.perform(
+        MvcResult asyncResult = this.mockMvc.perform(
                 delete(String.format("/users/%s", id))
             )
+            .andExpect(request().asyncStarted())
+            .andReturn();
+
+        this.mockMvc.perform(asyncDispatch(asyncResult))
             .andDo(print())
             .andExpect(status().isBadRequest())
             .andExpect(status().reason(String.format("Invalid UUID string: %s", id)));

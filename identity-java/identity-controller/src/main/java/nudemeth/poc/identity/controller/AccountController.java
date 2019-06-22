@@ -50,26 +50,30 @@ public class AccountController {
         return CompletableFuture.completedFuture(accountService.getUser(uuid));
     }
 
+    @Async("asyncExecutor")
     @ResponseStatus(code = HttpStatus.CREATED)
     @PostMapping(path = "/users", consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE }, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-    public UUID createUser(@RequestBody UserModel model) {
-        return accountService.createUser(model);
+    public CompletableFuture<UUID> createUser(@RequestBody UserModel model) {
+        return CompletableFuture.completedFuture(accountService.createUser(model));
     }
 
+    @Async("asyncExecutor")
     @PutMapping(path = "/users/{id}", consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE }, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-    public UserModel updateUser(@PathVariable(required = true) String id, @RequestBody UserModel model) {
+    public CompletableFuture<UserModel> updateUser(@PathVariable(required = true) String id, @RequestBody UserModel model) {
         UUID uuid = getUuidFromString(id);
         if (!uuid.equals(model.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("Invalid updating id: %s and %s", id, model.getId().toString()));
         }
-        return accountService.updateUser(model);
+        return CompletableFuture.completedFuture(accountService.updateUser(model));
     }
 
+    @Async("asyncExecutor")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "/users/{id}")
-    public void deleteUser(@PathVariable(required = true) String id) {
+    public CompletableFuture<Void> deleteUser(@PathVariable(required = true) String id) {
         UUID uuid = getUuidFromString(id);
         accountService.deleteUser(uuid);
+        return CompletableFuture.completedFuture(null);
     }
 
     private UUID getUuidFromString(String id) throws ResponseStatusException {

@@ -122,9 +122,9 @@ public class AccountControllerTests {
         
         when(mockAccountService.createUser(user)).thenReturn(id);
 
-        UUID actual = accountController.createUser(user);
+        CompletableFuture<UUID> actual = accountController.createUser(user);
 
-        Assert.assertEquals(id, actual);
+        Assert.assertEquals(id, actual.get());
         
         verify(mockAccountService, only()).createUser(user);
     }
@@ -143,9 +143,9 @@ public class AccountControllerTests {
         
         when(mockAccountService.updateUser(updatingUser)).thenReturn(updatedUser);
 
-        UserModel actual = accountController.updateUser(id.toString(), updatingUser);
+        CompletableFuture<UserModel> actual = accountController.updateUser(id.toString(), updatingUser);
 
-        Assert.assertThat(actual, samePropertyValuesAs(updatedUser));
+        Assert.assertThat(actual.get(), samePropertyValuesAs(updatedUser));
         
         verify(mockAccountService, only()).updateUser(updatingUser);
     }
