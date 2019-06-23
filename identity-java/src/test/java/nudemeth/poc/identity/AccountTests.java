@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -63,7 +64,7 @@ public class AccountTests {
         boolean isEmailConfirmed = false;
         Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
 
-        when(mockAccountService.getUser(id)).thenReturn(user);
+        when(mockAccountService.getUser(id)).thenReturn(CompletableFuture.completedFuture(user));
         
         MvcResult asyncResult = this.mockMvc.perform(get(String.format("/users/%s", id.toString())))
             .andExpect(request().asyncStarted())
@@ -107,7 +108,7 @@ public class AccountTests {
         boolean isEmailConfirmed = false;
         Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
 
-        when(mockAccountService.getUserByLogin(login)).thenReturn(user);
+        when(mockAccountService.getUserByLogin(login)).thenReturn(CompletableFuture.completedFuture(user));
         
         MvcResult asyncResult = this.mockMvc.perform(get(String.format("/users/login/%s", login)))
             .andExpect(request().asyncStarted())
@@ -135,7 +136,7 @@ public class AccountTests {
         boolean isEmailConfirmed = false;
         Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
 
-        when(mockAccountService.getUserByEmail(email)).thenReturn(user);
+        when(mockAccountService.getUserByEmail(email)).thenReturn(CompletableFuture.completedFuture(user));
         
         MvcResult asyncResult = this.mockMvc.perform(get(String.format("/users/email/%s", email)))
             .andExpect(request().asyncStarted())
@@ -163,7 +164,7 @@ public class AccountTests {
         user.setEmail(email);
         String jsonUser = mapper.writeValueAsString(user);
         
-        when(mockAccountService.createUser(user)).thenReturn(id);
+        when(mockAccountService.createUser(user)).thenReturn(CompletableFuture.completedFuture(id));
         
         MvcResult asyncResult = this.mockMvc.perform(
                 post("/users")
@@ -221,7 +222,7 @@ public class AccountTests {
         UserModel updatedUser = new UserModel(id, login, issuer, token, name, email, isEmailConfirmed);
         String jsonUser = mapper.writeValueAsString(updatingUser);
         
-        when(mockAccountService.updateUser(updatingUser)).thenReturn(updatedUser);
+        when(mockAccountService.updateUser(updatingUser)).thenReturn(CompletableFuture.completedFuture(updatedUser));
         
         MvcResult asyncResult = this.mockMvc.perform(
                 put(String.format("/users/%s", id.toString()))

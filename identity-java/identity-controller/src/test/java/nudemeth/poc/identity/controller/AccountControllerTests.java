@@ -46,7 +46,7 @@ public class AccountControllerTests {
         Optional<UserModel> user = Optional.of(new UserModel(uuid, login, issuer, token, name, email, isEmailConfirmed));
         Optional<UserModel> expected = Optional.of(new UserModel(uuid, login, issuer, token, name, email, isEmailConfirmed));
 
-        when(mockAccountService.getUser(uuid)).thenReturn(user);
+        when(mockAccountService.getUser(uuid)).thenReturn(CompletableFuture.completedFuture(user));
 
         CompletableFuture<Optional<UserModel>> actual = accountController.getUser(id);
 
@@ -80,7 +80,7 @@ public class AccountControllerTests {
         Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
         Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
 
-        when(mockAccountService.getUserByLogin(login)).thenReturn(user);
+        when(mockAccountService.getUserByLogin(login)).thenReturn(CompletableFuture.completedFuture(user));
         
         CompletableFuture<Optional<UserModel>> actual = accountController.getUserByLogin(login);
         
@@ -101,7 +101,7 @@ public class AccountControllerTests {
         Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
         Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
 
-        when(mockAccountService.getUserByEmail(email)).thenReturn(user);
+        when(mockAccountService.getUserByEmail(email)).thenReturn(CompletableFuture.completedFuture(user));
         
         CompletableFuture<Optional<UserModel>> actual = accountController.getUserByEmail(email);
 
@@ -120,7 +120,7 @@ public class AccountControllerTests {
         user.setName(name);
         user.setEmail(email);
         
-        when(mockAccountService.createUser(user)).thenReturn(id);
+        when(mockAccountService.createUser(user)).thenReturn(CompletableFuture.completedFuture(id));
 
         CompletableFuture<UUID> actual = accountController.createUser(user);
 
@@ -141,7 +141,7 @@ public class AccountControllerTests {
         UserModel updatingUser = new UserModel(id, login, issuer, token, name, email, isEmailConfirmed);
         UserModel updatedUser = new UserModel(id, login, issuer, token, name, email, isEmailConfirmed);
         
-        when(mockAccountService.updateUser(updatingUser)).thenReturn(updatedUser);
+        when(mockAccountService.updateUser(updatingUser)).thenReturn(CompletableFuture.completedFuture(updatedUser));
 
         CompletableFuture<UserModel> actual = accountController.updateUser(id.toString(), updatingUser);
 

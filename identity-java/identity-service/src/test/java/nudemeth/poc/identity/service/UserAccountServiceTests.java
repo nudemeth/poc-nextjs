@@ -9,6 +9,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,7 +41,7 @@ public class UserAccountServiceTests {
     }
 
     @Test
-    public void getUser_WhenFound_ShouldReturnUserModel() {
+    public void getUser_WhenFound_ShouldReturnUserModel() throws InterruptedException, ExecutionException {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
         String name = "Test Name";
@@ -52,29 +54,29 @@ public class UserAccountServiceTests {
 
         when(mockUserRepo.findById(id)).thenReturn(entity);
 
-        Optional<UserModel> actual = userAccountService.getUser(id);
+        CompletableFuture<Optional<UserModel>> actual = userAccountService.getUser(id);
         
-        Assert.assertThat(actual.get(), samePropertyValuesAs(expected.get()));
+        Assert.assertThat(actual.get().get(), samePropertyValuesAs(expected.get()));
 
         verify(mockUserRepo, only()).findById(id);
     }
 
     @Test
-    public void getUser_WhenNotFound_ShouldReturnEmptyUserModel() {
+    public void getUser_WhenNotFound_ShouldReturnEmptyUserModel() throws InterruptedException, ExecutionException {
         UUID id = UUID.randomUUID();
         Optional<UserEntity> entity = Optional.empty();
         
         when(mockUserRepo.findById(id)).thenReturn(entity);
 
-        Optional<UserModel> actual = userAccountService.getUser(id);
+        CompletableFuture<Optional<UserModel>> actual = userAccountService.getUser(id);
         
-        Assert.assertFalse(actual.isPresent());
+        Assert.assertFalse(actual.get().isPresent());
 
         verify(mockUserRepo, only()).findById(id);
     }
 
     @Test
-    public void getUserByLogin_WhenFound_ShouldReturnUserModel() {
+    public void getUserByLogin_WhenFound_ShouldReturnUserModel() throws InterruptedException, ExecutionException {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
         String name = "Test Name";
@@ -87,29 +89,30 @@ public class UserAccountServiceTests {
 
         when(mockUserRepo.findByLogin(login)).thenReturn(entity);
 
-        Optional<UserModel> actual = userAccountService.getUserByLogin(login);
+        CompletableFuture<Optional<UserModel>> actual = userAccountService.getUserByLogin(login);
         
-        Assert.assertThat(actual.get(), samePropertyValuesAs(expected.get()));
+        Assert.assertThat(actual.get().get(), samePropertyValuesAs(expected.get()));
 
         verify(mockUserRepo, only()).findByLogin(login);
     }
 
     @Test
-    public void getUserByLogin_WhenNotFound_ShouldReturnEmptyUserModel() {
+    public void getUserByLogin_WhenNotFound_ShouldReturnEmptyUserModel()
+            throws InterruptedException, ExecutionException {
         String login = "testLogin";
         Optional<UserEntity> entity = Optional.empty();
         
         when(mockUserRepo.findByLogin(login)).thenReturn(entity);
 
-        Optional<UserModel> actual = userAccountService.getUserByLogin(login);
+        CompletableFuture<Optional<UserModel>> actual = userAccountService.getUserByLogin(login);
         
-        Assert.assertFalse(actual.isPresent());
+        Assert.assertFalse(actual.get().isPresent());
 
         verify(mockUserRepo, only()).findByLogin(login);
     }
 
     @Test
-    public void getUserByEmail_WhenFound_ShouldReturnUserModel() {
+    public void getUserByEmail_WhenFound_ShouldReturnUserModel() throws InterruptedException, ExecutionException {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
         String name = "Test Name";
@@ -122,29 +125,30 @@ public class UserAccountServiceTests {
 
         when(mockUserRepo.findByEmail(email)).thenReturn(entity);
 
-        Optional<UserModel> actual = userAccountService.getUserByEmail(email);
+        CompletableFuture<Optional<UserModel>> actual = userAccountService.getUserByEmail(email);
         
-        Assert.assertThat(actual.get(), samePropertyValuesAs(expected.get()));
+        Assert.assertThat(actual.get().get(), samePropertyValuesAs(expected.get()));
 
         verify(mockUserRepo, only()).findByEmail(email);
     }
 
     @Test
-    public void getUserByEmail_WhenNotFound_ShouldReturnEmptyUserModel() {
+    public void getUserByEmail_WhenNotFound_ShouldReturnEmptyUserModel()
+            throws InterruptedException, ExecutionException {
         String email = "Test.Email@test.com";
         Optional<UserEntity> entity = Optional.empty();
         
         when(mockUserRepo.findByEmail(email)).thenReturn(entity);
 
-        Optional<UserModel> actual = userAccountService.getUserByEmail(email);
+        CompletableFuture<Optional<UserModel>> actual = userAccountService.getUserByEmail(email);
         
-        Assert.assertFalse(actual.isPresent());
+        Assert.assertFalse(actual.get().isPresent());
 
         verify(mockUserRepo, only()).findByEmail(email);
     }
 
     @Test
-    public void createUser_WhenSuccess_ShouldReturnUUID() {
+    public void createUser_WhenSuccess_ShouldReturnUUID() throws InterruptedException, ExecutionException {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
         String name = "Test Name";
@@ -159,9 +163,9 @@ public class UserAccountServiceTests {
 
         when(mockUserRepo.save(any(UserEntity.class))).thenReturn(entity);
 
-        UUID actual = userAccountService.createUser(model);
+        CompletableFuture<UUID> actual = userAccountService.createUser(model);
 
-        Assert.assertEquals(id, actual);
+        Assert.assertEquals(id, actual.get());
 
         verify(mockUserRepo, only()).save(any(UserEntity.class));
     }
@@ -178,7 +182,7 @@ public class UserAccountServiceTests {
     }
 
     @Test
-    public void updateUser_WhenSuccess_ShouldReturnUserModel() {
+    public void updateUser_WhenSuccess_ShouldReturnUserModel() throws InterruptedException, ExecutionException {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
         String name = "Test Name";
@@ -191,9 +195,9 @@ public class UserAccountServiceTests {
 
         when(mockUserRepo.save(any(UserEntity.class))).thenReturn(entity);
 
-        UserModel actual = userAccountService.updateUser(model);
+        CompletableFuture<UserModel> actual = userAccountService.updateUser(model);
 
-        Assert.assertThat(actual, samePropertyValuesAs(model));
+        Assert.assertThat(actual.get(), samePropertyValuesAs(model));
 
         verify(mockUserRepo, only()).save(entity);
     }

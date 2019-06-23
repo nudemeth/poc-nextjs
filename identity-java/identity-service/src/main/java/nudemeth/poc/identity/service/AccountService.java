@@ -2,14 +2,15 @@ package nudemeth.poc.identity.service;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import nudemeth.poc.identity.model.UserModel;
 
 public interface AccountService {
-    Optional<UserModel> getUser(UUID id);
-    Optional<UserModel> getUserByLogin(String login);
-    Optional<UserModel> getUserByEmail(String email);
-    UUID createUser(UserModel model);
-    void deleteUser(UUID id);
-    UserModel updateUser(UserModel model);
+    CompletableFuture<Optional<UserModel>> getUser(UUID id);
+    CompletableFuture<Optional<UserModel>> getUserByLogin(String login);
+    CompletableFuture<Optional<UserModel>> getUserByEmail(String email);
+    CompletableFuture<UUID> createUser(UserModel model);
+    CompletableFuture<Void> deleteUser(UUID id);
+    CompletableFuture<UserModel> updateUser(UserModel model);
 }
