@@ -24,7 +24,7 @@ public class AES256CBCCipherService implements CipherService {
         this.salt = salt;
     }
 
-    // @Override
+    @Override
     public String encrypt(String message) {
         try {
             IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes("UTF-8"));
