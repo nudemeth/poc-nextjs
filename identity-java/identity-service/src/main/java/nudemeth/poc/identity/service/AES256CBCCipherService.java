@@ -12,11 +12,16 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class AES256CBCCipherService implements CipherService {
 
     private final String key;
     private final String iv;
     private final String salt;
+
+    private Logger logger = LoggerFactory.getLogger(AES256CBCCipherService.class);
 
     public AES256CBCCipherService(String key, String iv, String salt) {
         this.key = key;
@@ -36,9 +41,9 @@ public class AES256CBCCipherService implements CipherService {
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
             return Base64.getEncoder().encodeToString(cipher.doFinal(message.getBytes("UTF-8")));
         } catch (GeneralSecurityException ex) {
-
+            logger.error(ex.getMessage(), ex);
         } catch (UnsupportedEncodingException ex) {
-
+            logger.error(ex.getMessage(), ex);
         }
         return null;
     }
@@ -55,9 +60,9 @@ public class AES256CBCCipherService implements CipherService {
             cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec);
             return new String(cipher.doFinal(Base64.getDecoder().decode(message)));
         } catch (GeneralSecurityException ex) {
-
+            logger.error(ex.getMessage(), ex);
         } catch (UnsupportedEncodingException ex) {
-
+            logger.error(ex.getMessage(), ex);
         }
         return null;
     }
