@@ -14,27 +14,27 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import nudemeth.poc.identity.config.CipherConfig;
 
 public class AES256CBCCipherService implements CipherService {
 
-    private final String key;
-    private final String iv;
-    private final String salt;
+    private final CipherConfig config;
 
     private Logger logger = LoggerFactory.getLogger(AES256CBCCipherService.class);
 
-    public AES256CBCCipherService(String key, String iv, String salt) {
-        this.key = key;
-        this.iv = iv;
-        this.salt = salt;
+    @Autowired
+    public AES256CBCCipherService(CipherConfig config) {
+        this.config = config;
     }
 
     @Override
     public String encrypt(String message) {
         try {
-            IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes("UTF-8"));
+            IvParameterSpec ivSpec = new IvParameterSpec(config.getIv().getBytes("UTF-8"));
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-            KeySpec spec = new PBEKeySpec(key.toCharArray(), salt.getBytes(), 65536, 256);
+            KeySpec spec = new PBEKeySpec(config.getKey().toCharArray(), config.getSalt().getBytes(), 65536, 256);
             SecretKey tmp = factory.generateSecret(spec);
             SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), "AES");
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
@@ -51,9 +51,9 @@ public class AES256CBCCipherService implements CipherService {
     @Override
     public String decrypt(String message) {
         try {
-            IvParameterSpec ivspec = new IvParameterSpec(iv.getBytes("UTF-8"));
+            IvParameterSpec ivspec = new IvParameterSpec(config.getIv().getBytes("UTF-8"));
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-            KeySpec spec = new PBEKeySpec(key.toCharArray(), salt.getBytes(), 65536, 256);
+            KeySpec spec = new PBEKeySpec(config.getKey().toCharArray(), config.getSalt().getBytes(), 65536, 256);
             SecretKey tmp = factory.generateSecret(spec);
             SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), "AES");
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
