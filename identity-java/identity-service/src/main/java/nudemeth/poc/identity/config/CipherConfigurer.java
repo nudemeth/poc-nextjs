@@ -4,9 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
-import lombok.Getter;
-import lombok.Setter;
-
 @Configuration
 public class CipherConfigurer {
 
