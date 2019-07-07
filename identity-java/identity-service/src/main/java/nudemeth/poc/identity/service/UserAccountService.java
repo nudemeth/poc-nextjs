@@ -18,11 +18,13 @@ public class UserAccountService implements AccountService {
 
     private UserRepository userRepo;
     private UserMapper userMapper;
+    private CipherService cipherService;
 
     @Autowired
-    public UserAccountService(UserRepository userRepo, UserMapper userMapper) {
+    public UserAccountService(UserRepository userRepo, UserMapper userMapper, CipherService cipherService) {
         this.userRepo = userRepo;
         this.userMapper = userMapper;
+        this.cipherService = cipherService;
     }
 
     @Override
@@ -52,7 +54,9 @@ public class UserAccountService implements AccountService {
     @Override
     @Async("asyncExecutor")
     public CompletableFuture<UUID> createUser(UserModel model) {
+        String encrypted = cipherService.encrypt(model.getLogin());
         UserEntity entity = userMapper.convertToEntity(model);
+        entity.setLogin(encrypted);
         UserEntity createdEntity = userRepo.save(entity);
         return CompletableFuture.completedFuture(createdEntity.getId());
     }

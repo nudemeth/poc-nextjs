@@ -24,6 +24,7 @@ import nudemeth.poc.identity.entity.UserEntity;
 import nudemeth.poc.identity.mapper.UserMapper;
 import nudemeth.poc.identity.model.UserModel;
 import nudemeth.poc.identity.repository.UserRepository;
+import nudemeth.poc.identity.config.CipherConfig;;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserAccountServiceTests {
@@ -31,13 +32,16 @@ public class UserAccountServiceTests {
     @Mock
     private UserRepository mockUserRepo;
     private UserMapper userMapper;
+    private CipherService cipherService;
     private UserAccountService userAccountService;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        CipherConfig config = new CipherConfig("1234567890123456", "key", "salt");
+        cipherService = new AES256CBCCipherService(config);
         userMapper = new UserMapper();
-        userAccountService = new UserAccountService(mockUserRepo, userMapper);
+        userAccountService = new UserAccountService(mockUserRepo, userMapper, cipherService);
     }
 
     @Test
