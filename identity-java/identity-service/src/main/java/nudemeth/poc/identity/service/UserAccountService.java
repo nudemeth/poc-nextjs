@@ -38,8 +38,13 @@ public class UserAccountService implements AccountService {
     @Override
     @Async("asyncExecutor")
     public CompletableFuture<Optional<UserModel>> getUserByLogin(String login) {
-        Optional<UserEntity> entity = userRepo.findByLogin(login);
-        Optional<UserModel> model = userMapper.convertToModel(entity);
+        String encrypted = cipherService.encrypt(login);
+        Optional<UserEntity> entity = userRepo.findByLogin(encrypted);
+        Optional<UserModel> model = userMapper.convertToModel(entity).map(m ->
+        {
+            m.setLogin(login);
+            return m;
+        });
         return CompletableFuture.completedFuture(model);
     }
 

@@ -83,36 +83,38 @@ public class UserAccountServiceTests {
     public void getUserByLogin_WhenFound_ShouldReturnUserModel() throws InterruptedException, ExecutionException {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
+        String encrypted = cipherService.encrypt(login);
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
         boolean isEmailConfirmed = false;
-        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, token, name, email, isEmailConfirmed));
+        Optional<UserEntity> entity = Optional.of(new UserEntity(id, encrypted, issuer, token, name, email, isEmailConfirmed));
         Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
 
-        when(mockUserRepo.findByLogin(login)).thenReturn(entity);
+        when(mockUserRepo.findByLogin(encrypted)).thenReturn(entity);
 
         CompletableFuture<Optional<UserModel>> actual = userAccountService.getUserByLogin(login);
         
         Assert.assertThat(actual.get().get(), samePropertyValuesAs(expected.get()));
 
-        verify(mockUserRepo, only()).findByLogin(login);
+        verify(mockUserRepo, only()).findByLogin(encrypted);
     }
 
     @Test
     public void getUserByLogin_WhenNotFound_ShouldReturnEmptyUserModel()
             throws InterruptedException, ExecutionException {
         String login = "testLogin";
+        String encrypted = cipherService.encrypt(login);
         Optional<UserEntity> entity = Optional.empty();
         
-        when(mockUserRepo.findByLogin(login)).thenReturn(entity);
+        when(mockUserRepo.findByLogin(encrypted)).thenReturn(entity);
 
         CompletableFuture<Optional<UserModel>> actual = userAccountService.getUserByLogin(login);
         
         Assert.assertFalse(actual.get().isPresent());
 
-        verify(mockUserRepo, only()).findByLogin(login);
+        verify(mockUserRepo, only()).findByLogin(encrypted);
     }
 
     @Test
