@@ -52,7 +52,12 @@ public class UserAccountService implements AccountService {
     @Async("asyncExecutor")
     public CompletableFuture<Optional<UserModel>> getUserByEmail(String email) {
         Optional<UserEntity> entity = userRepo.findByEmail(email);
-        Optional<UserModel> model = userMapper.convertToModel(entity);
+        Optional<UserModel> model = userMapper.convertToModel(entity).map(m ->
+        {
+            String decrypted = cipherService.decrypt(m.getLogin());
+            m.setLogin(decrypted);
+            return m;
+        });
         return CompletableFuture.completedFuture(model);
     }
 

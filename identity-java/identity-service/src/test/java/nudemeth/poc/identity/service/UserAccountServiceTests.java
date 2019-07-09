@@ -121,12 +121,13 @@ public class UserAccountServiceTests {
     public void getUserByEmail_WhenFound_ShouldReturnUserModel() throws InterruptedException, ExecutionException {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
+        String encrypted = cipherService.encrypt(login);
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
         boolean isEmailConfirmed = false;
-        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, token, name, email, isEmailConfirmed));
+        Optional<UserEntity> entity = Optional.of(new UserEntity(id, encrypted, issuer, token, name, email, isEmailConfirmed));
         Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
 
         when(mockUserRepo.findByEmail(email)).thenReturn(entity);
