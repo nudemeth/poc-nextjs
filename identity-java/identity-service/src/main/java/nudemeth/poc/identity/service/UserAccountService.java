@@ -31,7 +31,12 @@ public class UserAccountService implements AccountService {
     @Async("asyncExecutor")
     public CompletableFuture<Optional<UserModel>> getUser(UUID id) {
         Optional<UserEntity> entity = userRepo.findById(id);
-        Optional<UserModel> model = userMapper.convertToModel(entity);
+        Optional<UserModel> model = userMapper.convertToModel(entity).map(m ->
+        {
+            String decrypted = cipherService.decrypt(m.getLogin());
+            m.setLogin(decrypted);
+            return m;
+        });
         return CompletableFuture.completedFuture(model);
     }
 
