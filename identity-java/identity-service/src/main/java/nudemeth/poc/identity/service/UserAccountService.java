@@ -86,9 +86,12 @@ public class UserAccountService implements AccountService {
     @Override
     @Async("asyncExecutor")
     public CompletableFuture<UserModel> updateUser(UserModel model) {
+        String encrypted = cipherService.encrypt(model.getLogin());
         UserEntity entity = userMapper.convertToEntity(model);
+        entity.setLogin(encrypted);
         UserEntity updatedEntity = userRepo.save(entity);
         UserModel updatedModel = userMapper.convertToModel(updatedEntity);
+        updatedModel.setLogin(model.getLogin());
         return CompletableFuture.completedFuture(updatedModel);
     }
 }
