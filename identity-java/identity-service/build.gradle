@@ -4,6 +4,8 @@ version '0.1-SNAPSHOT'
 dependencies {
     compile                 project(':identity-model')
     compile                 project(':identity-dao')
+    
+    compile                 group: 'com.auth0',                 name: 'java-jwt',                       version: '3.8.1'
 
     testCompile             group: 'org.springframework.boot',  name: 'spring-boot-starter-test',       version: '2.1.4.RELEASE'
 }
