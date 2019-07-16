@@ -40,7 +40,7 @@ public class UserAccountServiceTests {
         MockitoAnnotations.initMocks(this);
         CipherConfig config = new CipherConfig("1234567890123456", "key", "salt");
         cipherService = new AES256CBCCipherService(config);
-        userMapper = new UserMapper();
+        userMapper = new UserMapper(cipherService);
         userAccountService = new UserAccountService(mockUserRepo, userMapper, cipherService);
     }
 
@@ -48,13 +48,13 @@ public class UserAccountServiceTests {
     public void getUser_WhenFound_ShouldReturnUserModel() throws InterruptedException, ExecutionException {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
-        String encrypted = cipherService.encrypt(login);
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
+        String encryptedToken = cipherService.encrypt(token);
         boolean isEmailConfirmed = false;
-        Optional<UserEntity> entity = Optional.of(new UserEntity(id, encrypted, issuer, token, name, email, isEmailConfirmed));
+        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, encryptedToken, name, email, isEmailConfirmed));
         Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
 
         when(mockUserRepo.findById(id)).thenReturn(entity);
@@ -84,51 +84,50 @@ public class UserAccountServiceTests {
     public void getUserByLogin_WhenFound_ShouldReturnUserModel() throws InterruptedException, ExecutionException {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
-        String encrypted = cipherService.encrypt(login);
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
+        String encryptedToken = cipherService.encrypt(token);
         boolean isEmailConfirmed = false;
-        Optional<UserEntity> entity = Optional.of(new UserEntity(id, encrypted, issuer, token, name, email, isEmailConfirmed));
+        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, encryptedToken, name, email, isEmailConfirmed));
         Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
 
-        when(mockUserRepo.findByLogin(encrypted)).thenReturn(entity);
+        when(mockUserRepo.findByLogin(login)).thenReturn(entity);
 
         CompletableFuture<Optional<UserModel>> actual = userAccountService.getUserByLogin(login);
         
         Assert.assertThat(actual.get().get(), samePropertyValuesAs(expected.get()));
 
-        verify(mockUserRepo, only()).findByLogin(encrypted);
+        verify(mockUserRepo, only()).findByLogin(login);
     }
 
     @Test
     public void getUserByLogin_WhenNotFound_ShouldReturnEmptyUserModel()
             throws InterruptedException, ExecutionException {
         String login = "testLogin";
-        String encrypted = cipherService.encrypt(login);
         Optional<UserEntity> entity = Optional.empty();
         
-        when(mockUserRepo.findByLogin(encrypted)).thenReturn(entity);
+        when(mockUserRepo.findByLogin(login)).thenReturn(entity);
 
         CompletableFuture<Optional<UserModel>> actual = userAccountService.getUserByLogin(login);
         
         Assert.assertFalse(actual.get().isPresent());
 
-        verify(mockUserRepo, only()).findByLogin(encrypted);
+        verify(mockUserRepo, only()).findByLogin(login);
     }
 
     @Test
     public void getUserByEmail_WhenFound_ShouldReturnUserModel() throws InterruptedException, ExecutionException {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
-        String encrypted = cipherService.encrypt(login);
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
+        String encryptedToken = cipherService.encrypt(token);
         boolean isEmailConfirmed = false;
-        Optional<UserEntity> entity = Optional.of(new UserEntity(id, encrypted, issuer, token, name, email, isEmailConfirmed));
+        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, encryptedToken, name, email, isEmailConfirmed));
         Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
 
         when(mockUserRepo.findByEmail(email)).thenReturn(entity);
@@ -193,13 +192,13 @@ public class UserAccountServiceTests {
     public void updateUser_WhenSuccess_ShouldReturnUserModel() throws InterruptedException, ExecutionException {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
-        String encrypted = cipherService.encrypt(login);
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
         String token = "abc";
+        String encryptedToken = cipherService.encrypt(token);
         boolean isEmailConfirmed = false;
-        UserEntity entity = new UserEntity(id, encrypted, issuer, token, name, email, isEmailConfirmed);
+        UserEntity entity = new UserEntity(id, login, issuer, encryptedToken, name, email, isEmailConfirmed);
         UserModel model = new UserModel(id, login, issuer, token, name, email, isEmailConfirmed);
 
         when(mockUserRepo.save(any(UserEntity.class))).thenReturn(entity);

@@ -15,9 +15,11 @@ import javax.crypto.spec.SecretKeySpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import nudemeth.poc.identity.config.CipherConfig;
 
+@Service
 public class AES256CBCCipherService implements CipherService {
 
     private final CipherConfig config;

@@ -31,25 +31,15 @@ public class UserAccountService implements AccountService {
     @Async("asyncExecutor")
     public CompletableFuture<Optional<UserModel>> getUser(UUID id) {
         Optional<UserEntity> entity = userRepo.findById(id);
-        Optional<UserModel> model = userMapper.convertToModel(entity).map(m ->
-        {
-            String decrypted = cipherService.decrypt(m.getLogin());
-            m.setLogin(decrypted);
-            return m;
-        });
+        Optional<UserModel> model = userMapper.convertToModel(entity);
         return CompletableFuture.completedFuture(model);
     }
 
     @Override
     @Async("asyncExecutor")
     public CompletableFuture<Optional<UserModel>> getUserByLogin(String login) {
-        String encrypted = cipherService.encrypt(login);
-        Optional<UserEntity> entity = userRepo.findByLogin(encrypted);
-        Optional<UserModel> model = userMapper.convertToModel(entity).map(m ->
-        {
-            m.setLogin(login);
-            return m;
-        });
+        Optional<UserEntity> entity = userRepo.findByLogin(login);
+        Optional<UserModel> model = userMapper.convertToModel(entity);
         return CompletableFuture.completedFuture(model);
     }
 
@@ -57,21 +47,14 @@ public class UserAccountService implements AccountService {
     @Async("asyncExecutor")
     public CompletableFuture<Optional<UserModel>> getUserByEmail(String email) {
         Optional<UserEntity> entity = userRepo.findByEmail(email);
-        Optional<UserModel> model = userMapper.convertToModel(entity).map(m ->
-        {
-            String decrypted = cipherService.decrypt(m.getLogin());
-            m.setLogin(decrypted);
-            return m;
-        });
+        Optional<UserModel> model = userMapper.convertToModel(entity);
         return CompletableFuture.completedFuture(model);
     }
 
     @Override
     @Async("asyncExecutor")
     public CompletableFuture<UUID> createUser(UserModel model) {
-        String encrypted = cipherService.encrypt(model.getLogin());
         UserEntity entity = userMapper.convertToEntity(model);
-        entity.setLogin(encrypted);
         UserEntity createdEntity = userRepo.save(entity);
         return CompletableFuture.completedFuture(createdEntity.getId());
     }
@@ -86,9 +69,7 @@ public class UserAccountService implements AccountService {
     @Override
     @Async("asyncExecutor")
     public CompletableFuture<UserModel> updateUser(UserModel model) {
-        String encrypted = cipherService.encrypt(model.getLogin());
         UserEntity entity = userMapper.convertToEntity(model);
-        entity.setLogin(encrypted);
         UserEntity updatedEntity = userRepo.save(entity);
         UserModel updatedModel = userMapper.convertToModel(updatedEntity);
         updatedModel.setLogin(model.getLogin());
