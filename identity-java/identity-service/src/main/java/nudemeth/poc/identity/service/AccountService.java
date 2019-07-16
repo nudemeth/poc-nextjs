@@ -8,6 +8,7 @@ import nudemeth.poc.identity.model.UserModel;
 
 public interface AccountService {
     CompletableFuture<Optional<UserModel>> getUser(UUID id);
+    CompletableFuture<Optional<String>> getUserToken(UUID id);
     CompletableFuture<Optional<UserModel>> getUserByLogin(String login);
     CompletableFuture<Optional<UserModel>> getUserByEmail(String email);
     CompletableFuture<UUID> createUser(UserModel model);

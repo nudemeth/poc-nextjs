@@ -16,13 +16,15 @@ import nudemeth.poc.identity.repository.UserRepository;
 @Service
 public class UserAccountService implements AccountService {
 
-    private UserRepository userRepo;
-    private UserMapper userMapper;
+    private final UserRepository userRepo;
+    private final UserMapper userMapper;
+    private final TokenService tokenService;
 
     @Autowired
-    public UserAccountService(UserRepository userRepo, UserMapper userMapper) {
+    public UserAccountService(final UserRepository userRepo, final  UserMapper userMapper, final  TokenService tokenService) {
         this.userRepo = userRepo;
         this.userMapper = userMapper;
+        this.tokenService = tokenService;
     }
 
     @Override
@@ -31,6 +33,15 @@ public class UserAccountService implements AccountService {
         Optional<UserEntity> entity = userRepo.findById(id);
         Optional<UserModel> model = userMapper.convertToModel(entity);
         return CompletableFuture.completedFuture(model);
+    }
+
+    @Override
+    @Async("asyncExecutor")
+    public CompletableFuture<Optional<String>> getUserToken(UUID id) {
+        CompletableFuture<Optional<UserModel>> futureOptionalModel = getUser(id);
+        return futureOptionalModel.thenApplyAsync((optionalModel) -> {
+            return optionalModel.map(model -> tokenService.create(model));
+        });
     }
 
     @Override

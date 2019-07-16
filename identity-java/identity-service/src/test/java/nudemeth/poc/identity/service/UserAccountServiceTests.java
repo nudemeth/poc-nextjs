@@ -34,6 +34,7 @@ public class UserAccountServiceTests {
     private UserMapper userMapper;
     private CipherService cipherService;
     private UserAccountService userAccountService;
+    private TokenService tokenService;
 
     @Before
     public void setUp() {
@@ -41,7 +42,8 @@ public class UserAccountServiceTests {
         CipherConfig config = new CipherConfig("1234567890123456", "key", "salt");
         cipherService = new AES256CBCCipherService(config);
         userMapper = new UserMapper(cipherService);
-        userAccountService = new UserAccountService(mockUserRepo, userMapper);
+        tokenService = new JwtTokenService();
+        userAccountService = new UserAccountService(mockUserRepo, userMapper, tokenService);
     }
 
     @Test
