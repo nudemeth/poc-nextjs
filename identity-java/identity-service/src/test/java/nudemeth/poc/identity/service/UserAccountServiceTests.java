@@ -41,7 +41,7 @@ public class UserAccountServiceTests {
         CipherConfig config = new CipherConfig("1234567890123456", "key", "salt");
         cipherService = new AES256CBCCipherService(config);
         userMapper = new UserMapper(cipherService);
-        userAccountService = new UserAccountService(mockUserRepo, userMapper, cipherService);
+        userAccountService = new UserAccountService(mockUserRepo, userMapper);
     }
 
     @Test

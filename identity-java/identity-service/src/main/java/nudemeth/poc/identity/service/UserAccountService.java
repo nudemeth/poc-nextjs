@@ -18,13 +18,11 @@ public class UserAccountService implements AccountService {
 
     private UserRepository userRepo;
     private UserMapper userMapper;
-    private CipherService cipherService;
 
     @Autowired
-    public UserAccountService(UserRepository userRepo, UserMapper userMapper, CipherService cipherService) {
+    public UserAccountService(UserRepository userRepo, UserMapper userMapper) {
         this.userRepo = userRepo;
         this.userMapper = userMapper;
-        this.cipherService = cipherService;
     }
 
     @Override
