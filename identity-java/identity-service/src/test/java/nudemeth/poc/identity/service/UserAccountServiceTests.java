@@ -42,7 +42,7 @@ public class UserAccountServiceTests {
         CipherConfig config = new CipherConfig("1234567890123456", "key", "salt");
         cipherService = new AES256CBCCipherService(config);
         userMapper = new UserMapper(cipherService);
-        tokenService = new JwtTokenService();
+        tokenService = new JwtTokenService(config);
         userAccountService = new UserAccountService(mockUserRepo, userMapper, tokenService);
     }
 

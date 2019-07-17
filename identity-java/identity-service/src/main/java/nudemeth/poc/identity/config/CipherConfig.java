@@ -2,9 +2,9 @@ package nudemeth.poc.identity.config;
 
 public class CipherConfig {
     
-    public String iv;
-    public String key;
-    public String salt;
+    private String iv;
+    private String key;
+    private String salt;
 
     public CipherConfig(String iv, String key, String salt) {
         this.iv = iv;
