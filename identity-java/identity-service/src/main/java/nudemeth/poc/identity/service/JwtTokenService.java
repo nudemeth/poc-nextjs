@@ -1,8 +1,7 @@
 package nudemeth.poc.identity.service;
 
+import java.time.Duration;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 import com.auth0.jwt.JWT;
@@ -21,7 +20,6 @@ import nudemeth.poc.identity.model.UserModel;
 public class JwtTokenService implements TokenService {
 
     private static final int TOKEN_LIFETIME_HOURS = 2;
-    private static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormatter.ISO_INSTANT;
 
     private final Algorithm algorithm;
 
@@ -32,7 +30,7 @@ public class JwtTokenService implements TokenService {
 
     @Override
     public String create(UserModel model) {
-        String expiryDateTime = ZonedDateTime.now().plusHours(TOKEN_LIFETIME_HOURS).format(DATETIME_FORMAT);
+        String expiryDateTime = DateTimeFormatter.ISO_INSTANT.format(Instant.now().plus(Duration.ofHours(TOKEN_LIFETIME_HOURS)));
         String token = JWT.create()
             .withClaim("id", model.getId().toString())
             .withClaim("login", model.getLogin())
@@ -48,15 +46,15 @@ public class JwtTokenService implements TokenService {
             .build();
             DecodedJWT jwt = verifier.verify(token);
             String exp = jwt.getClaim("exp").asString();
-            ZonedDateTime expiryDateTime = Instant.parse(exp).atZone(ZoneId.systemDefault());
+            Instant expiryDateTime = Instant.parse(exp);
             return isExpired(expiryDateTime);
         } catch (JWTVerificationException ex) {
             return false;
         }
     }
 
-    private boolean isExpired(ZonedDateTime expiryDateTime) {
-        return ZonedDateTime.now().compareTo(expiryDateTime) < 0;
+    private boolean isExpired(Instant expiryDateTime) {
+        return expiryDateTime.isBefore(Instant.now());
     }
 
 }
