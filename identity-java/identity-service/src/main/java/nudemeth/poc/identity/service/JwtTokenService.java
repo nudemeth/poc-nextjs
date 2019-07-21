@@ -2,12 +2,11 @@ package nudemeth.poc.identity.service;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ public class JwtTokenService implements TokenService {
 
     private static final int TOKEN_LIFETIME_HOURS = 2;
 
-    private final Algorithm algorithm;
+    private Algorithm algorithm;
 
     @Autowired
     public JwtTokenService(CipherConfig config) {
@@ -30,11 +29,10 @@ public class JwtTokenService implements TokenService {
 
     @Override
     public String create(UserModel model) {
-        String expiryDateTime = DateTimeFormatter.ISO_INSTANT.format(Instant.now().plus(Duration.ofHours(TOKEN_LIFETIME_HOURS)));
         String token = JWT.create()
             .withClaim("id", model.getId().toString())
             .withClaim("login", model.getLogin())
-            .withClaim("exp", expiryDateTime)
+            .withExpiresAt(Date.from(Instant.now().plus(Duration.ofHours(TOKEN_LIFETIME_HOURS))))
             .sign(algorithm);
         return token;
     }
@@ -42,18 +40,12 @@ public class JwtTokenService implements TokenService {
     @Override
     public boolean verify(String token) {
         try {
-            JWTVerifier verifier = JWT.require(algorithm).build();
-            DecodedJWT jwt = verifier.verify(token);
-            String exp = jwt.getClaim("exp").asString();
-            Instant expiryInstant = Instant.parse(exp);
-            return isExpired(expiryInstant);
+            JWTVerifier verifier = JWT.require(algorithm)
+                .build();
+            verifier.verify(token);
+            return true;
         } catch (JWTVerificationException ex) {
             return false;
         }
     }
-
-    private static boolean isExpired(Instant expiryInstant) {
-        return expiryInstant.isBefore(Instant.now());
-    }
-
 }
