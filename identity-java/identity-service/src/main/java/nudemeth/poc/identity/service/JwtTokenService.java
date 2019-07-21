@@ -42,19 +42,18 @@ public class JwtTokenService implements TokenService {
     @Override
     public boolean verify(String token) {
         try {
-            JWTVerifier verifier = JWT.require(algorithm)
-            .build();
+            JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT jwt = verifier.verify(token);
             String exp = jwt.getClaim("exp").asString();
-            Instant expiryDateTime = Instant.parse(exp);
-            return isExpired(expiryDateTime);
+            Instant expiryInstant = Instant.parse(exp);
+            return isExpired(expiryInstant);
         } catch (JWTVerificationException ex) {
             return false;
         }
     }
 
-    private boolean isExpired(Instant expiryDateTime) {
-        return expiryDateTime.isBefore(Instant.now());
+    private static boolean isExpired(Instant expiryInstant) {
+        return expiryInstant.isBefore(Instant.now());
     }
 
 }
