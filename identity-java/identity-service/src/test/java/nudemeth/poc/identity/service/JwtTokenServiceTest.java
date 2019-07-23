@@ -56,7 +56,7 @@ public class JwtTokenServiceTest {
         
             @Override
             public Date getToday() {
-                return Date.from(Instant.now().plus(Duration.ofHours(2)).minusMillis(500));
+                return Date.from(Instant.now().plus(Duration.ofHours(2)).minusMillis(500)); //Add 500ms gap for executing time to below lines
             }
         };
         JWTVerifier verifier = verification.build(clock);
@@ -66,7 +66,18 @@ public class JwtTokenServiceTest {
         } catch (JWTVerificationException ex) {
             Assert.fail("Token lifetime is less than 2 hours.");
         }
-        
+    }
+
+    @Test
+    public void verify_WhenValid_ShouldReturnTrue() {
+        UUID uuid = UUID.randomUUID();
+        String login = "TestLogin";
+        UserModel model = new UserModel(uuid, login, null, null, null, null, false);
+        JwtTokenService service = new JwtTokenService(config);
+        String token = service.create(model);
+        boolean actual = service.verify(token);
+
+        Assert.assertTrue(actual);
     }
 
     private static <T> void assertThrows(Runnable throwableMethod, Class<?> expectedException, String expectedMessage) {
