@@ -80,6 +80,15 @@ public class JwtTokenServiceTest {
         Assert.assertTrue(actual);
     }
 
+    @Test
+    public void verify_WhenInvalid_ShouldReturnFalse() {
+        JwtTokenService service = new JwtTokenService(config);
+        String token = "invalid token";
+        boolean actual = service.verify(token);
+
+        Assert.assertFalse(actual);
+    }
+
     private static <T> void assertThrows(Runnable throwableMethod, Class<?> expectedException, String expectedMessage) {
         try {
             throwableMethod.run();
