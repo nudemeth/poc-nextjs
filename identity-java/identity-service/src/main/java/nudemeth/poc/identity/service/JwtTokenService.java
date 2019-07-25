@@ -3,6 +3,7 @@ package nudemeth.poc.identity.service;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Objects;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -29,6 +30,9 @@ public class JwtTokenService implements TokenService {
 
     @Override
     public String create(UserModel model) {
+        if (model == null) {
+            throw new IllegalArgumentException("model argument cannot be null.");
+        }
         String token = JWT.create()
             .withClaim("id", model.getId().toString())
             .withClaim("login", model.getLogin())

@@ -69,6 +69,15 @@ public class JwtTokenServiceTest {
     }
 
     @Test
+    public void create_WhenNullModel_ShouldThrowException() {
+        JwtTokenService service = new JwtTokenService(config);
+        Runnable method = () -> {
+            service.create(null);
+        };
+        assertThrows(method, IllegalArgumentException.class, "model argument cannot be null.");
+    }
+
+    @Test
     public void verify_WhenValid_ShouldReturnTrue() {
         UUID uuid = UUID.randomUUID();
         String login = "TestLogin";
