@@ -3,7 +3,6 @@ package nudemeth.poc.identity.service;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
-import java.util.Objects;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -43,6 +42,9 @@ public class JwtTokenService implements TokenService {
 
     @Override
     public boolean verify(String token) {
+        if (token == null) {
+            throw new IllegalArgumentException("token argument cannot be null.");
+        }
         try {
             JWTVerifier verifier = JWT.require(algorithm)
                 .build();

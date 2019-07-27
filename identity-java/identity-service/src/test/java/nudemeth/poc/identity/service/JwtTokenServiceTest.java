@@ -98,6 +98,15 @@ public class JwtTokenServiceTest {
         Assert.assertFalse(actual);
     }
 
+    @Test
+    public void verify_WhenNullToken_ShouldThrowException() {
+        JwtTokenService service = new JwtTokenService(config);
+        Runnable method = () -> {
+            service.verify(null);
+        };
+        assertThrows(method, IllegalArgumentException.class, "token argument cannot be null.");
+    }
+
     private static <T> void assertThrows(Runnable throwableMethod, Class<?> expectedException, String expectedMessage) {
         try {
             throwableMethod.run();
