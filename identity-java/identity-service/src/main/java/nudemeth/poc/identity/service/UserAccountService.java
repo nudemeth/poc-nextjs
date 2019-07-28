@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import nudemeth.poc.identity.entity.UserEntity;
 import nudemeth.poc.identity.mapper.UserMapper;
+import nudemeth.poc.identity.model.TokenModel;
 import nudemeth.poc.identity.model.UserModel;
 import nudemeth.poc.identity.repository.UserRepository;
 
@@ -37,10 +38,15 @@ public class UserAccountService implements AccountService {
 
     @Override
     @Async("asyncExecutor")
-    public CompletableFuture<Optional<String>> getUserToken(UUID id) {
+    public CompletableFuture<Optional<TokenModel>> getTokenByUserId(UUID id) {
         CompletableFuture<Optional<UserModel>> futureOptionalModel = getUser(id);
         return futureOptionalModel.thenApplyAsync((optionalModel) -> {
-            return optionalModel.map(model -> tokenService.create(model));
+            return optionalModel.map(model -> {
+                String token = tokenService.create(model);
+                TokenModel tokenModel = new TokenModel(model.getId(), token);
+                tokenModel.setToken(token);
+                return tokenModel;
+            });
         });
     }
 

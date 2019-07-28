@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import nudemeth.poc.identity.model.TokenModel;
 import nudemeth.poc.identity.model.UserModel;
 import nudemeth.poc.identity.service.AccountService;
 
@@ -41,6 +42,13 @@ public class AccountController {
     @GetMapping(path = "/users/email/{email}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
     public CompletableFuture<Optional<UserModel>> getUserByEmail(@PathVariable(required = true) String email) {
         return accountService.getUserByEmail(email);
+    }
+
+    @Async("asyncExecutor")
+    @GetMapping(path = "/token/user/{id}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+    public CompletableFuture<Optional<TokenModel>> getTokenByUserId(@PathVariable(required = true) String id) {
+        UUID uuid = getUuidFromString(id);
+        return accountService.getTokenByUserId(uuid);
     }
 
     @Async("asyncExecutor")

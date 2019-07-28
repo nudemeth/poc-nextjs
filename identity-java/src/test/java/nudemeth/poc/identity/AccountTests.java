@@ -27,6 +27,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import nudemeth.poc.identity.model.TokenModel;
 import nudemeth.poc.identity.model.UserModel;
 import nudemeth.poc.identity.service.AccountService;
 
@@ -79,6 +80,26 @@ public class AccountTests {
             .andExpect(jsonPath("$.email").value(email));
 
         verify(mockAccountService, atLeastOnce()).getUser(id);
+    }
+
+    @Test
+    public void getTokenByUser_WhenWithIdPathParam_ShouldReturnJson() throws Exception {
+        UUID id = UUID.randomUUID();
+        String token = "Test.Token";
+        Optional<TokenModel> userToken = Optional.of(new TokenModel(id, token));
+
+        when(mockAccountService.getTokenByUserId(id)).thenReturn(CompletableFuture.completedFuture(userToken));
+        
+        MvcResult asyncResult = this.mockMvc.perform(get(String.format("/token/user/%s", id.toString())))
+            .andExpect(request().asyncStarted())
+            .andReturn();
+
+        this.mockMvc.perform(asyncDispatch(asyncResult))
+            .andDo(print())
+            .andExpect(jsonPath("$.id").value(id.toString()))
+            .andExpect(jsonPath("$.token").value(token));
+
+        verify(mockAccountService, atLeastOnce()).getTokenByUserId(id);
     }
 
     @Test
