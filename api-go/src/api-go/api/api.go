@@ -58,7 +58,6 @@ func (service *Service) GetCatalog(url string, userAgent string) ([]byte, int, e
 
 func (service *Service) GetUser(path string, login string, issuer string) ([]byte, int, error) {
 	pathWithParams := fmt.Sprintf(path+"/%s", login)
-	log.Printf("login=%s", login)
 	req, err := http.NewRequest("GET", service.BaseURL+pathWithParams, nil)
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Accept", "application/json")
@@ -198,7 +197,7 @@ func (service *Service) CreateUser(issuer string, token string, login string) ([
 }
 
 func (service *Service) GetUserToken(id string) ([]byte, int, error) {
-	path := "api/v1/identity/token/user"
+	path := "/api/v1/identity/token/user"
 	pathWithParams := fmt.Sprintf(path+"/%s", id)
 
 	req, err := http.NewRequest("GET", service.BaseURL+pathWithParams, nil)

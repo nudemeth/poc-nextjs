@@ -25,7 +25,14 @@ func identity(w http.ResponseWriter, req *http.Request, service *api.Service) {
 	var res []byte
 	var err error
 	var status int
-	if strings.Index(req.URL.Path, "/token") > -1 && req.Method == "GET" {
+	if strings.Index(req.URL.Path, "/users/token") > -1 && req.Method == "GET" {
+		id := path.Base(req.URL.Path)
+		res, status, err = service.GetUserToken(id)
+	} else if strings.Index(req.URL.Path, "/users/login") > -1 && req.Method == "GET" {
+		login := path.Base(req.URL.Path)
+		issuer := req.URL.Query().Get("issuer")
+		res, status, err = service.GetUser("/api/v1/identity/users/login", login, issuer)
+	} else if strings.Index(req.URL.Path, "/token") > -1 && req.Method == "GET" {
 		issuer := req.URL.Query().Get("issuer")
 		code := req.URL.Query().Get("code")
 		url := getTokenURL(issuer, code)
@@ -47,13 +54,6 @@ func identity(w http.ResponseWriter, req *http.Request, service *api.Service) {
 			res, status, err = service.CreateUser(issuer, token, login)
 		}
 
-	} else if strings.Index(req.URL.Path, "/users/login") > -1 && req.Method == "GET" {
-		login := path.Base(req.URL.Path)
-		issuer := req.URL.Query().Get("issuer")
-		res, status, err = service.GetUser("/api/v1/identity/users/login", login, issuer)
-	} else if strings.Index(req.URL.Path, "/users/token") > -1 && req.Method == "GET" {
-		id := path.Base(req.URL.Path)
-		res, status, err = service.GetUserToken(id)
 	} else {
 		log.Printf("Cannot map route: service=%s, URI=%s", "Identity", req.URL.Path)
 		w.WriteHeader(http.StatusNotFound)
