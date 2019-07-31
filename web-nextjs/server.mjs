@@ -61,16 +61,18 @@ const createUser = (issuer, token, login) => {
         .then(r => r.json())
 }
 
-const encrypt = (value) => {
-    const iv = crypto.randomBytes(16)
-    const ivStr = iv.toString('base64')
-    const cipher = crypto.createCipheriv(algorithm, key, iv)
-    let encrypted = cipher.update(value, 'utf8', 'hex')
-    encrypted += cipher.final('hex')
-    return `${encrypted}.${ivStr}`
+const getUserToken = (id) => {
+    const options = {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+        }
+    }
+    return fetch(`${config.api.identity.uri}users/token/${id}`, options)
+        .then(r => r.json())
 }
 
-const decrypt = (value) => {
+const decodeJwt = (value) => {
     try {
         const portions = value.split('.')
         const encryptedValue = portions[0]
@@ -111,15 +113,14 @@ app
 
             const token = await getToken(issuer, code)
             const userinfo = await getUserInfo(issuer, token.access_token)
-            const result = await createUser(issuer, token, userinfo.login)
+            const id = await createUser(issuer, token, userinfo.login)
+            const result = await getUserToken(id)
 
             if (!result) {
                 return res.status(500).send('Authentication process failed.')
             }
 
-            const encrypted = encrypt(userinfo.login)
-            
-            res.cookie('user', encrypted, {
+            res.cookie('accessToken', result.token, {
                 httpOnly: true,
                 secure: !dev
             })
@@ -131,21 +132,21 @@ app
         })
 
         server.get('*', (req, res) => {
-            const encryptedUser = req.cookies.user
+            const accessToken = req.cookies.accessToken
             const parsedUrl = parse(req.url, true)
             const { pathname, query } = parsedUrl
 
-            if (!encryptedUser) {
+            if (!accessToken) {
                 return app.render(req, res, pathname, { ...query, sites: authSites, user: null })
             }
 
-            const decryptedUser = decrypt(encryptedUser)
-            if (!decryptedUser) {
+            const jwt = decodeJwt(accessToken)
+            if (!jwt) {
                 res.clearCookie('user')
                 return app.render(req, res, pathname, { ...query, sites: authSites, user: null })
             }
             
-            return app.render(req, res, pathname, { ...query, sites: authSites, user: decryptedUser })
+            return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: jwt })
         })
 
         server.listen(port, (err) => {
