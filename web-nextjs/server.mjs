@@ -5,19 +5,15 @@ import favicon from 'serve-favicon'
 import path from 'path'
 import fetch from 'isomorphic-unfetch'
 import cookieParser from 'cookie-parser'
-import crypto from 'crypto'
 import { parse } from 'url'
 import config from './config'
+import jwt from 'jsonwebtoken'
 
 const __dirname = path.resolve()
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 //const handle = app.getRequestHandler()
 
-const algorithm = process.env.ENCRYPTION_ALGORITHM || 'aes-256-cbc'
-const secret = process.env.ENCRYPTION_SECRET || 'this is my secret'
-const salt = process.env.ENCRYPTION_SALT || 'this is my salt'
-const key = crypto.scryptSync(secret, salt, 32)
 const authSites = [
     { name: 'github', url: process.env.GITHUB_AUTH_URL || null }
 ]
@@ -72,18 +68,11 @@ const getUserToken = (id) => {
         .then(r => r.json())
 }
 
-const decodeJwt = (value) => {
+const decodeJwt = (token) => {
     try {
-        const portions = value.split('.')
-        const encryptedValue = portions[0]
-        const ivStr = portions[1]
-        const iv = Buffer.from(ivStr, 'base64')
-        const decipher = crypto.createDecipheriv(algorithm, key, iv)
-        let decrypted = decipher.update(encryptedValue, 'hex', 'utf8')
-        decrypted += decipher.final('utf8')
-        return decrypted
+        return jwt.decode(token)
     } catch (err) {
-        console.warn(`Unable to parse: ${value} (${err.message})`)
+        console.warn(`Unable to decode JWT: ${token} (${err.message})`)
         return null
     }
 }
