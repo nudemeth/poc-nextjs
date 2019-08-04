@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import jwt from 'jsonwebtoken'
 import AppBar from '@material-ui/core/AppBar'
 import ToolBar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
@@ -40,13 +41,14 @@ class Header extends React.Component {
         theme: PropTypes.object.isRequired,
         handleDrawerToggle: PropTypes.func.isRequired,
         children: PropTypes.any.isRequired,
-        user: PropTypes.string
+        accessToken: PropTypes.string
     }
 
     render() {
         const { classes } = this.props
-        const user = this.props.user
-        const loginOrUser = user ? <Button color='inherit'>{user}</Button> : <Link prefetch href='/login'><Button color='inherit'>Login</Button></Link>
+        const accessToken = this.props.accessToken
+        const decoded = jwt.decode(accessToken, { complete: true })
+        const loginOrUser = accessToken ? <Button color='inherit'>{decoded.payload.login}</Button> : <Link prefetch href='/login'><Button color='inherit'>Login</Button></Link>
         return (
             <AppBar className={classes.appBar}>
                 <ToolBar>
