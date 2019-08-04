@@ -1,12 +1,12 @@
 const actionTypes = {
-    STORE_USER: 'STORE_USER',
+    STORE_ACCESS_TOKEN: 'STORE_ACCESS_TOKEN',
     STORE_AUTH_SITES: 'STORE_AUTH_SITES'
 }
 
 export default actionTypes
 
-export const storeUser = (user) => {
-    return { type: actionTypes.STORE_USER, payload: { user }}
+export const storeAccessToken = (accessToken) => {
+    return { type: actionTypes.STORE_ACCESS_TOKEN, payload: { accessToken }}
 }
 
 export const storeAuthSites = (sites) => {

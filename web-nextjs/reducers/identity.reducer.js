@@ -3,10 +3,10 @@ import actionTypes from '../actions/actionTypes'
 
 export default function identityReducer(state = initialState, action) {
     switch (action.type) {
-    case actionTypes.STORE_USER:
+    case actionTypes.STORE_ACCESS_TOKEN:
         return {
             ...state,
-            ...{ user: action.payload.user }
+            ...{ accessToken: action.payload.accessToken }
         }
     case actionTypes.STORE_AUTH_SITES:
         return {

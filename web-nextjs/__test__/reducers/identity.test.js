@@ -8,10 +8,10 @@ describe('CatalogTypes reducers tests', () => {
         expect(reducer(undefined, {})).toEqual(result)
     })
 
-    it('Should handle STORE_USER action type', () => {
-        const action = { payload: { user: 'test user' }, type: actionTypes.STORE_USER }
+    it('Should handle STORE_ACCESS_TOKEN action type', () => {
+        const action = { payload: { accessToken: 'access token' }, type: actionTypes.STORE_ACCESS_TOKEN }
         const state = {}
-        const result = { user: action.payload.user }
+        const result = { accessToken: action.payload.accessToken }
         expect(reducer(state, action)).toEqual(result)
     })
 

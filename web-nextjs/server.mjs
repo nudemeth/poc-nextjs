@@ -117,7 +117,7 @@ app
             const parsedUrl = parse(req.url, true)
             const { query } = parsedUrl
             
-            app.render(req, res, '/authentication', { ...query, sites: authSites, user: userinfo.login })
+            app.render(req, res, '/authentication', { ...query, sites: authSites, accessToken: result.token })
         })
 
         server.get('*', (req, res) => {
@@ -126,13 +126,13 @@ app
             const { pathname, query } = parsedUrl
 
             if (!accessToken) {
-                return app.render(req, res, pathname, { ...query, sites: authSites, user: null })
+                return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: null })
             }
 
             const jwt = decodeJwt(accessToken)
             if (!jwt) {
                 res.clearCookie('user')
-                return app.render(req, res, pathname, { ...query, sites: authSites, user: null })
+                return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: null })
             }
             
             return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: jwt })

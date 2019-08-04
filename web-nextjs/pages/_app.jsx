@@ -8,7 +8,7 @@ import withRedux from 'next-redux-wrapper'
 import withReduxSaga from 'next-redux-saga'
 import getPageContext from '../components/common/getPageContext'
 import configureStore from '../store/store'
-import { storeUser, storeAuthSites } from '../actions/identity.actions'
+import { storeAccessToken, storeAuthSites } from '../actions/identity.actions'
 
 class MyApp extends App {
     constructor(props) {
@@ -23,7 +23,7 @@ class MyApp extends App {
         
         //check if run at server
         if (ctx.req) {
-            store.dispatch(storeUser(query.user))
+            store.dispatch(storeAccessToken(query.accessToken))
             store.dispatch(storeAuthSites(query.sites))
         }
     
