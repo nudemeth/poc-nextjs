@@ -65,7 +65,7 @@ class Header extends React.Component {
     }
 }
 
-const mapStateToProps = ({ identityReducer: { user }}) => ({ user })
+const mapStateToProps = ({ identityReducer: { accessToken }}) => ({ accessToken })
 
 export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(Header))
 export { Header }

@@ -7,7 +7,6 @@ import fetch from 'isomorphic-unfetch'
 import cookieParser from 'cookie-parser'
 import { parse } from 'url'
 import config from './config'
-import jwt from 'jsonwebtoken'
 
 const __dirname = path.resolve()
 const dev = process.env.NODE_ENV !== 'production'
@@ -68,15 +67,6 @@ const getUserToken = (id) => {
         .then(r => r.json())
 }
 
-const decodeJwt = (token) => {
-    try {
-        return jwt.decode(token)
-    } catch (err) {
-        console.warn(`Unable to decode JWT: ${token} (${err.message})`)
-        return null
-    }
-}
-
 app
     .prepare()
     .then(() => {
@@ -85,12 +75,6 @@ app
 
         server.use(favicon(path.join(__dirname, 'static', 'favicon.ico')))
         server.use(cookieParser())
-
-        /*server.get('/p/:id', (req, res) => {
-            const actualPage = '/post';
-            const queryParams = { id: req.params.id };
-            app.render(req, res, actualPage, queryParams);
-        });*/
 
         server.get('/authentication', async (req, res) => {
             const issuer = req.query.issuer
@@ -111,7 +95,9 @@ app
 
             res.cookie('accessToken', result.token, {
                 httpOnly: true,
-                secure: !dev
+                secure: !dev,
+                sameSite: true,
+                maxAge: 1000 * 60 * 60
             })
 
             const parsedUrl = parse(req.url, true)
@@ -124,18 +110,14 @@ app
             const accessToken = req.cookies.accessToken
             const parsedUrl = parse(req.url, true)
             const { pathname, query } = parsedUrl
-
+            
             if (!accessToken) {
                 return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: null })
             }
 
-            const jwt = decodeJwt(accessToken)
-            if (!jwt) {
-                res.clearCookie('user')
-                return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: null })
-            }
+            //TODO: Send request to identity api to get new access token.
             
-            return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: jwt })
+            return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: accessToken })
         })
 
         server.listen(port, (err) => {

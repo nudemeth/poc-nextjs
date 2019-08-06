@@ -46,7 +46,6 @@ class LoginCard extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
         theme: PropTypes.object.isRequired,
-        user: PropTypes.string,
         sites: PropTypes.arrayOf(PropTypes.shape({
             name: PropTypes.string,
             url: PropTypes.string

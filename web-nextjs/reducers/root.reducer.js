@@ -10,7 +10,7 @@ export const initialState = {
     items: [],
     item: {},
     catalogTypes: [],
-    user: null,
+    accessToken: null,
     sites: [],
     greeting: ''
 }
