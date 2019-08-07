@@ -17,7 +17,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import nudemeth.poc.identity.model.TokenModel;
 import nudemeth.poc.identity.model.UserModel;
 import nudemeth.poc.identity.service.UserAccountService;
 
@@ -94,12 +93,12 @@ public class AccountControllerTests {
     public void getUserToken_WhenWithId_ShouldReturnToken() throws Exception {
         UUID id = UUID.randomUUID();
         String token = "Test.Token";
-        Optional<TokenModel> userToken = Optional.of(new TokenModel(id, token));
-        Optional<TokenModel> expected = Optional.of(new TokenModel(id, token));
+        Optional<String> userToken = Optional.of(token);
+        Optional<String> expected = Optional.of(token);
 
         when(mockAccountService.getTokenByUserId(id)).thenReturn(CompletableFuture.completedFuture(userToken));
         
-        CompletableFuture<Optional<TokenModel>> actual = accountController.getTokenByUserId(id.toString());
+        CompletableFuture<Optional<String>> actual = accountController.getTokenByUserId(id.toString());
         
         Assert.assertEquals(expected.get(), actual.get().get());
 
