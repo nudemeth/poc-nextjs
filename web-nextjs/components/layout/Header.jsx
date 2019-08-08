@@ -44,11 +44,17 @@ class Header extends React.Component {
         accessToken: PropTypes.string
     }
 
+    login = () => {
+        const accessToken = this.props.accessToken
+        if (accessToken) {
+            const decoded = jwt.decode(accessToken, { complete: true })
+            return <Button color='inherit'>{decoded.payload.login}</Button>
+        } 
+        return <Link prefetch href='/login'><Button color='inherit'>Login</Button></Link>
+    }
+
     render() {
         const { classes } = this.props
-        const accessToken = this.props.accessToken
-        const decoded = jwt.decode(accessToken, { complete: true })
-        const loginOrUser = accessToken ? <Button color='inherit'>{decoded.payload.login}</Button> : <Link prefetch href='/login'><Button color='inherit'>Login</Button></Link>
         return (
             <AppBar className={classes.appBar}>
                 <ToolBar>
@@ -58,7 +64,7 @@ class Header extends React.Component {
                     <div className={classes.flex}>
                         {this.props.children}
                     </div>
-                    {loginOrUser}
+                    {this.login()}
                 </ToolBar>
             </AppBar>
         )
