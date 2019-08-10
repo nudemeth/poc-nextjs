@@ -59,8 +59,7 @@ server.post('/api/v1/identity/users', (req, res) => {
     res.send(JSON.stringify('ec6c1cb4-d3b6-4f0c-908d-722ca798fa87'))
 })
 server.get('/api/v1/identity/users/token/:id', (req, res) => {
-    const id = req.params.id
-    res.send({ id: id, token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMzQ1LTY3ODkwLTEyMzQ1LTY3ODkwIiwibG9naW4iOiJudWRlbWV0aCJ9.dah0nTw1wPaOzNiCeQvnPnhhKFnUmMoL0783Sz6jsho' })
+    res.send(JSON.stringify('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMzQ1LTY3ODkwLTEyMzQ1LTY3ODkwIiwibG9naW4iOiJudWRlbWV0aCJ9.dah0nTw1wPaOzNiCeQvnPnhhKFnUmMoL0783Sz6jsho'))
 })
 server.use(jsonServer.rewriter(routes))
 server.use(router)

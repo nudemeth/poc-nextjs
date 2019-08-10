@@ -84,16 +84,16 @@ app
                 return res.sendStatus(404)
             }
 
-            const token = await getToken(issuer, code)
-            const userinfo = await getUserInfo(issuer, token.access_token)
-            const id = await createUser(issuer, token, userinfo.login)
-            const result = await getUserToken(id)
+            const issuerToken = await getToken(issuer, code)
+            const userinfo = await getUserInfo(issuer, issuerToken.access_token)
+            const id = await createUser(issuer, issuerToken, userinfo.login)
+            const token = await getUserToken(id)
 
-            if (!result) {
+            if (!token) {
                 return res.status(500).send('Authentication process failed.')
             }
 
-            res.cookie('accessToken', result.token, {
+            res.cookie('accessToken', token, {
                 httpOnly: true,
                 secure: !dev,
                 sameSite: true,
@@ -103,7 +103,7 @@ app
             const parsedUrl = parse(req.url, true)
             const { query } = parsedUrl
             
-            app.render(req, res, '/authentication', { ...query, sites: authSites, accessToken: result.token })
+            app.render(req, res, '/authentication', { ...query, sites: authSites, accessToken: token })
         })
 
         server.get('*', (req, res) => {
