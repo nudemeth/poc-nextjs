@@ -25,8 +25,8 @@ public class UserMapper implements Mapper<UserModel, UserEntity> {
             return null;
         }
         String encryptedToken = null;
-        if (model.getToken() != null) {
-            encryptedToken = cipherService.encrypt(model.getToken());
+        if (model.getIssuerToken() != null) {
+            encryptedToken = cipherService.encrypt(model.getIssuerToken());
         }
         return new UserEntity(model.getId(), model.getLogin(), model.getIssuer(), encryptedToken, model.getName(), model.getEmail(), model.isEmailConfirmed());
     }
@@ -37,8 +37,8 @@ public class UserMapper implements Mapper<UserModel, UserEntity> {
             return null;
         }
         String decryptedToken = null;
-        if (entity.getToken() != null) {
-            decryptedToken = cipherService.decrypt(entity.getToken());
+        if (entity.getIssuerToken() != null) {
+            decryptedToken = cipherService.decrypt(entity.getIssuerToken());
         }
         return new UserModel(entity.getId(), entity.getLogin(), entity.getIssuer(), decryptedToken, entity.getName(), entity.getEmail(), entity.isEmailConfirmed());
     }

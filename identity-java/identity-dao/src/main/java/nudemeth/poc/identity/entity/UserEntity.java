@@ -37,7 +37,8 @@ public class UserEntity {
     @Getter @Setter
     private String issuer;
     @Getter @Setter
-    private String token;
+    @Column(name = "issuer_token")
+    private String issuerToken;
     @Getter @Setter
     private String name;
     @Getter @Setter

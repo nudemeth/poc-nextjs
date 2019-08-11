@@ -53,11 +53,11 @@ public class UserAccountServiceTests {
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
-        String token = "abc";
-        String encryptedToken = cipherService.encrypt(token);
+        String issuerToken = "abc";
+        String encryptedToken = cipherService.encrypt(issuerToken);
         boolean isEmailConfirmed = false;
         Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, encryptedToken, name, email, isEmailConfirmed));
-        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
+        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, issuerToken, name, email, isEmailConfirmed));
 
         when(mockUserRepo.findById(id)).thenReturn(entity);
 
@@ -89,11 +89,11 @@ public class UserAccountServiceTests {
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
-        String token = "abc";
-        String encryptedToken = cipherService.encrypt(token);
+        String issuerToken = "abc";
+        String encryptedToken = cipherService.encrypt(issuerToken);
         boolean isEmailConfirmed = false;
         Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, encryptedToken, name, email, isEmailConfirmed));
-        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
+        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, issuerToken, name, email, isEmailConfirmed));
 
         when(mockUserRepo.findByLogin(login)).thenReturn(entity);
 
@@ -126,11 +126,11 @@ public class UserAccountServiceTests {
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
-        String token = "abc";
-        String encryptedToken = cipherService.encrypt(token);
+        String issuerToken = "abc";
+        String encryptedToken = cipherService.encrypt(issuerToken);
         boolean isEmailConfirmed = false;
         Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, encryptedToken, name, email, isEmailConfirmed));
-        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
+        Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, issuerToken, name, email, isEmailConfirmed));
 
         when(mockUserRepo.findByEmail(email)).thenReturn(entity);
 
@@ -163,9 +163,9 @@ public class UserAccountServiceTests {
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
-        String token = "abc";
+        String issuerToken = "abc";
         boolean isEmailConfirmed = false;
-        UserEntity entity = new UserEntity(id, login, issuer, token, name, email, isEmailConfirmed);
+        UserEntity entity = new UserEntity(id, login, issuer, issuerToken, name, email, isEmailConfirmed);
         UserModel model = new UserModel(login);
         model.setName(name);
         model.setEmail(email);
@@ -197,11 +197,11 @@ public class UserAccountServiceTests {
         String name = "Test Name";
         String email = "Test.Email@test.com";
         String issuer = "Test Issuer";
-        String token = "abc";
-        String encryptedToken = cipherService.encrypt(token);
+        String issuerToken = "abc";
+        String encryptedToken = cipherService.encrypt(issuerToken);
         boolean isEmailConfirmed = false;
         UserEntity entity = new UserEntity(id, login, issuer, encryptedToken, name, email, isEmailConfirmed);
-        UserModel model = new UserModel(id, login, issuer, token, name, email, isEmailConfirmed);
+        UserModel model = new UserModel(id, login, issuer, issuerToken, name, email, isEmailConfirmed);
 
         when(mockUserRepo.save(any(UserEntity.class))).thenReturn(entity);
 
