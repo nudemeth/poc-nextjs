@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import express from 'express'
 import next from 'next'
+import jwt from 'jsonwebtoken'
 import favicon from 'serve-favicon'
 import path from 'path'
 import fetch from 'isomorphic-unfetch'
@@ -39,7 +40,7 @@ const getUserInfo = (issuer, token) => {
         .then(r => r.json())
 }
 
-const createUser = (issuer, token, login) => {
+const createOrUpdateUser = (issuer, token, login) => {
     const data = {
         issuer,
         token,
@@ -84,9 +85,9 @@ app
                 return res.sendStatus(404)
             }
 
-            const issuerToken = await getToken(issuer, code)
-            const userinfo = await getUserInfo(issuer, issuerToken.access_token)
-            const id = await createUser(issuer, issuerToken, userinfo.login)
+            const issuerResponse = await getToken(issuer, code)
+            const userinfo = await getUserInfo(issuer, issuerResponse.access_token)
+            const id = await createOrUpdateUser(issuer, issuerResponse.access_token, userinfo.login)
             const token = await getUserToken(id)
 
             if (!token) {
@@ -97,6 +98,11 @@ app
                 httpOnly: true,
                 secure: !dev,
                 sameSite: true,
+            })
+
+            res.cookie('exp', null, {
+                httpOnly: true,
+                secure: !dev,
                 maxAge: 1000 * 60 * 60
             })
 
@@ -106,8 +112,9 @@ app
             app.render(req, res, '/authentication', { ...query, sites: authSites, accessToken: token })
         })
 
-        server.get('*', (req, res) => {
+        server.get('*', async (req, res) => {
             const accessToken = req.cookies.accessToken
+            const expiry = req.cookies.exp
             const parsedUrl = parse(req.url, true)
             const { pathname, query } = parsedUrl
             
@@ -115,7 +122,18 @@ app
                 return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: null })
             }
 
-            //TODO: Send request to identity api to get new access token.
+            if (!expiry) {
+                const decoded = jwt.decode(accessToken)
+                const token = await getUserToken(decoded.id)
+                if (!token) {
+                    return res.status(500).send('Authentication process failed.')
+                }
+                res.cookie('exp', null, {
+                    httpOnly: true,
+                    secure: !dev,
+                    maxAge: 1000 * 60 * 60
+                })
+            }
             
             return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: accessToken })
         })
