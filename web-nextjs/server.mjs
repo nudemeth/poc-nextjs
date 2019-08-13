@@ -12,6 +12,7 @@ import config from './config'
 const __dirname = path.resolve()
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
+const refreshTokenLifeTime = 1000 * 60
 //const handle = app.getRequestHandler()
 
 const authSites = [
@@ -100,10 +101,10 @@ app
                 sameSite: true,
             })
 
-            res.cookie('exp', null, {
+            res.cookie('exp', Date.now(), {
                 httpOnly: true,
                 secure: !dev,
-                maxAge: 1000 * 60 * 60
+                maxAge: refreshTokenLifeTime
             })
 
             const parsedUrl = parse(req.url, true)
@@ -121,17 +122,17 @@ app
             if (!accessToken) {
                 return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: null })
             }
-
-            if (!expiry) {
+            
+            if (expiry === undefined && !pathname.startsWith('/_next') && !pathname.startsWith('/static')) {
                 const decoded = jwt.decode(accessToken)
                 const token = await getUserToken(decoded.id)
                 if (!token) {
                     return res.status(500).send('Authentication process failed.')
                 }
-                res.cookie('exp', null, {
+                res.cookie('exp', Date.now(), {
                     httpOnly: true,
                     secure: !dev,
-                    maxAge: 1000 * 60 * 60
+                    maxAge: refreshTokenLifeTime
                 })
             }
             
