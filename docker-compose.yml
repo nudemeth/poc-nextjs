@@ -9,6 +9,7 @@ services:
       - "ENCRYPTION_SECRET=this is my secret"
       - "ENCRYPTION_SALT=this is my salt"
       - "GITHUB_AUTH_URL=https://github.com/login/oauth/authorize?client_id=[PUT_CLIENT_ID_HERE]"
+      - "REFRESH_TOKEN_LIFE_TIME=6000"
     networks:
       - microservices-net
     depends_on:
