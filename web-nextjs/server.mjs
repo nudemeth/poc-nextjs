@@ -69,6 +69,19 @@ const getUserToken = (id) => {
         .then(r => r.json())
 }
 
+const refreshToken = async (res, accessToken) => {
+    const decoded = jwt.decode(accessToken)
+    const token = await getUserToken(decoded.id)
+    if (!token) {
+        return res.sendStatus(400)
+    }
+    res.cookie('exp', Date.now(), {
+        httpOnly: true,
+        secure: !dev,
+        maxAge: refreshTokenLifeTime
+    })
+}
+
 app
     .prepare()
     .then(() => {
@@ -92,7 +105,7 @@ app
             const token = await getUserToken(id)
 
             if (!token) {
-                return res.status(500).send('Authentication process failed.')
+                return res.sendStatus(400)
             }
 
             res.cookie('accessToken', token, {
@@ -124,16 +137,11 @@ app
             }
             
             if (expiry === undefined && !pathname.startsWith('/_next') && !pathname.startsWith('/static')) {
-                const decoded = jwt.decode(accessToken)
-                const token = await getUserToken(decoded.id)
-                if (!token) {
-                    return res.status(500).send('Authentication process failed.')
-                }
-                res.cookie('exp', Date.now(), {
-                    httpOnly: true,
-                    secure: !dev,
-                    maxAge: refreshTokenLifeTime
-                })
+                await refreshToken(res, accessToken)
+            }
+
+            if ([200, 201, 202, 204].findIndex(res.statusCode) == -1) {
+                return
             }
             
             return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: accessToken })
