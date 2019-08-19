@@ -140,7 +140,7 @@ app
                 await refreshToken(res, accessToken)
             }
 
-            if ([200, 201, 202, 204].findIndex(res.statusCode) == -1) {
+            if (![200, 201, 202, 204].includes(res.statusCode)) {
                 return
             }
             
