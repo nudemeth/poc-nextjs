@@ -1,5 +1,6 @@
 import React from 'react'
 import App, { Container } from 'next/app'
+import Router from 'next/router'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import JssProvider from 'react-jss/lib/JssProvider'
@@ -20,6 +21,10 @@ class MyApp extends App {
         let pageProps = {}
         const query = ctx.query
         const store = ctx.store
+
+        if (this.isRedirect(query, ctx.pathname)) {
+            this.redirect(ctx.res)
+        }
         
         //check if run at server
         if (ctx.req) {
@@ -30,8 +35,24 @@ class MyApp extends App {
         if (Component.getInitialProps) {
             pageProps = await Component.getInitialProps({ ctx })
         }
-    
+
         return { pageProps }
+    }
+
+    static redirect(res) {
+        if (!res) {
+            Router.push('/login')
+            return
+        }
+
+        res.writeHead(302, {
+            Location: '/login'
+        })
+        res.end()
+    }
+
+    static isRedirect(query, pathname) {
+        return !query.accessToken && pathname !== '/login'
     }
 
     componentDidMount() {
