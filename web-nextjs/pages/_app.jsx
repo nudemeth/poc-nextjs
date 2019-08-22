@@ -10,6 +10,7 @@ import withReduxSaga from 'next-redux-saga'
 import getPageContext from '../components/common/getPageContext'
 import configureStore from '../store/store'
 import { storeAccessToken, storeAuthSites } from '../actions/identity.actions'
+import config from '../config'
 
 class MyApp extends App {
     constructor(props) {
@@ -52,7 +53,7 @@ class MyApp extends App {
     }
 
     static isRedirect(query, pathname) {
-        return !query.accessToken && pathname !== '/login'
+        return !query.accessToken && !config.noAuthPaths.includes(pathname)
     }
 
     componentDidMount() {

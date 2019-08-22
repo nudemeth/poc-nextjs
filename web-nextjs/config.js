@@ -10,7 +10,11 @@ const config = {
         identity: {
             uri: `${protocal}://${dns}${port}/api/v1/identity/`
         }
-    }
+    },
+    noAuthPaths: [
+        '/login',
+        '/about'
+    ]
 }
 
 module.exports = config
