@@ -12,7 +12,7 @@ import config from './config'
 const __dirname = path.resolve()
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
-const refreshTokenLifeTime = parseInt(process.env.REFRESH_TOKEN_LIFE_TIME) || 1000 * 60
+const refreshTokenLifeTime = parseInt(process.env.REFRESH_TOKEN_LIFE_TIME) || 1000 * 60 * 60
 //const handle = app.getRequestHandler()
 
 const authSites = [
