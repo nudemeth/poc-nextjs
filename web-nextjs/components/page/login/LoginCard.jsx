@@ -24,6 +24,7 @@ const styles = () => ({
         margin: 0
     },
     dividerContainer: {
+        height: 30,
         padding: '0 16px',
         width: '100%',
         display: 'flex',
@@ -72,6 +73,7 @@ class LoginCard extends React.Component {
                         label='Username'
                         margin='normal'
                         fullWidth
+                        disabled
                     />
                     <TextField
                         id='password'
@@ -79,10 +81,11 @@ class LoginCard extends React.Component {
                         type='password'
                         margin='normal'
                         fullWidth
+                        disabled
                     />
                 </CardContent>
                 <CardActions className={classes.cardActions}>
-                    <Button variant='raised' color='primary' className={classes.signInButton}>
+                    <Button variant='raised' color='primary' className={classes.signInButton} disabled>
                         Sign In
                     </Button>
                 </CardActions>
