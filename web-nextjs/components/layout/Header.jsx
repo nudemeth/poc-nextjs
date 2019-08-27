@@ -6,6 +6,8 @@ import ToolBar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
 import Icon from '@material-ui/core/Icon'
 import Button from '@material-ui/core/Button'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
 import Link from 'next/link'
 import { withStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
@@ -34,6 +36,9 @@ const styles = theme => ({
 class Header extends React.Component {
     constructor(props) {
         super(props)
+        this.state = {
+            anchorEl: null
+        }
     }
 
     static propTypes = {
@@ -44,11 +49,33 @@ class Header extends React.Component {
         accessToken: PropTypes.string
     }
 
+    handleAccountMenuClick = (event) => {
+        this.setState({ anchorEl: event.currentTarget })
+    }
+
+    handleAccountMenuClose = () => {
+        this.setState({ anchorEl: null })
+    }
+
     login = () => {
         const accessToken = this.props.accessToken
         if (accessToken) {
             const decoded = jwt.decode(accessToken, { complete: true })
-            return <Button color='inherit'>{decoded.payload.login}</Button>
+            return (
+                <React.Fragment>
+                    <Button
+                        color='inherit'
+                        aria-owns={this.state.anchorEl ? 'account-menu' : null}
+                        aria-haspopup="true"
+                        onClick={this.handleAccountMenuClick}>
+                        {decoded.payload.login}
+                    </Button>
+                    <Menu id='account-menu' anchorEl={this.state.anchorEl} open={Boolean(this.state.anchorEl)} onClose={this.handleAccountMenuClose}>
+                        <MenuItem onClick={this.handleAccountMenuClose}>Profile</MenuItem>
+                        <MenuItem onClick={this.handleAccountMenuClose}>Logout</MenuItem>
+                    </Menu>
+                </React.Fragment>
+            )
         } 
         return <Link prefetch href='/login'><Button color='inherit'>Login</Button></Link>
     }
