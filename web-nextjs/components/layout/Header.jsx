@@ -72,7 +72,7 @@ class Header extends React.Component {
                     </Button>
                     <Menu id='account-menu' anchorEl={this.state.anchorEl} open={Boolean(this.state.anchorEl)} onClose={this.handleAccountMenuClose}>
                         <MenuItem onClick={this.handleAccountMenuClose}>Profile</MenuItem>
-                        <MenuItem onClick={this.handleAccountMenuClose}>Logout</MenuItem>
+                        <MenuItem><Link href='/logout'><span>Logout</span></Link></MenuItem>
                     </Menu>
                 </React.Fragment>
             )
