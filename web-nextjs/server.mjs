@@ -126,6 +126,14 @@ app
             app.render(req, res, '/authentication', { ...query, sites: authSites, accessToken: token })
         })
 
+        server.get('/logout', async (req, res) => {
+            const parsedUrl = parse(req.url, true)
+            const { query } = parsedUrl
+            res.clearCookie('accessToken')
+            res.clearCookie('exp')
+            return app.render(req, res, '/logout', query)
+        })
+
         server.get('*', async (req, res) => {
             const accessToken = req.cookies.accessToken
             const expiry = req.cookies.exp

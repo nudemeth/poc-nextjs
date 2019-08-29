@@ -57,6 +57,10 @@ class Header extends React.Component {
         this.setState({ anchorEl: null })
     }
 
+    handleLogoutClick = () => {
+        window.location.href = '/logout'
+    }
+
     login = () => {
         const accessToken = this.props.accessToken
         if (accessToken) {
@@ -72,7 +76,7 @@ class Header extends React.Component {
                     </Button>
                     <Menu id='account-menu' anchorEl={this.state.anchorEl} open={Boolean(this.state.anchorEl)} onClose={this.handleAccountMenuClose}>
                         <MenuItem onClick={this.handleAccountMenuClose}>Profile</MenuItem>
-                        <MenuItem><Link href='/logout'><span>Logout</span></Link></MenuItem>
+                        <MenuItem onClick={this.handleLogoutClick}>Logout</MenuItem>
                     </Menu>
                 </React.Fragment>
             )
