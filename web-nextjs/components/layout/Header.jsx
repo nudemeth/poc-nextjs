@@ -69,8 +69,8 @@ class Header extends React.Component {
                 <React.Fragment>
                     <Button
                         color='inherit'
-                        aria-owns={this.state.anchorEl ? 'account-menu' : null}
-                        aria-haspopup="true"
+                        aria-owns='account-menu'
+                        aria-haspopup='true'
                         onClick={this.handleAccountMenuClick}>
                         {decoded.payload.login}
                     </Button>
