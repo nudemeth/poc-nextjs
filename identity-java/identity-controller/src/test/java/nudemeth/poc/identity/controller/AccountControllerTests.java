@@ -127,7 +127,7 @@ public class AccountControllerTests {
     }
 
     @Test
-    public void createUser_WhenWithUserModel_ShouldReturnUUIDWith() throws Exception {
+    public void createUser_WhenWithUserModel_ShouldReturnUUID() throws Exception {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
         String name = "Test Name";
@@ -143,6 +143,98 @@ public class AccountControllerTests {
         Assert.assertEquals(id, actual.get());
         
         verify(mockAccountService, only()).createUser(user);
+    }
+
+    @Test
+    public void createOrUpdateUser_WhenWithUserModel_ShouldReturnUUID() throws Exception {
+        UUID id = UUID.randomUUID();
+        String login = "testLogin";
+        String name = "Test Name";
+        String issuer = "Test issuer";
+        String email = "Test.Email@test.com";
+        UserModel user = new UserModel(login);
+        user.setName(name);
+        user.setEmail(email);
+        user.setIssuer(issuer);
+        
+        when(mockAccountService.createOrUpdateUserByLoginAndIssuer(user)).thenReturn(CompletableFuture.completedFuture(id));
+
+        CompletableFuture<UUID> actual = accountController.createOrUpdateUserByLogin(login, issuer, user);
+
+        Assert.assertEquals(id, actual.get());
+        
+        verify(mockAccountService, only()).createOrUpdateUserByLoginAndIssuer(user);
+    }
+
+    @Test
+    public void createOrUpdateUser_WhenWithUserModelNoIssuer_ShouldReturnUUID() throws Exception {
+        UUID id = UUID.randomUUID();
+        String login = "testLogin";
+        String name = "Test Name";
+        String issuer = null;
+        String email = "Test.Email@test.com";
+        UserModel user = new UserModel(login);
+        user.setName(name);
+        user.setEmail(email);
+        user.setIssuer(issuer);
+        
+        when(mockAccountService.createOrUpdateUserByLoginAndIssuer(user)).thenReturn(CompletableFuture.completedFuture(id));
+
+        CompletableFuture<UUID> actual = accountController.createOrUpdateUserByLogin(login, issuer, user);
+
+        Assert.assertEquals(id, actual.get());
+        
+        verify(mockAccountService, only()).createOrUpdateUserByLoginAndIssuer(user);
+    }
+
+    @Test
+    public void createOrUpdateUser_WhenWithUserModelLoginNotMatch_ShouldThrowResponseStatusException() throws Exception {
+        String login = "testLogin";
+        String login2 = "testLogin2";
+        String name = "Test Name";
+        String issuer = null;
+        String email = "Test.Email@test.com";
+        UserModel user = new UserModel(login);
+        user.setName(name);
+        user.setEmail(email);
+        user.setIssuer(issuer);
+        
+        Runnable method = () -> {
+            accountController.createOrUpdateUserByLogin(login2, issuer, user);
+        };
+        
+        ResponseStatusException expectedEx = new ResponseStatusException(HttpStatus.BAD_REQUEST,
+            String.format("Invalid creating or updating login: %s and %s", login2, login)
+        );
+
+        assertThrows(method, expectedEx.getClass(), expectedEx.getMessage());
+        
+        verify(mockAccountService, never()).createOrUpdateUserByLoginAndIssuer(user);
+    }
+
+    @Test
+    public void createOrUpdateUser_WhenWithUserModelIssuerNotMatch_ShouldThrowResponseStatusException() throws Exception {
+        String login = "testLogin";
+        String name = "Test Name";
+        String issuer = "Test Issuer";
+        String issuer2 = "Test Issuer 2";
+        String email = "Test.Email@test.com";
+        UserModel user = new UserModel(login);
+        user.setName(name);
+        user.setEmail(email);
+        user.setIssuer(issuer);
+        
+        Runnable method = () -> {
+            accountController.createOrUpdateUserByLogin(login, issuer2, user);
+        };
+        
+        ResponseStatusException expectedEx = new ResponseStatusException(HttpStatus.BAD_REQUEST,
+            String.format("Invalid creating or updating issuer: %s and %s", issuer2, issuer)
+        );
+
+        assertThrows(method, expectedEx.getClass(), expectedEx.getMessage());
+        
+        verify(mockAccountService, never()).createOrUpdateUserByLoginAndIssuer(user);
     }
 
     @Test

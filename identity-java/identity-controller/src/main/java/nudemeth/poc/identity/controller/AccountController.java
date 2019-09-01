@@ -68,7 +68,7 @@ public class AccountController {
     @Async("asyncExecutor")
     @ResponseStatus(code = HttpStatus.CREATED)
     @PutMapping(path = "/users/login/{login}", consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE }, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-    public CompletableFuture<UUID> createOrUpdateUserByLogin(@PathVariable(required = true) String login, @RequestParam String issuer, @RequestBody UserModel model) {
+    public CompletableFuture<UUID> createOrUpdateUserByLogin(@PathVariable(required = true) String login, @RequestParam(required = false) String issuer, @RequestBody UserModel model) {
         if (!login.equals(model.getLogin())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("Invalid creating or updating login: %s and %s", login, model.getLogin()));
         }
