@@ -42,16 +42,18 @@ func identity(w http.ResponseWriter, req *http.Request, service *api.Service) {
 		token := req.URL.Query().Get("token")
 		url := getUserInfoURL(issuer)
 		res, status, err = service.GetIdentityUserInfo(url, token)
-	} else if strings.Index(req.URL.Path, "/users") > -1 && req.Method == "POST" && req.Body != nil {
+	} else if strings.Index(req.URL.Path, "/users/login") > -1 && req.Method == "PUT" && req.Body != nil {
+		login := path.Base(req.URL.Path)
+		issuer := req.URL.Query().Get("issuer")
 		decoder := json.NewDecoder(req.Body)
 		var user UserModel
 		err := decoder.Decode(&user)
 
 		if err == nil {
-			issuer := user.Issuer
+			issuer := issuer
 			token := user.Token
-			login := user.Login
-			res, status, err = service.CreateUser(issuer, token, login)
+			login := login
+			res, status, err = service.CreateOrUpdateUser(issuer, token, login)
 		}
 
 	} else {

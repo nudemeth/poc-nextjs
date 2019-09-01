@@ -4,6 +4,7 @@ import (
 	"api-go/api"
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -129,7 +130,8 @@ func TestCreateUser(t *testing.T) {
 	jsonValue, err := json.Marshal(data)
 
 	service := &api.Service{Client: server.Client(), BaseURL: server.URL}
-	req := httptest.NewRequest("POST", "/users", bytes.NewBuffer(jsonValue))
+	fullPath := fmt.Sprintf("/api/v1/identity/users/login/%s?issuer=%s", mockLogin, mockIssuer)
+	req := httptest.NewRequest("PUT", fullPath, bytes.NewBuffer(jsonValue))
 	identity(w, req, service)
 
 	resp := w.Result()
