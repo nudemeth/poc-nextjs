@@ -48,8 +48,8 @@ public class UserAccountService implements AccountService {
 
     @Override
     @Async("asyncExecutor")
-    public CompletableFuture<Optional<UserModel>> getUserByLogin(String login) {
-        Optional<UserEntity> entity = userRepo.findByLogin(login);
+    public CompletableFuture<Optional<UserModel>> getUserByLoginAndIssuer(String login, String issuer) {
+        Optional<UserEntity> entity = userRepo.findByLoginAndIssuer(login, issuer);
         Optional<UserModel> model = userMapper.convertToModel(entity);
         return CompletableFuture.completedFuture(model);
     }
@@ -72,6 +72,23 @@ public class UserAccountService implements AccountService {
 
     @Override
     @Async("asyncExecutor")
+    public CompletableFuture<UUID> createOrUpdateUserByLoginAndIssuer(UserModel model) {
+        UserEntity entity = userRepo.findByLoginAndIssuer(model.getLogin(), model.getIssuer())
+            .map(e -> {
+                e.setIssuerToken(model.getIssuerToken());
+                e.setEmail(model.getEmail());
+                if (!model.getEmail().equals(e.getEmail())) {
+                    e.setEmailConfirmed(false);
+                }
+                return e;
+            })
+            .orElse(userMapper.convertToEntity(model));
+        UserEntity createdEntity = userRepo.save(entity);
+        return CompletableFuture.completedFuture(createdEntity.getId());
+    }
+
+    @Override
+    @Async("asyncExecutor")
     public CompletableFuture<Void> deleteUser(UUID id) {
         userRepo.deleteById(id);
         return CompletableFuture.completedFuture(null);
@@ -83,7 +100,6 @@ public class UserAccountService implements AccountService {
         UserEntity entity = userMapper.convertToEntity(model);
         UserEntity updatedEntity = userRepo.save(entity);
         UserModel updatedModel = userMapper.convertToModel(updatedEntity);
-        updatedModel.setLogin(model.getLogin());
         return CompletableFuture.completedFuture(updatedModel);
     }
 }

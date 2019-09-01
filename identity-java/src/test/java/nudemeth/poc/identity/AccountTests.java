@@ -2,6 +2,7 @@ package nudemeth.poc.identity;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -118,7 +119,7 @@ public class AccountTests {
     }
 
     @Test
-    public void getUserByLogin_WhenWithLoginPathParam_ShouldReturnJsonUser() throws Exception {
+    public void getUserByLogin_WhenWithLoginAndIssuer_ShouldReturnJsonUser() throws Exception {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
         String name = "Test Name";
@@ -128,7 +129,35 @@ public class AccountTests {
         boolean isEmailConfirmed = false;
         Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
 
-        when(mockAccountService.getUserByLogin(login)).thenReturn(CompletableFuture.completedFuture(user));
+        when(mockAccountService.getUserByLoginAndIssuer(login, issuer)).thenReturn(CompletableFuture.completedFuture(user));
+        
+        MvcResult asyncResult = this.mockMvc.perform(get(String.format("/users/login/%s?issuer=%s", login, issuer)))
+            .andExpect(request().asyncStarted())
+            .andReturn();
+        
+        this.mockMvc.perform(asyncDispatch(asyncResult))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(id.toString()))
+            .andExpect(jsonPath("$.login").value(login))
+            .andExpect(jsonPath("$.name").value(name))
+            .andExpect(jsonPath("$.email").value(email));
+
+        verify(mockAccountService, atLeastOnce()).getUserByLoginAndIssuer(anyString(), anyString());
+    }
+
+    @Test
+    public void getUserByLogin_WhenWithLoginAndNoIssuer_ShouldReturnJsonUser() throws Exception {
+        UUID id = UUID.randomUUID();
+        String login = "testLogin";
+        String name = "Test Name";
+        String email = "Test.Email@test.com";
+        String issuer = null;
+        String token = "abc";
+        boolean isEmailConfirmed = false;
+        Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, token, name, email, isEmailConfirmed));
+
+        when(mockAccountService.getUserByLoginAndIssuer(login, issuer)).thenReturn(CompletableFuture.completedFuture(user));
         
         MvcResult asyncResult = this.mockMvc.perform(get(String.format("/users/login/%s", login)))
             .andExpect(request().asyncStarted())
@@ -142,7 +171,7 @@ public class AccountTests {
             .andExpect(jsonPath("$.name").value(name))
             .andExpect(jsonPath("$.email").value(email));
 
-        verify(mockAccountService, atLeastOnce()).getUserByLogin(anyString());
+        verify(mockAccountService, atLeastOnce()).getUserByLoginAndIssuer(anyString(), isNull());
     }
 
     @Test

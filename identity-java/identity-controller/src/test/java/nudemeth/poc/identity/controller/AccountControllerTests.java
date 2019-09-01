@@ -80,13 +80,13 @@ public class AccountControllerTests {
         Optional<UserModel> user = Optional.of(new UserModel(id, login, issuer, issuerToken, name, email, isEmailConfirmed));
         Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, issuerToken, name, email, isEmailConfirmed));
 
-        when(mockAccountService.getUserByLogin(login)).thenReturn(CompletableFuture.completedFuture(user));
+        when(mockAccountService.getUserByLoginAndIssuer(login, issuer)).thenReturn(CompletableFuture.completedFuture(user));
         
-        CompletableFuture<Optional<UserModel>> actual = accountController.getUserByLogin(login);
+        CompletableFuture<Optional<UserModel>> actual = accountController.getUserByLogin(login, issuer);
         
         Assert.assertThat(actual.get().get(), samePropertyValuesAs(expected.get()));
 
-        verify(mockAccountService, only()).getUserByLogin(login);
+        verify(mockAccountService, only()).getUserByLoginAndIssuer(login, issuer);
     }
 
     @Test

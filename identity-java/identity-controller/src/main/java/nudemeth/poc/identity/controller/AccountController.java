@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -33,8 +34,8 @@ public class AccountController {
 
     @Async("asyncExecutor")
     @GetMapping(path = "/users/login/{login}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-    public CompletableFuture<Optional<UserModel>> getUserByLogin(@PathVariable(required = true) String login) {
-        return accountService.getUserByLogin(login);
+    public CompletableFuture<Optional<UserModel>> getUserByLogin(@PathVariable(required = true) String login, @RequestParam(required = false) String issuer) {
+        return accountService.getUserByLoginAndIssuer(login, issuer);
     }
 
     @Async("asyncExecutor")
@@ -62,6 +63,19 @@ public class AccountController {
     @PostMapping(path = "/users", consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE }, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
     public CompletableFuture<UUID> createUser(@RequestBody UserModel model) {
         return accountService.createUser(model);
+    }
+
+    @Async("asyncExecutor")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    @PutMapping(path = "/users/login/{login}", consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE }, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+    public CompletableFuture<UUID> createOrUpdateUserByLogin(@PathVariable(required = true) String login, @RequestParam String issuer, @RequestBody UserModel model) {
+        if (!login.equals(model.getLogin())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("Invalid creating or updating login: %s and %s", login, model.getLogin()));
+        }
+        if (issuer != null && model.getIssuer() != null && !issuer.equals(model.getIssuer())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("Invalid creating or updating issuer: %s and %s", issuer, model.getIssuer()));
+        }
+        return accountService.createOrUpdateUserByLoginAndIssuer(model);
     }
 
     @Async("asyncExecutor")

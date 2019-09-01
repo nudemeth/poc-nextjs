@@ -83,7 +83,7 @@ public class UserAccountServiceTests {
     }
 
     @Test
-    public void getUserByLogin_WhenFound_ShouldReturnUserModel() throws InterruptedException, ExecutionException {
+    public void getUserByLoginAndIssuer_WhenFound_ShouldReturnUserModel() throws InterruptedException, ExecutionException {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
         String name = "Test Name";
@@ -95,28 +95,29 @@ public class UserAccountServiceTests {
         Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, encryptedToken, name, email, isEmailConfirmed));
         Optional<UserModel> expected = Optional.of(new UserModel(id, login, issuer, issuerToken, name, email, isEmailConfirmed));
 
-        when(mockUserRepo.findByLogin(login)).thenReturn(entity);
+        when(mockUserRepo.findByLoginAndIssuer(login, issuer)).thenReturn(entity);
 
-        CompletableFuture<Optional<UserModel>> actual = userAccountService.getUserByLogin(login);
+        CompletableFuture<Optional<UserModel>> actual = userAccountService.getUserByLoginAndIssuer(login, issuer);
         
         Assert.assertThat(actual.get().get(), samePropertyValuesAs(expected.get()));
 
-        verify(mockUserRepo, only()).findByLogin(login);
+        verify(mockUserRepo, only()).findByLoginAndIssuer(login, issuer);
     }
 
     @Test
-    public void getUserByLogin_WhenNotFound_ShouldReturnEmptyUserModel()
+    public void getUserByLoginAndIssuer_WhenNotFound_ShouldReturnEmptyUserModel()
             throws InterruptedException, ExecutionException {
         String login = "testLogin";
+        String issuer = "testIssuer";
         Optional<UserEntity> entity = Optional.empty();
         
-        when(mockUserRepo.findByLogin(login)).thenReturn(entity);
+        when(mockUserRepo.findByLoginAndIssuer(login, issuer)).thenReturn(entity);
 
-        CompletableFuture<Optional<UserModel>> actual = userAccountService.getUserByLogin(login);
+        CompletableFuture<Optional<UserModel>> actual = userAccountService.getUserByLoginAndIssuer(login, issuer);
         
         Assert.assertFalse(actual.get().isPresent());
 
-        verify(mockUserRepo, only()).findByLogin(login);
+        verify(mockUserRepo, only()).findByLoginAndIssuer(login, issuer);
     }
 
     @Test

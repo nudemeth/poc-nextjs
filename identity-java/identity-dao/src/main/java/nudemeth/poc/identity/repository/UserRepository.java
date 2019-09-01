@@ -10,6 +10,6 @@ import nudemeth.poc.identity.entity.UserEntity;;
 
 @Repository
 public interface UserRepository extends CrudRepository<UserEntity, UUID> {
-    Optional<UserEntity> findByLogin(String login);
     Optional<UserEntity> findByEmail(String email);
+    Optional<UserEntity> findByLoginAndIssuer(String login, String issuer);
 }
