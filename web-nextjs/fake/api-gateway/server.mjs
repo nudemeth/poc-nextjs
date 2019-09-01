@@ -55,7 +55,7 @@ server.get('/api/v1/identity/userinfo', async (req, res) => {
 
     res.send(data)
 })
-server.post('/api/v1/identity/users', (req, res) => {   
+server.put('/api/v1/identity/users/login/:login', (req, res) => {   
     res.send(JSON.stringify('ec6c1cb4-d3b6-4f0c-908d-722ca798fa87'))
 })
 server.get('/api/v1/identity/users/token/:id', (req, res) => {
