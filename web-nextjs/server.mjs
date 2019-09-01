@@ -48,13 +48,13 @@ const createOrUpdateUser = (issuer, token, login) => {
         login
     }
     const options = {
-        method: 'POST',
+        method: 'PUT',
         headers: {
             'Accept': 'application/json',
         },
         body: JSON.stringify(data)
     }
-    return fetch(`${config.api.identity.uri}users`, options)
+    return fetch(`${config.api.identity.uri}users/login/${login}?issuer=${issuer}`, options)
         .then(r => r.json())
 }
 
