@@ -13,7 +13,6 @@ const __dirname = path.resolve()
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const refreshTokenLifeTime = parseInt(process.env.REFRESH_TOKEN_LIFE_TIME) || 1000 * 60 * 60
-//const handle = app.getRequestHandler()
 
 const authSites = [
     { name: 'github', url: process.env.GITHUB_AUTH_URL || null }
@@ -58,28 +57,30 @@ const createOrUpdateUser = (issuer, token, login) => {
         .then(r => r.json())
 }
 
-const getUserToken = (id) => {
+const getUserToken = async (id) => {
     const options = {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
         }
     }
-    return fetch(`${config.api.identity.uri}users/token/${id}`, options)
-        .then(r => r.json())
+    const res = await fetch(`${config.api.identity.uri}users/token/${id}`, options)
+    if (!res.ok) {
+        return
+    }
+    return res.json()
 }
 
-const refreshToken = async (res, accessToken) => {
+const canRefreshToken = async (res, accessToken) => {
     const decoded = jwt.decode(accessToken)
+    if (!decoded) {
+        return false
+    }
     const token = await getUserToken(decoded.id)
     if (!token) {
-        return res.sendStatus(400)
+        return false
     }
-    res.cookie('exp', Date.now(), {
-        httpOnly: true,
-        secure: !dev,
-        maxAge: refreshTokenLifeTime
-    })
+    return true
 }
 
 app
@@ -145,7 +146,17 @@ app
             }
             
             if (expiry === undefined && !pathname.startsWith('/_next') && !pathname.startsWith('/static')) {
-                await refreshToken(res, accessToken)
+                if (await canRefreshToken(res, accessToken)) {
+                    res.cookie('exp', Date.now(), {
+                        httpOnly: true,
+                        secure: !dev,
+                        maxAge: refreshTokenLifeTime
+                    })
+                } else {
+                    res.clearCookie('accessToken')
+                    res.clearCookie('exp')
+                    return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: null })
+                }
             }
 
             if (![200, 201, 202, 204].includes(res.statusCode)) {
