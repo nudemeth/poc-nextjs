@@ -71,7 +71,7 @@ const getUserToken = async (id) => {
     return res.json()
 }
 
-const canRefreshToken = async (res, accessToken) => {
+const canRefreshToken = async (accessToken) => {
     const decoded = jwt.decode(accessToken)
     if (!decoded) {
         return false
@@ -140,28 +140,29 @@ app
             const expiry = req.cookies.exp
             const parsedUrl = parse(req.url, true)
             const { pathname, query } = parsedUrl
+            const isResourceRequest = pathname.startsWith('/_next') || pathname.startsWith('/static')
+            const hasExpiry = expiry !== undefined
+            const isNormalRequest = isResourceRequest || hasExpiry
             
             if (!accessToken) {
                 return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: null })
             }
+
+            if (isNormalRequest) {
+                return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: accessToken })
+            }
             
-            if (expiry === undefined && !pathname.startsWith('/_next') && !pathname.startsWith('/static')) {
-                if (await canRefreshToken(res, accessToken)) {
-                    res.cookie('exp', Date.now(), {
-                        httpOnly: true,
-                        secure: !dev,
-                        maxAge: refreshTokenLifeTime
-                    })
-                } else {
-                    res.clearCookie('accessToken')
-                    res.clearCookie('exp')
-                    return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: null })
-                }
+            if (!await canRefreshToken(accessToken)) {
+                res.clearCookie('accessToken')
+                res.clearCookie('exp')
+                return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: null })
             }
 
-            if (![200, 201, 202, 204].includes(res.statusCode)) {
-                return
-            }
+            res.cookie('exp', Date.now(), {
+                httpOnly: true,
+                secure: !dev,
+                maxAge: refreshTokenLifeTime
+            })
             
             return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: accessToken })
         })

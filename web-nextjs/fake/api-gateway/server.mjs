@@ -55,10 +55,10 @@ server.get('/api/v1/identity/userinfo', async (req, res) => {
 
     res.send(data)
 })
-server.put('/api/v1/identity/users/login/:login', (req, res) => {   
+server.put('/api/v1/identity/users/login/:login', ({ res }) => {   
     res.send(JSON.stringify('ec6c1cb4-d3b6-4f0c-908d-722ca798fa87'))
 })
-server.get('/api/v1/identity/users/token/:id', (req, res) => {
+server.get('/api/v1/identity/users/token/:id', ({ res }) => {
     res.send(JSON.stringify('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMzQ1LTY3ODkwLTEyMzQ1LTY3ODkwIiwibG9naW4iOiJudWRlbWV0aCJ9.dah0nTw1wPaOzNiCeQvnPnhhKFnUmMoL0783Sz6jsho'))
 })
 server.use(jsonServer.rewriter(routes))
