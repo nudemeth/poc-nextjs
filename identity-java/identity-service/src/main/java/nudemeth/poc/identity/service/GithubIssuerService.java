@@ -6,7 +6,7 @@ import nudemeth.poc.identity.model.issuer.IssuerUserInfo;
 
 public class GithubIssuerService implements IssuerService {
 
-    public GithubIssuerService(String clientId, String secret) {
+    public GithubIssuerService(String clientId, String clientSecret) {
 
     }
 
