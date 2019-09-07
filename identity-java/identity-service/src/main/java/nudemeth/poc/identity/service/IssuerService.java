@@ -1,5 +1,7 @@
 package nudemeth.poc.identity.service;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.concurrent.CompletableFuture;
 
 import nudemeth.poc.identity.model.issuer.IssuerUserInfo;
