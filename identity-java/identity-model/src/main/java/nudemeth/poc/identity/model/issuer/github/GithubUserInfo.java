@@ -13,7 +13,6 @@ import nudemeth.poc.identity.model.issuer.IssuerUserInfo;
 @ToString
 @EqualsAndHashCode
 public class GithubUserInfo implements IssuerUserInfo {
-    
     @Getter @Setter
     private String login;
 }

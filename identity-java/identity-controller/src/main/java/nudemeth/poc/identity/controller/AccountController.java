@@ -68,14 +68,13 @@ public class AccountController {
     @Async("asyncExecutor")
     @ResponseStatus(code = HttpStatus.CREATED)
     @PutMapping(path = "/users/login/{login}", consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE }, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-    public CompletableFuture<UUID> createOrUpdateUserByLogin(@PathVariable(required = true) String login, @RequestParam(required = false) String issuer, @RequestBody UserModel model) {
-        if (!login.equals(model.getLogin())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("Invalid creating or updating login: %s and %s", login, model.getLogin()));
+    public CompletableFuture<UUID> createOrUpdateUserByLogin(@PathVariable(required = true) String login, @RequestParam(required = false) String issuer, @RequestParam(required = false) String code, @RequestBody UserModel model) {
+        if (issuer != null && !issuer.isEmpty() && (code == null || code.isEmpty())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("Code is required for issuer: %s", issuer));
         }
-        if (issuer != null && model.getIssuer() != null && !issuer.equals(model.getIssuer())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("Invalid creating or updating issuer: %s and %s", issuer, model.getIssuer()));
-        }
-        return accountService.createOrUpdateUserByLoginAndIssuer(model);
+        model.setIssuer(issuer);
+        model.setLogin(login);
+        return accountService.createOrUpdateUserByLoginAndIssuer(model, code);
     }
 
     @Async("asyncExecutor")

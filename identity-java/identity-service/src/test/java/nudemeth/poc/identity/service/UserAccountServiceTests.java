@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.web.client.RestOperations;
 
 import nudemeth.poc.identity.entity.UserEntity;
 import nudemeth.poc.identity.mapper.UserMapper;
@@ -31,6 +32,8 @@ public class UserAccountServiceTests {
 
     @Mock
     private UserRepository mockUserRepo;
+    @Mock
+    private RestOperations mockRestOperations;
     private UserMapper userMapper;
     private CipherService cipherService;
     private UserAccountService userAccountService;
@@ -43,7 +46,8 @@ public class UserAccountServiceTests {
         cipherService = new AES256CBCCipherService(config);
         userMapper = new UserMapper(cipherService);
         tokenService = new JwtTokenService(config);
-        userAccountService = new UserAccountService(mockUserRepo, userMapper, tokenService);
+
+        userAccountService = new UserAccountService(mockUserRepo, userMapper, tokenService, mockRestOperations);
     }
 
     @Test

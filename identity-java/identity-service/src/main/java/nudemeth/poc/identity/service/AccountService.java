@@ -12,7 +12,7 @@ public interface AccountService {
     CompletableFuture<Optional<UserModel>> getUserByLoginAndIssuer(String login, String issuer);
     CompletableFuture<Optional<UserModel>> getUserByEmail(String email);
     CompletableFuture<UUID> createUser(UserModel model);
-    CompletableFuture<UUID> createOrUpdateUserByLoginAndIssuer(UserModel model);
+    CompletableFuture<UUID> createOrUpdateUserByLoginAndIssuer(UserModel model, String code);
     CompletableFuture<Void> deleteUser(UUID id);
     CompletableFuture<UserModel> updateUser(UserModel model);
 }

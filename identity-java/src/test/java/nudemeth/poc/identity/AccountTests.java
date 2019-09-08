@@ -239,6 +239,7 @@ public class AccountTests {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
         String issuer = "testIssuer";
+        String code = "testCode";
         String name = "Test Name";
         String email = "Test.Email@test.com";
         UserModel user = new UserModel(login);
@@ -247,10 +248,10 @@ public class AccountTests {
         user.setEmail(email);
         String jsonUser = mapper.writeValueAsString(user);
         
-        when(mockAccountService.createOrUpdateUserByLoginAndIssuer(user)).thenReturn(CompletableFuture.completedFuture(id));
+        when(mockAccountService.createOrUpdateUserByLoginAndIssuer(user, code)).thenReturn(CompletableFuture.completedFuture(id));
         
         MvcResult asyncResult = this.mockMvc.perform(
-                put(String.format("/users/login/%s?issuer=%s", login, issuer))
+                put(String.format("/users/login/%s?issuer=%s&code=%s", login, issuer, code))
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(jsonUser)
@@ -264,7 +265,7 @@ public class AccountTests {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(content().string(mapper.writeValueAsString(id)));
 
-        verify(mockAccountService, only()).createOrUpdateUserByLoginAndIssuer(user);
+        verify(mockAccountService, only()).createOrUpdateUserByLoginAndIssuer(user, code);
     }
 
     @Test
@@ -292,13 +293,12 @@ public class AccountTests {
             .andDo(print())
             .andExpect(status().isBadRequest());
 
-        verify(mockAccountService, never()).createOrUpdateUserByLoginAndIssuer(user);
+        verify(mockAccountService, never()).createOrUpdateUserByLoginAndIssuer(user, null);
     }
 
     @Test
-    public void createOrUpdateUserByLogin_WhenLoginNotMatch_ShouldReturnBadRequest() throws Exception {
+    public void createOrUpdateUserByLogin_WhenWithIssuerNoCode_ShouldReturnBadRequest() throws Exception {
         String login = "testLogin";
-        String login2 = "testLogin2";
         String issuer = "testIssuer";
         String name = "Test Name";
         String email = "Test.Email@test.com";
@@ -309,7 +309,7 @@ public class AccountTests {
         String jsonUser = mapper.writeValueAsString(user);
         
         MvcResult asyncResult = this.mockMvc.perform(
-                put(String.format("/users/login/%s", login2))
+                put(String.format("/users/login/%s?issuer=%s&code=", login, issuer))
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(jsonUser)
@@ -321,36 +321,7 @@ public class AccountTests {
             .andDo(print())
             .andExpect(status().isBadRequest());
 
-        verify(mockAccountService, never()).createOrUpdateUserByLoginAndIssuer(user);
-    }
-
-    @Test
-    public void createOrUpdateUserByLogin_WhenIssuerNotMatch_ShouldReturnBadRequest() throws Exception {
-        String login = "testLogin";
-        String issuer = "testIssuer";
-        String issuer2 = "testIssuer2";
-        String name = "Test Name";
-        String email = "Test.Email@test.com";
-        UserModel user = new UserModel(login);
-        user.setIssuer(issuer);
-        user.setName(name);
-        user.setEmail(email);
-        String jsonUser = mapper.writeValueAsString(user);
-        
-        MvcResult asyncResult = this.mockMvc.perform(
-                put(String.format("/users/login/%s?issuer=%s", login, issuer2))
-                .accept(MediaType.APPLICATION_JSON_UTF8)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(jsonUser)
-            )
-            .andExpect(request().asyncStarted())
-            .andReturn();
-        
-        this.mockMvc.perform(asyncDispatch(asyncResult))
-            .andDo(print())
-            .andExpect(status().isBadRequest());
-
-        verify(mockAccountService, never()).createOrUpdateUserByLoginAndIssuer(user);
+        verify(mockAccountService, never()).createOrUpdateUserByLoginAndIssuer(user, null);
     }
 
     @Test

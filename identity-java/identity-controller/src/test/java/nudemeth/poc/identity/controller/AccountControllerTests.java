@@ -151,19 +151,20 @@ public class AccountControllerTests {
         String login = "testLogin";
         String name = "Test Name";
         String issuer = "Test issuer";
+        String code = "Test Code";
         String email = "Test.Email@test.com";
         UserModel user = new UserModel(login);
         user.setName(name);
         user.setEmail(email);
         user.setIssuer(issuer);
         
-        when(mockAccountService.createOrUpdateUserByLoginAndIssuer(user)).thenReturn(CompletableFuture.completedFuture(id));
+        when(mockAccountService.createOrUpdateUserByLoginAndIssuer(user, code)).thenReturn(CompletableFuture.completedFuture(id));
 
-        CompletableFuture<UUID> actual = accountController.createOrUpdateUserByLogin(login, issuer, user);
+        CompletableFuture<UUID> actual = accountController.createOrUpdateUserByLogin(login, issuer, code, user);
 
         Assert.assertEquals(id, actual.get());
         
-        verify(mockAccountService, only()).createOrUpdateUserByLoginAndIssuer(user);
+        verify(mockAccountService, only()).createOrUpdateUserByLoginAndIssuer(user, code);
     }
 
     @Test
@@ -172,27 +173,28 @@ public class AccountControllerTests {
         String login = "testLogin";
         String name = "Test Name";
         String issuer = null;
+        String code = null;
         String email = "Test.Email@test.com";
         UserModel user = new UserModel(login);
         user.setName(name);
         user.setEmail(email);
         user.setIssuer(issuer);
         
-        when(mockAccountService.createOrUpdateUserByLoginAndIssuer(user)).thenReturn(CompletableFuture.completedFuture(id));
+        when(mockAccountService.createOrUpdateUserByLoginAndIssuer(user, null)).thenReturn(CompletableFuture.completedFuture(id));
 
-        CompletableFuture<UUID> actual = accountController.createOrUpdateUserByLogin(login, issuer, user);
+        CompletableFuture<UUID> actual = accountController.createOrUpdateUserByLogin(login, issuer, code, user);
 
         Assert.assertEquals(id, actual.get());
         
-        verify(mockAccountService, only()).createOrUpdateUserByLoginAndIssuer(user);
+        verify(mockAccountService, only()).createOrUpdateUserByLoginAndIssuer(user, null);
     }
 
     @Test
-    public void createOrUpdateUser_WhenWithUserModelLoginNotMatch_ShouldThrowResponseStatusException() throws Exception {
+    public void createOrUpdateUser_WhenWithIssuerNoCode_ShouldThrowResponseStatusException() throws Exception {
         String login = "testLogin";
-        String login2 = "testLogin2";
         String name = "Test Name";
-        String issuer = null;
+        String issuer = "Test issuer";
+        String code = null;
         String email = "Test.Email@test.com";
         UserModel user = new UserModel(login);
         user.setName(name);
@@ -200,41 +202,16 @@ public class AccountControllerTests {
         user.setIssuer(issuer);
         
         Runnable method = () -> {
-            accountController.createOrUpdateUserByLogin(login2, issuer, user);
+            accountController.createOrUpdateUserByLogin(login, issuer, code, user);
         };
         
         ResponseStatusException expectedEx = new ResponseStatusException(HttpStatus.BAD_REQUEST,
-            String.format("Invalid creating or updating login: %s and %s", login2, login)
+            String.format("Code is required for issuer: %s", issuer)
         );
 
         assertThrows(method, expectedEx.getClass(), expectedEx.getMessage());
         
-        verify(mockAccountService, never()).createOrUpdateUserByLoginAndIssuer(user);
-    }
-
-    @Test
-    public void createOrUpdateUser_WhenWithUserModelIssuerNotMatch_ShouldThrowResponseStatusException() throws Exception {
-        String login = "testLogin";
-        String name = "Test Name";
-        String issuer = "Test Issuer";
-        String issuer2 = "Test Issuer 2";
-        String email = "Test.Email@test.com";
-        UserModel user = new UserModel(login);
-        user.setName(name);
-        user.setEmail(email);
-        user.setIssuer(issuer);
-        
-        Runnable method = () -> {
-            accountController.createOrUpdateUserByLogin(login, issuer2, user);
-        };
-        
-        ResponseStatusException expectedEx = new ResponseStatusException(HttpStatus.BAD_REQUEST,
-            String.format("Invalid creating or updating issuer: %s and %s", issuer2, issuer)
-        );
-
-        assertThrows(method, expectedEx.getClass(), expectedEx.getMessage());
-        
-        verify(mockAccountService, never()).createOrUpdateUserByLoginAndIssuer(user);
+        verify(mockAccountService, never()).createOrUpdateUserByLoginAndIssuer(user, null);
     }
 
     @Test

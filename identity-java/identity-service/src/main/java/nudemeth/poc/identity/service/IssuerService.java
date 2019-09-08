@@ -1,13 +1,9 @@
 package nudemeth.poc.identity.service;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.concurrent.CompletableFuture;
-
 import nudemeth.poc.identity.model.issuer.IssuerUserInfo;
 
 public interface IssuerService {
-    CompletableFuture<Boolean> isValidAccessToken(String accessToken);
-    CompletableFuture<String> getAccessToken(String code);
-    CompletableFuture<IssuerUserInfo> getUserInfo(String accessToken);
+    Boolean isValidAccessToken(String accessToken);
+    String getAccessToken(String code);
+    IssuerUserInfo getUserInfo(String accessToken);
 }
