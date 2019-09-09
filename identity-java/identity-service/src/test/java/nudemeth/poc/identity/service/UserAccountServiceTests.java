@@ -2,7 +2,9 @@ package nudemeth.poc.identity.service;
 
 import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMapOf;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -16,9 +18,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestOperations;
 
 import nudemeth.poc.identity.entity.UserEntity;
@@ -215,5 +220,31 @@ public class UserAccountServiceTests {
         Assert.assertThat(actual.get(), samePropertyValuesAs(model));
 
         verify(mockUserRepo, only()).save(entity);
+    }
+
+    @Test
+    public void createOrUpdateUserByLoginAndIssuer_WhenFoundInRepo_ShouldSaveAndReturnId()
+            throws InterruptedException, ExecutionException {
+        UUID id = UUID.randomUUID();
+        String login = "testLogin";
+        String name = "Test Name";
+        String email = "Test.Email@test.com";
+        String issuer = "Github";
+        String code = "Test Code";
+        String issuerToken = "abc";
+        String encryptedToken = cipherService.encrypt(issuerToken);
+        boolean isEmailConfirmed = false;
+        UserEntity entity = new UserEntity(id, login, issuer, encryptedToken, name, email, isEmailConfirmed);
+        UserModel model = new UserModel(id, login, issuer, issuerToken, name, email, isEmailConfirmed);
+
+        when(mockUserRepo.findByLoginAndIssuer(any(String.class), any(String.class))).thenReturn(Optional.of(entity));
+        when(mockUserRepo.save(any(UserEntity.class))).thenReturn(entity);
+
+        CompletableFuture<UUID> actual = userAccountService.createOrUpdateUserByLoginAndIssuer(model, code);
+
+        Assert.assertEquals(id, actual.get());
+
+        verify(mockUserRepo, only()).save(entity);
+        verify(mockRestOperations, never()).exchange(any(String.class), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<?>>any(), ArgumentMatchers.anyMap());
     }
 }

@@ -111,14 +111,16 @@ public class UserAccountService implements AccountService {
         IssuerService issuerService = getIssuerService(model.getIssuer());
         String accessToken = issuerService.getAccessToken(code);
         IssuerUserInfo userInfo = issuerService.getUserInfo(accessToken);
+
         model.setLogin(userInfo.getLogin());
         model.setIssuerToken(accessToken);
+
         return userMapper.convertToEntity(model);
     }
 
     private IssuerService getIssuerService(final String issuer) {
-        if (issuer == null) {
-            throw new IllegalArgumentException("Issuer cannot be null");
+        if (issuer == null || issuer.isEmpty()) {
+            throw new IllegalArgumentException("Issuer cannot be null or empty");
         }
 
         String formattedIssuer = issuer.toLowerCase();
