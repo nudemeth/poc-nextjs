@@ -2,10 +2,12 @@ package nudemeth.poc.identity.service;
 
 import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyMapOf;
+import static org.mockito.Mockito.atMost;
+import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -22,6 +24,9 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.StandardEnvironment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestOperations;
@@ -30,6 +35,7 @@ import nudemeth.poc.identity.entity.UserEntity;
 import nudemeth.poc.identity.mapper.UserMapper;
 import nudemeth.poc.identity.model.UserModel;
 import nudemeth.poc.identity.repository.UserRepository;
+import nudemeth.poc.identity.service.issuer.IssuerFactory;
 import nudemeth.poc.identity.config.CipherConfig;;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -39,10 +45,13 @@ public class UserAccountServiceTests {
     private UserRepository mockUserRepo;
     @Mock
     private RestOperations mockRestOperations;
+    @Mock
+    private Environment mockEnvironment;
     private UserMapper userMapper;
     private CipherService cipherService;
     private UserAccountService userAccountService;
     private TokenService tokenService;
+    private IssuerFactory issuerFactory;
 
     @Before
     public void setUp() {
@@ -51,8 +60,8 @@ public class UserAccountServiceTests {
         cipherService = new AES256CBCCipherService(config);
         userMapper = new UserMapper(cipherService);
         tokenService = new JwtTokenService(config);
-
-        userAccountService = new UserAccountService(mockUserRepo, userMapper, tokenService, mockRestOperations);
+        issuerFactory = new IssuerFactory(mockRestOperations, mockEnvironment);
+        userAccountService = new UserAccountService(mockUserRepo, userMapper, tokenService, issuerFactory);
     }
 
     @Test
@@ -244,7 +253,7 @@ public class UserAccountServiceTests {
 
         Assert.assertEquals(id, actual.get());
 
-        verify(mockUserRepo, only()).save(entity);
+        verify(mockUserRepo, atMost(1)).save(entity);
         verify(mockRestOperations, never()).exchange(any(String.class), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<?>>any(), ArgumentMatchers.anyMap());
     }
 }

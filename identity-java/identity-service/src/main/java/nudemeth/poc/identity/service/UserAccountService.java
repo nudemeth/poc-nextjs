@@ -7,13 +7,14 @@ import java.util.concurrent.CompletableFuture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestOperations;
 
 import nudemeth.poc.identity.entity.UserEntity;
 import nudemeth.poc.identity.mapper.UserMapper;
 import nudemeth.poc.identity.model.UserModel;
 import nudemeth.poc.identity.model.issuer.IssuerUserInfo;
 import nudemeth.poc.identity.repository.UserRepository;
+import nudemeth.poc.identity.service.issuer.IssuerFactory;
+import nudemeth.poc.identity.service.issuer.IssuerService;
 
 @Service
 public class UserAccountService implements AccountService {
@@ -21,14 +22,14 @@ public class UserAccountService implements AccountService {
     private final UserRepository userRepo;
     private final UserMapper userMapper;
     private final TokenService tokenService;
-    private final RestOperations restOperations;
+    private final IssuerFactory issuerFactory;
 
     @Autowired
-    public UserAccountService(final UserRepository userRepo, final  UserMapper userMapper, final  TokenService tokenService, RestOperations restOperations) {
+    public UserAccountService(final UserRepository userRepo, final  UserMapper userMapper, final TokenService tokenService, final IssuerFactory issuerFactory) {
         this.userRepo = userRepo;
         this.userMapper = userMapper;
         this.tokenService = tokenService;
-        this.restOperations = restOperations;
+        this.issuerFactory = issuerFactory;
     }
 
     @Override
@@ -108,7 +109,7 @@ public class UserAccountService implements AccountService {
     }
 
     private UserEntity createUserByLoginAndIssuer(UserModel model, String code) {
-        IssuerService issuerService = getIssuerService(model.getIssuer());
+        IssuerService issuerService = issuerFactory.Create(model.getIssuer());
         String accessToken = issuerService.getAccessToken(code);
         IssuerUserInfo userInfo = issuerService.getUserInfo(accessToken);
 
@@ -116,19 +117,5 @@ public class UserAccountService implements AccountService {
         model.setIssuerToken(accessToken);
 
         return userMapper.convertToEntity(model);
-    }
-
-    private IssuerService getIssuerService(final String issuer) {
-        if (issuer == null || issuer.isEmpty()) {
-            throw new IllegalArgumentException("Issuer cannot be null or empty");
-        }
-
-        String formattedIssuer = issuer.toLowerCase();
-        switch (formattedIssuer) {
-            case "github":
-                return new GithubIssuerService(restOperations);
-            default:
-                throw new IllegalArgumentException(String.format("Issuer is invalid: %s", issuer));
-        }
     }
 }

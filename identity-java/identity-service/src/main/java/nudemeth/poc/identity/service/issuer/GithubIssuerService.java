@@ -1,11 +1,13 @@
-package nudemeth.poc.identity.service;
+package nudemeth.poc.identity.service.issuer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -18,13 +20,15 @@ public class GithubIssuerService implements IssuerService {
 
     private final String clientId;
     private final String clientSecret;
+    private final String urlPattern;
     private final RestOperations restTemplate;
-
+    
     @Autowired
-    public GithubIssuerService(final RestOperations restTemplate) {
-        this.clientId = System.getenv("GITHUB_CLIENT_ID");
-        this.clientSecret = System.getenv("GITHUB_CLIENT_SECRET");
+    public GithubIssuerService(final RestOperations restTemplate, final Environment environment) {
         this.restTemplate = restTemplate;
+        this.clientId = Optional.ofNullable(System.getenv("GITHUB_CLIENT_ID")).orElse(environment.getProperty("GITHUB_CLIENT_ID"));
+        this.clientSecret = Optional.ofNullable(System.getenv("GITHUB_CLIENT_SECRET")).orElse(environment.getProperty("GITHUB_CLIENT_SECRET"));
+        this.urlPattern = Optional.ofNullable(System.getenv("GITHUB_TOKEN_URL")).orElse(environment.getProperty("GITHUB_TOKEN_URL"));
     }
 
     @Override
@@ -34,7 +38,7 @@ public class GithubIssuerService implements IssuerService {
 
     @Override
     public String getAccessToken(String code) {
-        String url = getAcessTokenUrl(code);
+        String url = getAccessTokenUrl(code);
         HttpHeaders headers = createHttpHeaders();
         Map<String, String> uriParams = createUriParameters(code);
         HttpEntity<String> entity = new HttpEntity<String>(headers);
@@ -66,8 +70,7 @@ public class GithubIssuerService implements IssuerService {
         return uriParams;
     }
 
-    private String getAcessTokenUrl(String code) {
-        String urlPattern = System.getenv("GITHUB_TOKEN_URL");
+    private String getAccessTokenUrl(String code) {
         return String.format(urlPattern, code);
     }
 

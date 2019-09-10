@@ -1,4 +1,4 @@
-package nudemeth.poc.identity.service;
+package nudemeth.poc.identity.service.issuer;
 
 import nudemeth.poc.identity.model.issuer.IssuerUserInfo;
 
