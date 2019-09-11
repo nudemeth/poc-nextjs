@@ -87,7 +87,7 @@ public class UserAccountService implements AccountService {
                 }
                 return e;
             })
-            .orElse(createUserByLoginAndIssuer(model, code));
+            .orElseGet(() -> createUserByLoginAndIssuer(model, code));
         UserEntity createdEntity = userRepo.save(entity);
         return CompletableFuture.completedFuture(createdEntity.getId());
     }
