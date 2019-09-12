@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
@@ -15,17 +13,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestOperations;
 
 import nudemeth.poc.identity.model.issuer.IssuerUserInfo;
+import nudemeth.poc.identity.model.issuer.github.AccessTokenInfoResponse;
 
 public class GithubIssuerService implements IssuerService {
 
     private final String clientId;
     private final String clientSecret;
     private final String urlPattern;
-    private final RestOperations restTemplate;
+    private final RestOperations restOperation;
     
     @Autowired
-    public GithubIssuerService(final RestOperations restTemplate, final Environment environment) {
-        this.restTemplate = restTemplate;
+    public GithubIssuerService(final RestOperations restOperation, final Environment environment) {
+        this.restOperation = restOperation;
         this.clientId = Optional.ofNullable(System.getenv("GITHUB_CLIENT_ID")).orElse(environment.getProperty("GITHUB_CLIENT_ID"));
         this.clientSecret = Optional.ofNullable(System.getenv("GITHUB_CLIENT_SECRET")).orElse(environment.getProperty("GITHUB_CLIENT_SECRET"));
         this.urlPattern = Optional.ofNullable(System.getenv("GITHUB_TOKEN_URL")).orElse(environment.getProperty("GITHUB_TOKEN_URL"));
@@ -42,8 +41,8 @@ public class GithubIssuerService implements IssuerService {
         HttpHeaders headers = createHttpHeaders();
         Map<String, String> uriParams = createUriParameters(code);
         HttpEntity<String> entity = new HttpEntity<String>(headers);
-        
-        ResponseEntity<AccessTokenInfoResponse> response = restTemplate.exchange(url, HttpMethod.POST, entity,
+
+        ResponseEntity<AccessTokenInfoResponse> response = restOperation.exchange(url, HttpMethod.POST, entity,
                 AccessTokenInfoResponse.class, uriParams);
         AccessTokenInfoResponse accessTokenInfo = response.getBody();
 
@@ -72,32 +71,6 @@ public class GithubIssuerService implements IssuerService {
 
     private String getAccessTokenUrl(String code) {
         return String.format(urlPattern, code);
-    }
-
-    private class AccessTokenInfoResponse {
-        private String accessToken;
-        private String tokenType;
-
-        @JsonProperty("token_type")
-        public String getTokenType() {
-            return this.tokenType;
-        }
-
-        @JsonProperty("token_type")
-        public void setTokenType(String tokenType) {
-            this.tokenType = tokenType;
-        }
-
-        @JsonProperty("access_token")
-        public String getAccessToken() {
-            return this.accessToken;
-        }
-
-        @JsonProperty("access_token")
-        public void setAccessToken(String accessToken) {
-            this.accessToken = accessToken;
-        }
-
     }
 
 }
