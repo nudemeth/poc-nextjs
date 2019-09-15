@@ -9,12 +9,14 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestOperations;
 
 import nudemeth.poc.identity.model.issuer.IssuerUserInfo;
 import nudemeth.poc.identity.model.issuer.github.AccessTokenInfoResponse;
 import nudemeth.poc.identity.model.issuer.github.GithubUserInfo;
+import nudemeth.poc.identity.model.issuer.github.ValidationResponse;
 
 public class GithubIssuerService implements IssuerService {
 
@@ -22,6 +24,7 @@ public class GithubIssuerService implements IssuerService {
     private final String clientSecret;
     private final String accessTokenUrlPattern;
     private final String userInfoUrlPattern;
+    private final String validationUrlPattern;
     private final RestOperations restOperation;
     
     @Autowired
@@ -31,21 +34,29 @@ public class GithubIssuerService implements IssuerService {
         this.clientSecret = Optional.ofNullable(System.getenv("GITHUB_CLIENT_SECRET")).orElse(environment.getProperty("GITHUB_CLIENT_SECRET"));
         this.accessTokenUrlPattern = Optional.ofNullable(System.getenv("GITHUB_TOKEN_URL")).orElse(environment.getProperty("GITHUB_TOKEN_URL"));
         this.userInfoUrlPattern = Optional.ofNullable(System.getenv("GITHUB_USER_INFO_URL")).orElse(environment.getProperty("GITHUB_USER_INFO_URL"));
+        this.validationUrlPattern = Optional.ofNullable(System.getenv("GITHUB_VALIDATION_URL")).orElse(environment.getProperty("GITHUB_VALIDATION_URL"));
     }
 
     @Override
-    public Boolean isValidAccessToken(String accessToken) {
-        return null;
+    public Boolean isAccessTokenValid(String accessToken) {
+        HttpHeaders headers = createHttpHeaders();
+        Map<String, String> uriParams = createValidationUriParams(accessToken);
+        HttpEntity<String> entity = new HttpEntity<String>(headers);
+
+        ResponseEntity<ValidationResponse> response = restOperation.exchange(validationUrlPattern, HttpMethod.GET, entity,
+            ValidationResponse.class, uriParams);
+        HttpStatus statusCode = response.getStatusCode();
+
+        return statusCode.is2xxSuccessful();
     }
 
     @Override
     public String getAccessToken(String code) {
-        String url = getAccessTokenUrl(code);
         HttpHeaders headers = createHttpHeaders();
-        Map<String, String> uriParams = createUriParameters(code);
+        Map<String, String> uriParams = createAccessTokenUriParams(code);
         HttpEntity<String> entity = new HttpEntity<String>(headers);
 
-        ResponseEntity<AccessTokenInfoResponse> response = restOperation.exchange(url, HttpMethod.POST, entity,
+        ResponseEntity<AccessTokenInfoResponse> response = restOperation.exchange(accessTokenUrlPattern, HttpMethod.POST, entity,
                 AccessTokenInfoResponse.class, uriParams);
         AccessTokenInfoResponse accessTokenInfo = response.getBody();
 
@@ -54,11 +65,10 @@ public class GithubIssuerService implements IssuerService {
 
     @Override
     public IssuerUserInfo getUserInfo(String accessToken) {
-        String url = userInfoUrlPattern;
         HttpHeaders headers = createUserInfoHttpHeaders(accessToken);
         HttpEntity<String> entity = new HttpEntity<String>(headers);
 
-        ResponseEntity<GithubUserInfo> response = restOperation.exchange(url, HttpMethod.GET, entity,
+        ResponseEntity<GithubUserInfo> response = restOperation.exchange(userInfoUrlPattern, HttpMethod.GET, entity,
             GithubUserInfo.class);
         System.out.println(response == null);
         GithubUserInfo userInfo = response.getBody();
@@ -72,11 +82,18 @@ public class GithubIssuerService implements IssuerService {
         return headers;
     }
 
-    private Map<String, String> createUriParameters(String code) {
+    private Map<String, String> createAccessTokenUriParams(String code) {
         Map<String, String> uriParams = new HashMap<String, String>();
         uriParams.put("code", code);
         uriParams.put("client_id", clientId);
         uriParams.put("client_secret", clientSecret);
+        return uriParams;
+    }
+
+    private Map<String, String> createValidationUriParams(String accessToken) {
+        Map<String, String> uriParams = new HashMap<String, String>();
+        uriParams.put("client_id", clientId);
+        uriParams.put("access_token", accessToken);
         return uriParams;
     }
 
@@ -87,10 +104,6 @@ public class GithubIssuerService implements IssuerService {
         headers.add("Authorization", String.format("token %s", accessToken));
         headers.add("User-Agent", "poc-microservice-dev");
         return headers;
-    }
-
-    private String getAccessTokenUrl(String code) {
-        return String.format(accessTokenUrlPattern, code);
     }
 
 }
