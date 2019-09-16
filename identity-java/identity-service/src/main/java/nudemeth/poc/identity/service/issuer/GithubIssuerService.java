@@ -1,5 +1,6 @@
 package nudemeth.poc.identity.service.issuer;
 
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -39,10 +40,10 @@ public class GithubIssuerService implements IssuerService {
 
     @Override
     public Boolean isAccessTokenValid(String accessToken) {
-        HttpHeaders headers = createHttpHeaders();
+        HttpHeaders headers = createAccessTokenValidationHttpHeaders();
         Map<String, String> uriParams = createValidationUriParams(accessToken);
         HttpEntity<String> entity = new HttpEntity<String>(headers);
-
+        
         ResponseEntity<ValidationResponse> response = restOperation.exchange(validationUrlPattern, HttpMethod.GET, entity,
             ValidationResponse.class, uriParams);
         HttpStatus statusCode = response.getStatusCode();
@@ -101,8 +102,16 @@ public class GithubIssuerService implements IssuerService {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         headers.add("Accept", "application/json");
-        headers.add("Authorization", String.format("token %s", accessToken));
         headers.add("User-Agent", "poc-microservice-dev");
+        headers.setBearerAuth(accessToken);
+        return headers;
+    }
+
+    private HttpHeaders createAccessTokenValidationHttpHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
+        headers.add("Accept", "application/json");
+        headers.setBasicAuth(this.clientId, this.clientSecret, Charset.forName("UTF-8"));
         return headers;
     }
 
