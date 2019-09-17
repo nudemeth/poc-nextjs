@@ -18,7 +18,7 @@ const authSites = [
     { name: 'github', url: process.env.GITHUB_AUTH_URL || null }
 ]
 
-const getToken = (issuer, code) => {
+const getIssuerToken = (issuer, code) => {
     const options = {
         method: 'GET',
         headers: {
@@ -100,7 +100,7 @@ app
                 return res.sendStatus(404)
             }
 
-            const issuerResponse = await getToken(issuer, code)
+            const issuerResponse = await getIssuerToken(issuer, code)
             const userinfo = await getUserInfo(issuer, issuerResponse.access_token)
             const id = await createOrUpdateUser(issuer, issuerResponse.access_token, userinfo.login)
             const token = await getUserToken(id)
