@@ -235,26 +235,17 @@ public class AccountTests {
     }
 
     @Test
-    public void createOrUpdateUserByLogin_WhenWithUserModel_ShouldReturnUUIDWithCreatedHttpStatus() throws Exception {
+    public void createOrUpdateIssuerUser_WhenWithIssuerAndCode_ShouldReturnUUIDWithCreatedHttpStatus() throws Exception {
         UUID id = UUID.randomUUID();
-        String login = "testLogin";
         String issuer = "testIssuer";
         String code = "testCode";
-        String name = "Test Name";
-        String email = "Test.Email@test.com";
-        UserModel user = new UserModel(login);
-        user.setIssuer(issuer);
-        user.setName(name);
-        user.setEmail(email);
-        String jsonUser = mapper.writeValueAsString(user);
         
-        when(mockAccountService.createOrUpdateUserByLoginAndIssuer(user, code)).thenReturn(CompletableFuture.completedFuture(id));
+        when(mockAccountService.createOrUpdateIssuerUser(issuer, code)).thenReturn(CompletableFuture.completedFuture(id));
         
         MvcResult asyncResult = this.mockMvc.perform(
-                put(String.format("/users/login/%s?issuer=%s&code=%s", login, issuer, code))
+                put(String.format("/users/issuer/%s/code/%s", issuer, code))
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(jsonUser)
             )
             .andExpect(request().asyncStarted())
             .andReturn();
@@ -265,63 +256,22 @@ public class AccountTests {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(content().string(mapper.writeValueAsString(id)));
 
-        verify(mockAccountService, only()).createOrUpdateUserByLoginAndIssuer(user, code);
+        verify(mockAccountService, only()).createOrUpdateIssuerUser(issuer, code);
     }
 
     @Test
-    public void createOrUpdateUserByLogin_WhenNoLogin_ShouldReturnBadRequest() throws Exception {
-        String login = "testLogin";
+    public void createOrUpdateIssuerUser_WhenWithIssuerNoCode_ShouldReturnBadRequest() throws Exception {
         String issuer = "testIssuer";
-        String name = "Test Name";
-        String email = "Test.Email@test.com";
-        UserModel user = new UserModel(login);
-        user.setIssuer(issuer);
-        user.setName(name);
-        user.setEmail(email);
-        String jsonUser = mapper.writeValueAsString(user);
         
-        MvcResult asyncResult = this.mockMvc.perform(
-                put("/users/login/")
+        this.mockMvc.perform(
+                put(String.format("/users/issuer/%s/code/", issuer))
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(jsonUser)
             )
-            .andExpect(request().asyncStarted())
-            .andReturn();
-        
-        this.mockMvc.perform(asyncDispatch(asyncResult))
             .andDo(print())
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isNotFound());
 
-        verify(mockAccountService, never()).createOrUpdateUserByLoginAndIssuer(user, null);
-    }
-
-    @Test
-    public void createOrUpdateUserByLogin_WhenWithIssuerNoCode_ShouldReturnBadRequest() throws Exception {
-        String login = "testLogin";
-        String issuer = "testIssuer";
-        String name = "Test Name";
-        String email = "Test.Email@test.com";
-        UserModel user = new UserModel(login);
-        user.setIssuer(issuer);
-        user.setName(name);
-        user.setEmail(email);
-        String jsonUser = mapper.writeValueAsString(user);
-        
-        MvcResult asyncResult = this.mockMvc.perform(
-                put(String.format("/users/login/%s?issuer=%s&code=", login, issuer))
-                .accept(MediaType.APPLICATION_JSON_UTF8)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(jsonUser)
-            )
-            .andExpect(request().asyncStarted())
-            .andReturn();
-        
-        this.mockMvc.perform(asyncDispatch(asyncResult))
-            .andDo(print())
-            .andExpect(status().isBadRequest());
-
-        verify(mockAccountService, never()).createOrUpdateUserByLoginAndIssuer(user, null);
+        verify(mockAccountService, never()).createOrUpdateIssuerUser(issuer, null);
     }
 
     @Test

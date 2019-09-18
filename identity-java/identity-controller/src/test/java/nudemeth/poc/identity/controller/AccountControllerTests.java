@@ -146,63 +146,27 @@ public class AccountControllerTests {
     }
 
     @Test
-    public void createOrUpdateUser_WhenWithUserModel_ShouldReturnUUID() throws Exception {
+    public void createOrUpdateUser_WhenWithIssuerAndCode_ShouldReturnUUID() throws Exception {
         UUID id = UUID.randomUUID();
-        String login = "testLogin";
-        String name = "Test Name";
         String issuer = "Test issuer";
         String code = "Test Code";
-        String email = "Test.Email@test.com";
-        UserModel user = new UserModel(login);
-        user.setName(name);
-        user.setEmail(email);
-        user.setIssuer(issuer);
         
-        when(mockAccountService.createOrUpdateUserByLoginAndIssuer(user, code)).thenReturn(CompletableFuture.completedFuture(id));
+        when(mockAccountService.createOrUpdateIssuerUser(issuer, code)).thenReturn(CompletableFuture.completedFuture(id));
 
-        CompletableFuture<UUID> actual = accountController.createOrUpdateUserByLogin(login, issuer, code, user);
+        CompletableFuture<UUID> actual = accountController.createOrUpdateIssuerUser(issuer, code);
 
         Assert.assertEquals(id, actual.get());
         
-        verify(mockAccountService, only()).createOrUpdateUserByLoginAndIssuer(user, code);
-    }
-
-    @Test
-    public void createOrUpdateUser_WhenWithUserModelNoIssuer_ShouldReturnUUID() throws Exception {
-        UUID id = UUID.randomUUID();
-        String login = "testLogin";
-        String name = "Test Name";
-        String issuer = null;
-        String code = null;
-        String email = "Test.Email@test.com";
-        UserModel user = new UserModel(login);
-        user.setName(name);
-        user.setEmail(email);
-        user.setIssuer(issuer);
-        
-        when(mockAccountService.createOrUpdateUserByLoginAndIssuer(user, null)).thenReturn(CompletableFuture.completedFuture(id));
-
-        CompletableFuture<UUID> actual = accountController.createOrUpdateUserByLogin(login, issuer, code, user);
-
-        Assert.assertEquals(id, actual.get());
-        
-        verify(mockAccountService, only()).createOrUpdateUserByLoginAndIssuer(user, null);
+        verify(mockAccountService, only()).createOrUpdateIssuerUser(issuer, code);
     }
 
     @Test
     public void createOrUpdateUser_WhenWithIssuerNoCode_ShouldThrowResponseStatusException() throws Exception {
-        String login = "testLogin";
-        String name = "Test Name";
         String issuer = "Test issuer";
         String code = null;
-        String email = "Test.Email@test.com";
-        UserModel user = new UserModel(login);
-        user.setName(name);
-        user.setEmail(email);
-        user.setIssuer(issuer);
         
         Runnable method = () -> {
-            accountController.createOrUpdateUserByLogin(login, issuer, code, user);
+            accountController.createOrUpdateIssuerUser(issuer, code);
         };
         
         ResponseStatusException expectedEx = new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -211,7 +175,25 @@ public class AccountControllerTests {
 
         assertThrows(method, expectedEx.getClass(), expectedEx.getMessage());
         
-        verify(mockAccountService, never()).createOrUpdateUserByLoginAndIssuer(user, null);
+        verify(mockAccountService, never()).createOrUpdateIssuerUser(issuer, code);
+    }
+
+    @Test
+    public void createOrUpdateUser_WhenNoIssuer_ShouldThrowResponseStatusException() throws Exception {
+        String issuer = null;
+        String code = null;
+        
+        Runnable method = () -> {
+            accountController.createOrUpdateIssuerUser(issuer, code);
+        };
+        
+        ResponseStatusException expectedEx = new ResponseStatusException(HttpStatus.BAD_REQUEST,
+            "Issuer is required"
+        );
+
+        assertThrows(method, expectedEx.getClass(), expectedEx.getMessage());
+        
+        verify(mockAccountService, never()).createOrUpdateIssuerUser(issuer, code);
     }
 
     @Test

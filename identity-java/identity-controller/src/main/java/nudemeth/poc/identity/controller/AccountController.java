@@ -67,14 +67,15 @@ public class AccountController {
 
     @Async("asyncExecutor")
     @ResponseStatus(code = HttpStatus.CREATED)
-    @PutMapping(path = "/users/login/{login}", consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE }, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-    public CompletableFuture<UUID> createOrUpdateUserByLogin(@PathVariable(required = true) String login, @RequestParam(required = false) String issuer, @RequestParam(required = false) String code, @RequestBody UserModel model) {
-        if (issuer != null && !issuer.isEmpty() && (code == null || code.isEmpty())) {
+    @PutMapping(path = "/users/issuer/{issuer}/code/{code}", consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE }, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+    public CompletableFuture<UUID> createOrUpdateIssuerUser(@PathVariable(required = true) String issuer, @PathVariable(required = true) String code) {
+        if (issuer == null || issuer.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Issuer is required");
+        }
+        if (code == null || code.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("Code is required for issuer: %s", issuer));
         }
-        model.setIssuer(issuer);
-        model.setLogin(login);
-        return accountService.createOrUpdateUserByLoginAndIssuer(model, code);
+        return accountService.createOrUpdateIssuerUser(issuer, code);
     }
 
     @Async("asyncExecutor")

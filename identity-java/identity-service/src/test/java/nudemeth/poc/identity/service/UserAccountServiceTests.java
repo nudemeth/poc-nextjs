@@ -3,10 +3,9 @@ package nudemeth.poc.identity.service;
 import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -19,6 +18,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -233,7 +233,7 @@ public class UserAccountServiceTests {
     }
 
     @Test
-    public void createOrUpdateUserByLoginAndIssuer_WhenFoundInRepo_ShouldSaveAndReturnId()
+    public void createOrUpdateUserByLoginAndIssuer_WhenFoundInRepo_ShouldSaveUpdatedTokenAndReturnId()
             throws InterruptedException, ExecutionException {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
@@ -242,20 +242,38 @@ public class UserAccountServiceTests {
         String issuer = "Github";
         String code = "Test Code";
         String issuerToken = "abc";
+        String newIssuerToken = "def";
         String encryptedToken = cipherService.encrypt(issuerToken);
+        String newEncryptedToken = cipherService.encrypt(newIssuerToken);
         boolean isEmailConfirmed = false;
         UserEntity entity = new UserEntity(id, login, issuer, encryptedToken, name, email, isEmailConfirmed);
-        UserModel model = new UserModel(id, login, issuer, issuerToken, name, email, isEmailConfirmed);
+        UserEntity newEntity = new UserEntity(id, login, newEncryptedToken, encryptedToken, name, email, isEmailConfirmed);
+        String tokenUrl = "http://mock.token";
+        String userInfoUrl = "http://mock.userinfo";
+        AccessTokenInfoResponse accessTokenBody = new AccessTokenInfoResponse();
+        ResponseEntity<AccessTokenInfoResponse> accessTokenResponse = new ResponseEntity<AccessTokenInfoResponse>(accessTokenBody, HttpStatus.OK);
+        GithubUserInfo userInfoBody = new GithubUserInfo();
+        ResponseEntity<GithubUserInfo> userInfoResponse = new ResponseEntity<GithubUserInfo>(userInfoBody, HttpStatus.OK);
 
+        accessTokenBody.setAccessToken(newIssuerToken);
+        userInfoBody.setLogin(login);
+
+        when(mockRestOperations.exchange(eq(tokenUrl), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<AccessTokenInfoResponse>>any(), ArgumentMatchers.anyMap())).thenReturn(accessTokenResponse);
+        when(mockRestOperations.exchange(eq(userInfoUrl), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<GithubUserInfo>>any())).thenReturn(userInfoResponse);
+        when(mockEnvironment.getProperty("GITHUB_TOKEN_URL")).thenReturn(tokenUrl);
+        when(mockEnvironment.getProperty("GITHUB_USER_INFO_URL")).thenReturn(userInfoUrl);
         when(mockUserRepo.findByLoginAndIssuer(any(String.class), any(String.class))).thenReturn(Optional.of(entity));
         when(mockUserRepo.save(any(UserEntity.class))).thenReturn(entity);
 
-        CompletableFuture<UUID> actual = userAccountService.createOrUpdateUserByLoginAndIssuer(model, code);
+        CompletableFuture<UUID> actual = userAccountService.createOrUpdateIssuerUser(issuer, code);
 
+        ArgumentCaptor<UserEntity> argument = ArgumentCaptor.forClass(UserEntity.class);
+
+        verify(mockUserRepo, times(1)).save(argument.capture());
+        verify(mockRestOperations, times(2)).exchange(any(String.class), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<?>>any(), ArgumentMatchers.anyMap());
+
+        Assert.assertEquals(newEntity, argument.getValue());
         Assert.assertEquals(id, actual.get());
-
-        verify(mockUserRepo, atMost(1)).save(entity);
-        verify(mockRestOperations, never()).exchange(any(String.class), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<?>>any(), ArgumentMatchers.anyMap());
     }
 
     @Test
@@ -263,15 +281,11 @@ public class UserAccountServiceTests {
             throws InterruptedException, ExecutionException {
         UUID id = UUID.randomUUID();
         String login = "testLogin";
-        String name = "Test Name";
-        String email = "Test.Email@test.com";
         String issuer = "Github";
         String code = "Test Code";
         String issuerToken = "abc";
         String encryptedToken = cipherService.encrypt(issuerToken);
-        boolean isEmailConfirmed = false;
-        UserEntity entity = new UserEntity(id, login, issuer, encryptedToken, name, email, isEmailConfirmed);
-        UserModel model = new UserModel(id, login, issuer, issuerToken, name, email, isEmailConfirmed);
+        UserEntity entity = new UserEntity(id, login, issuer, encryptedToken, null, null, false);
         String tokenUrl = "http://mock.token";
         String userInfoUrl = "http://mock.userinfo";
         AccessTokenInfoResponse accessTokenBody = new AccessTokenInfoResponse();
@@ -280,21 +294,23 @@ public class UserAccountServiceTests {
         ResponseEntity<GithubUserInfo> userInfoResponse = new ResponseEntity<GithubUserInfo>(userInfoBody, HttpStatus.OK);
 
         accessTokenBody.setAccessToken(issuerToken);
-        accessTokenBody.setTokenType("Bearer");
         userInfoBody.setLogin(login);
 
-        when(mockUserRepo.findByLoginAndIssuer(any(String.class), any(String.class))).thenReturn(Optional.empty());
-        when(mockUserRepo.save(any(UserEntity.class))).thenReturn(entity);
         when(mockRestOperations.exchange(eq(tokenUrl), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<AccessTokenInfoResponse>>any(), ArgumentMatchers.anyMap())).thenReturn(accessTokenResponse);
         when(mockRestOperations.exchange(eq(userInfoUrl), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<GithubUserInfo>>any())).thenReturn(userInfoResponse);
         when(mockEnvironment.getProperty("GITHUB_TOKEN_URL")).thenReturn(tokenUrl);
         when(mockEnvironment.getProperty("GITHUB_USER_INFO_URL")).thenReturn(userInfoUrl);
+        when(mockUserRepo.findByLoginAndIssuer(any(String.class), any(String.class))).thenReturn(Optional.empty());
+        when(mockUserRepo.save(any(UserEntity.class))).thenReturn(entity);
 
-        CompletableFuture<UUID> actual = userAccountService.createOrUpdateUserByLoginAndIssuer(model, code);
+        CompletableFuture<UUID> actual = userAccountService.createOrUpdateIssuerUser(issuer, code);
 
+        ArgumentCaptor<UserEntity> argument = ArgumentCaptor.forClass(UserEntity.class);
+
+        verify(mockUserRepo, times(1)).save(argument.capture());
+        verify(mockRestOperations, times(2)).exchange(any(String.class), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<?>>any(), ArgumentMatchers.anyMap());
+
+        Assert.assertEquals(entity, argument.getValue());
         Assert.assertEquals(id, actual.get());
-
-        verify(mockUserRepo, atMost(1)).save(entity);
-        verify(mockRestOperations, atMost(1)).exchange(eq(tokenUrl), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<AccessTokenInfoResponse>>any(), ArgumentMatchers.anyMap());
     }
 }

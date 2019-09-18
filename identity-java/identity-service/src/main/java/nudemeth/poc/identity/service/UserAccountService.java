@@ -77,17 +77,15 @@ public class UserAccountService implements AccountService {
     
     @Override
     @Async("asyncExecutor")
-    public CompletableFuture<UUID> createOrUpdateUserByLoginAndIssuer(UserModel model, String code) {
-        UserEntity entity = userRepo.findByLoginAndIssuer(model.getLogin(), model.getIssuer())
+    public CompletableFuture<UUID> createOrUpdateIssuerUser(String issuer, String code) {
+        UserModel newModel = getIssuerUser(issuer, code);
+        UserEntity newEntity = userMapper.convertToEntity(newModel);
+        UserEntity entity = userRepo.findByLoginAndIssuer(newEntity.getLogin(), newEntity.getIssuer())
             .map(e -> {
-                e.setIssuerToken(model.getIssuerToken());
-                e.setEmail(model.getEmail());
-                if (!model.getEmail().equals(e.getEmail())) {
-                    e.setEmailConfirmed(false);
-                }
+                e.setIssuerToken(newEntity.getIssuerToken());
                 return e;
             })
-            .orElseGet(() -> createUserByLoginAndIssuer(model, code));
+            .orElse(newEntity);
         UserEntity createdEntity = userRepo.save(entity);
         return CompletableFuture.completedFuture(createdEntity.getId());
     }
@@ -108,14 +106,15 @@ public class UserAccountService implements AccountService {
         return CompletableFuture.completedFuture(updatedModel);
     }
 
-    private UserEntity createUserByLoginAndIssuer(UserModel model, String code) {
-        IssuerService issuerService = issuerFactory.Create(model.getIssuer());
+    private UserModel getIssuerUser(String issuer, String code) {
+        IssuerService issuerService = issuerFactory.Create(issuer);
         String accessToken = issuerService.getAccessToken(code);
         IssuerUserInfo userInfo = issuerService.getUserInfo(accessToken);
-
+        UserModel model = new UserModel();
+        
         model.setLogin(userInfo.getLogin());
         model.setIssuerToken(accessToken);
 
-        return userMapper.convertToEntity(model);
+        return model;
     }
 }
