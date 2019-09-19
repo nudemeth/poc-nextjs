@@ -247,7 +247,7 @@ public class UserAccountServiceTests {
         String newEncryptedToken = cipherService.encrypt(newIssuerToken);
         boolean isEmailConfirmed = false;
         UserEntity entity = new UserEntity(id, login, issuer, encryptedToken, name, email, isEmailConfirmed);
-        UserEntity newEntity = new UserEntity(id, login, newEncryptedToken, encryptedToken, name, email, isEmailConfirmed);
+        UserEntity newEntity = new UserEntity(id, login, issuer, newEncryptedToken, name, email, isEmailConfirmed);
         String tokenUrl = "http://mock.token";
         String userInfoUrl = "http://mock.userinfo";
         AccessTokenInfoResponse accessTokenBody = new AccessTokenInfoResponse();
@@ -270,7 +270,8 @@ public class UserAccountServiceTests {
         ArgumentCaptor<UserEntity> argument = ArgumentCaptor.forClass(UserEntity.class);
 
         verify(mockUserRepo, times(1)).save(argument.capture());
-        verify(mockRestOperations, times(2)).exchange(any(String.class), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<?>>any(), ArgumentMatchers.anyMap());
+        verify(mockRestOperations, times(1)).exchange(any(String.class), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<AccessTokenInfoResponse>>any(), ArgumentMatchers.anyMap());
+        verify(mockRestOperations, times(1)).exchange(any(String.class), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<GithubUserInfo>>any(), ArgumentMatchers.anyMap());
 
         Assert.assertEquals(newEntity, argument.getValue());
         Assert.assertEquals(id, actual.get());
@@ -279,13 +280,13 @@ public class UserAccountServiceTests {
     @Test
     public void createOrUpdateUserByLoginAndIssuer_WhenNotFoundInRepo_ShouldCallIssuerAndSaveAndReturnId()
             throws InterruptedException, ExecutionException {
-        UUID id = UUID.randomUUID();
+        UUID id = null;
         String login = "testLogin";
         String issuer = "Github";
         String code = "Test Code";
         String issuerToken = "abc";
         String encryptedToken = cipherService.encrypt(issuerToken);
-        UserEntity entity = new UserEntity(id, login, issuer, encryptedToken, null, null, false);
+        UserEntity entity = new UserEntity(null, login, issuer, encryptedToken, null, null, false);
         String tokenUrl = "http://mock.token";
         String userInfoUrl = "http://mock.userinfo";
         AccessTokenInfoResponse accessTokenBody = new AccessTokenInfoResponse();
@@ -308,7 +309,8 @@ public class UserAccountServiceTests {
         ArgumentCaptor<UserEntity> argument = ArgumentCaptor.forClass(UserEntity.class);
 
         verify(mockUserRepo, times(1)).save(argument.capture());
-        verify(mockRestOperations, times(2)).exchange(any(String.class), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<?>>any(), ArgumentMatchers.anyMap());
+        verify(mockRestOperations, times(1)).exchange(any(String.class), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<AccessTokenInfoResponse>>any(), ArgumentMatchers.anyMap());
+        verify(mockRestOperations, times(1)).exchange(any(String.class), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<GithubUserInfo>>any(), ArgumentMatchers.anyMap());
 
         Assert.assertEquals(entity, argument.getValue());
         Assert.assertEquals(id, actual.get());

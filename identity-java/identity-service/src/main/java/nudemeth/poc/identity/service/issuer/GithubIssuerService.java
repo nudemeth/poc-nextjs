@@ -71,7 +71,6 @@ public class GithubIssuerService implements IssuerService {
 
         ResponseEntity<GithubUserInfo> response = restOperation.exchange(userInfoUrlPattern, HttpMethod.GET, entity,
             GithubUserInfo.class);
-        System.out.println(response == null);
         GithubUserInfo userInfo = response.getBody();
         return userInfo;
     }

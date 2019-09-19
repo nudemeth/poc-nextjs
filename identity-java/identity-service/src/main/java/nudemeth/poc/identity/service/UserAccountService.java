@@ -113,6 +113,7 @@ public class UserAccountService implements AccountService {
         UserModel model = new UserModel();
         
         model.setLogin(userInfo.getLogin());
+        model.setIssuer(issuer);
         model.setIssuerToken(accessToken);
 
         return model;
