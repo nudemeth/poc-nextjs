@@ -41,7 +41,7 @@ public class GithubIssuerService implements IssuerService {
     @Override
     public Boolean isAccessTokenValid(String accessToken) {
         HttpHeaders headers = createAccessTokenValidationHttpHeaders();
-        Map<String, String> uriParams = createValidationUriParams(accessToken);
+        Map<String, String> uriParams = createAccessTokenValidationUriParams(accessToken);
         HttpEntity<String> entity = new HttpEntity<String>(headers);
         
         ResponseEntity<ValidationResponse> response = restOperation.exchange(validationUrlPattern, HttpMethod.GET, entity,
@@ -53,7 +53,7 @@ public class GithubIssuerService implements IssuerService {
 
     @Override
     public String getAccessToken(String code) {
-        HttpHeaders headers = createHttpHeaders();
+        HttpHeaders headers = createAccessTokenHttpHeaders();
         Map<String, String> uriParams = createAccessTokenUriParams(code);
         HttpEntity<String> entity = new HttpEntity<String>(headers);
 
@@ -75,7 +75,7 @@ public class GithubIssuerService implements IssuerService {
         return userInfo;
     }
 
-    private HttpHeaders createHttpHeaders() {
+    private HttpHeaders createAccessTokenHttpHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         headers.add("Accept", "application/json");
@@ -90,7 +90,7 @@ public class GithubIssuerService implements IssuerService {
         return uriParams;
     }
 
-    private Map<String, String> createValidationUriParams(String accessToken) {
+    private Map<String, String> createAccessTokenValidationUriParams(String accessToken) {
         Map<String, String> uriParams = new HashMap<String, String>();
         uriParams.put("client_id", clientId);
         uriParams.put("access_token", accessToken);
