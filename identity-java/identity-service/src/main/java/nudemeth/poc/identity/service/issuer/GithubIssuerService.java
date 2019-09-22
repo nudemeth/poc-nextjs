@@ -39,7 +39,7 @@ public class GithubIssuerService implements IssuerService {
     }
 
     @Override
-    public Boolean isAccessTokenValid(String accessToken) {
+    public Boolean isValidAccessToken(String accessToken) {
         HttpHeaders headers = createAccessTokenValidationHttpHeaders();
         Map<String, String> uriParams = createAccessTokenValidationUriParams(accessToken);
         HttpEntity<String> entity = new HttpEntity<String>(headers);

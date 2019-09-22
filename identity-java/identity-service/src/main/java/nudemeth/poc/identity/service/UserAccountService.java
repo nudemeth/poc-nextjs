@@ -46,6 +46,7 @@ public class UserAccountService implements AccountService {
         CompletableFuture<Optional<UserModel>> futureOptionalModel = getUser(id);
         return futureOptionalModel.thenApplyAsync((optionalModel) -> {
             return optionalModel.map(model -> {
+                // TODO: validate issuer access token here
                 return tokenService.create(model);
             });
         });
