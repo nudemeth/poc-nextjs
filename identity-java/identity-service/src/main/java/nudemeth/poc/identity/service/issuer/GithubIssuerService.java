@@ -31,11 +31,11 @@ public class GithubIssuerService implements IssuerService {
     @Autowired
     public GithubIssuerService(final RestOperations restOperation, final Environment environment) {
         this.restOperation = restOperation;
-        this.clientId = Optional.ofNullable(System.getenv("GITHUB_CLIENT_ID")).orElse(environment.getProperty("GITHUB_CLIENT_ID"));
-        this.clientSecret = Optional.ofNullable(System.getenv("GITHUB_CLIENT_SECRET")).orElse(environment.getProperty("GITHUB_CLIENT_SECRET"));
-        this.accessTokenUrlPattern = Optional.ofNullable(System.getenv("GITHUB_TOKEN_URL")).orElse(environment.getProperty("GITHUB_TOKEN_URL"));
-        this.userInfoUrlPattern = Optional.ofNullable(System.getenv("GITHUB_USER_INFO_URL")).orElse(environment.getProperty("GITHUB_USER_INFO_URL"));
-        this.validationUrlPattern = Optional.ofNullable(System.getenv("GITHUB_VALIDATION_URL")).orElse(environment.getProperty("GITHUB_VALIDATION_URL"));
+        this.clientId = Optional.ofNullable(System.getenv("GITHUB_CLIENT_ID")).orElse(environment.getProperty("issuer.github.client.id"));
+        this.clientSecret = Optional.ofNullable(System.getenv("GITHUB_CLIENT_SECRET")).orElse(environment.getProperty("issuer.github.client.secret"));
+        this.accessTokenUrlPattern = Optional.ofNullable(System.getenv("GITHUB_TOKEN_URL")).orElse(environment.getProperty("issuer.github.token.url"));
+        this.userInfoUrlPattern = Optional.ofNullable(System.getenv("GITHUB_USER_INFO_URL")).orElse(environment.getProperty("issuer.github.userinfo.url"));
+        this.validationUrlPattern = Optional.ofNullable(System.getenv("GITHUB_VALIDATION_URL")).orElse(environment.getProperty("issuer.github.validation.url"));
     }
 
     @Override

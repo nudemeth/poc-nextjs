@@ -260,8 +260,8 @@ public class UserAccountServiceTests {
 
         when(mockRestOperations.exchange(eq(tokenUrl), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<AccessTokenInfoResponse>>any(), ArgumentMatchers.anyMap())).thenReturn(accessTokenResponse);
         when(mockRestOperations.exchange(eq(userInfoUrl), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<GithubUserInfo>>any())).thenReturn(userInfoResponse);
-        when(mockEnvironment.getProperty("GITHUB_TOKEN_URL")).thenReturn(tokenUrl);
-        when(mockEnvironment.getProperty("GITHUB_USER_INFO_URL")).thenReturn(userInfoUrl);
+        when(mockEnvironment.getProperty("issuer.github.token.url")).thenReturn(tokenUrl);
+        when(mockEnvironment.getProperty("issuer.github.userinfo.url")).thenReturn(userInfoUrl);
         when(mockUserRepo.findByLoginAndIssuer(any(String.class), any(String.class))).thenReturn(Optional.of(entity));
         when(mockUserRepo.save(any(UserEntity.class))).thenReturn(entity);
 
@@ -299,8 +299,8 @@ public class UserAccountServiceTests {
 
         when(mockRestOperations.exchange(eq(tokenUrl), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<AccessTokenInfoResponse>>any(), ArgumentMatchers.anyMap())).thenReturn(accessTokenResponse);
         when(mockRestOperations.exchange(eq(userInfoUrl), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<GithubUserInfo>>any())).thenReturn(userInfoResponse);
-        when(mockEnvironment.getProperty("GITHUB_TOKEN_URL")).thenReturn(tokenUrl);
-        when(mockEnvironment.getProperty("GITHUB_USER_INFO_URL")).thenReturn(userInfoUrl);
+        when(mockEnvironment.getProperty("issuer.github.token.url")).thenReturn(tokenUrl);
+        when(mockEnvironment.getProperty("issuer.github.userinfo.url")).thenReturn(userInfoUrl);
         when(mockUserRepo.findByLoginAndIssuer(any(String.class), any(String.class))).thenReturn(Optional.empty());
         when(mockUserRepo.save(any(UserEntity.class))).thenReturn(entity);
 
