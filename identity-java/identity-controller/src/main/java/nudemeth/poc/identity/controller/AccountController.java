@@ -4,6 +4,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import nudemeth.poc.identity.exception.InvalidTokenException;
 import nudemeth.poc.identity.model.UserModel;
 import nudemeth.poc.identity.service.AccountService;
 
@@ -26,6 +29,8 @@ import nudemeth.poc.identity.service.AccountService;
 public class AccountController {
 
     private AccountService accountService;
+
+    private Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     @Autowired
     public AccountController(AccountService accountService) {
@@ -45,10 +50,16 @@ public class AccountController {
     }
 
     @Async("asyncExecutor")
+    @ResponseStatus(code = HttpStatus.OK)
     @GetMapping(path = "/token/user/{id}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
     public CompletableFuture<Optional<String>> getTokenByUserId(@PathVariable(required = true) String id) {
         UUID uuid = getUuidFromString(id);
-        return accountService.getTokenByUserId(uuid);
+        try {
+            return accountService.getTokenByUserId(uuid);
+        } catch (InvalidTokenException ex) {
+            logger.error(ex.getMessage(), ex);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ex.getMessage(), ex);
+        }
     }
 
     @Async("asyncExecutor")

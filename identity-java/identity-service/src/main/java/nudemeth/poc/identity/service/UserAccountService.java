@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import nudemeth.poc.identity.entity.UserEntity;
+import nudemeth.poc.identity.exception.InvalidTokenException;
 import nudemeth.poc.identity.mapper.UserMapper;
 import nudemeth.poc.identity.model.UserModel;
 import nudemeth.poc.identity.model.issuer.IssuerUserInfo;
@@ -49,13 +50,12 @@ public class UserAccountService implements AccountService {
                 if (model.getIssuer() == null || model.getIssuer().isEmpty()) {
                     return tokenService.create(model);
                 }
-
                 IssuerService issuerService = issuerFactory.Create(model.getIssuer());
                 Boolean isValidIssuerToken = issuerService.isValidAccessToken(model.getIssuerToken());
                 if (isValidIssuerToken) {
                     return tokenService.create(model);
                 }
-                return null;
+                throw new InvalidTokenException(String.format("Invalid access token for issuer: %s", model.getIssuer()));
             });
         });
     }
