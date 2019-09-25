@@ -50,16 +50,16 @@ public class AccountController {
     }
 
     @Async("asyncExecutor")
-    @ResponseStatus(code = HttpStatus.OK)
     @GetMapping(path = "/token/user/{id}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
     public CompletableFuture<Optional<String>> getTokenByUserId(@PathVariable(required = true) String id) {
         UUID uuid = getUuidFromString(id);
-        try {
-            return accountService.getTokenByUserId(uuid);
-        } catch (InvalidTokenException ex) {
+        return accountService.getTokenByUserId(uuid).exceptionally(ex -> {
             logger.error(ex.getMessage(), ex);
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ex.getMessage(), ex);
-        }
+            if (ex.getCause() != null && ex.getCause() instanceof InvalidTokenException) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ex.getMessage(), ex);
+            }
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), ex);
+        });
     }
 
     @Async("asyncExecutor")
