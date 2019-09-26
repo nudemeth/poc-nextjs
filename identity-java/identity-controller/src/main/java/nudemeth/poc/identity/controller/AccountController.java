@@ -50,7 +50,7 @@ public class AccountController {
     }
 
     @Async("asyncExecutor")
-    @GetMapping(path = "/token/user/{id}", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+    @GetMapping(path = "/users/{id}/token", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
     public CompletableFuture<Optional<String>> getTokenByUserId(@PathVariable(required = true) String id) {
         UUID uuid = getUuidFromString(id);
         return accountService.getTokenByUserId(uuid).exceptionally(ex -> {

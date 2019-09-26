@@ -91,7 +91,7 @@ public class AccountTests {
 
         when(mockAccountService.getTokenByUserId(id)).thenReturn(CompletableFuture.completedFuture(userToken));
         
-        MvcResult asyncResult = this.mockMvc.perform(get(String.format("/token/user/%s", id.toString())))
+        MvcResult asyncResult = this.mockMvc.perform(get(String.format("/users/%s/token", id.toString())))
             .andExpect(request().asyncStarted())
             .andReturn();
 
