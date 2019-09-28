@@ -106,6 +106,20 @@ public class AccountControllerTests {
     }
 
     @Test
+    public void getUserToken_WhenTokenEmpty_ShouldReturnEmpty() throws Exception {
+        UUID id = UUID.randomUUID();
+        Optional<String> userToken = Optional.empty();
+
+        when(mockAccountService.getTokenByUserId(id)).thenReturn(CompletableFuture.completedFuture(userToken));
+        
+        CompletableFuture<Optional<String>> actual = accountController.getTokenByUserId(id.toString());
+        
+        Assert.assertFalse(actual.get().isPresent());
+
+        verify(mockAccountService, only()).getTokenByUserId(id);
+    }
+
+    @Test
     public void getUserByEmail_WhenWithEmail_ShouldReturnUserModel() throws Exception {
         UUID id = UUID.randomUUID();
         String login = "testLogin";

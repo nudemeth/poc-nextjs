@@ -4,8 +4,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,8 +28,6 @@ public class AccountController {
 
     private AccountService accountService;
 
-    private Logger logger = LoggerFactory.getLogger(AccountController.class);
-
     @Autowired
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
@@ -53,8 +49,9 @@ public class AccountController {
     @GetMapping(path = "/users/{id}/token", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
     public CompletableFuture<Optional<String>> getTokenByUserId(@PathVariable(required = true) String id) {
         UUID uuid = getUuidFromString(id);
-        return accountService.getTokenByUserId(uuid).exceptionally(ex -> {
-            logger.error(ex.getMessage(), ex);
+        return accountService
+            .getTokenByUserId(uuid)
+            .exceptionally(ex -> {
             if (ex.getCause() != null && ex.getCause() instanceof InvalidTokenException) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ex.getMessage(), ex);
             }
