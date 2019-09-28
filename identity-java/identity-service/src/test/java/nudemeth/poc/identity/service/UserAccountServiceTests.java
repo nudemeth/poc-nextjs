@@ -4,7 +4,6 @@ import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,6 +11,7 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 
 import org.junit.Assert;
@@ -31,10 +31,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestOperations;
 
 import nudemeth.poc.identity.entity.UserEntity;
+import nudemeth.poc.identity.exception.InvalidTokenException;
 import nudemeth.poc.identity.mapper.UserMapper;
 import nudemeth.poc.identity.model.UserModel;
 import nudemeth.poc.identity.model.issuer.github.AccessTokenInfoResponse;
 import nudemeth.poc.identity.model.issuer.github.GithubUserInfo;
+import nudemeth.poc.identity.model.issuer.github.ValidationResponse;
 import nudemeth.poc.identity.repository.UserRepository;
 import nudemeth.poc.identity.service.issuer.IssuerFactory;
 import nudemeth.poc.identity.config.CipherConfig;;
@@ -84,7 +86,7 @@ public class UserAccountServiceTests {
         
         Assert.assertThat(actual.get().get(), samePropertyValuesAs(expected.get()));
 
-        verify(mockUserRepo, only()).findById(id);
+        verify(mockUserRepo, times(1)).findById(id);
     }
 
     @Test
@@ -98,7 +100,57 @@ public class UserAccountServiceTests {
         
         Assert.assertFalse(actual.get().isPresent());
 
-        verify(mockUserRepo, only()).findById(id);
+        verify(mockUserRepo, times(1)).findById(id);
+    }
+
+    @Test
+    public void getTokenByUserId_When404_ShouldThrowInvalidTokenException() throws InterruptedException, ExecutionException {
+        UUID id = UUID.randomUUID();
+        String login = "testLogin";
+        String name = "Test Name";
+        String email = "Test.Email@test.com";
+        String issuer = "github";
+        String issuerToken = "abc";
+        String encryptedToken = cipherService.encrypt(issuerToken);
+        boolean isEmailConfirmed = false;
+        String validationUrl = "http://mock.validation";
+        String clientId = "testId";
+        String clientSecret = "testSecret";
+        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, encryptedToken, name, email, isEmailConfirmed));
+        ValidationResponse validationBody = new ValidationResponse();
+        ResponseEntity<ValidationResponse> validationResponse = new ResponseEntity<ValidationResponse>(validationBody, HttpStatus.NOT_FOUND);
+        
+        when(mockUserRepo.findById(id)).thenReturn(entity);
+        when(mockEnvironment.getProperty("issuer.github.validation.url")).thenReturn(validationUrl);
+        when(mockEnvironment.getProperty("issuer.github.client.id")).thenReturn(clientId);
+        when(mockEnvironment.getProperty("issuer.github.client.secret")).thenReturn(clientSecret);
+        when(mockRestOperations.exchange(eq(validationUrl), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<ValidationResponse>>any(), ArgumentMatchers.anyMap())).thenReturn(validationResponse);
+
+        CompletableFuture<Optional<String>> actual = userAccountService.getTokenByUserId(id);
+        InvalidTokenException innerEx = new InvalidTokenException("Invalid access token for issuer: github");
+        CompletionException expectedEx = new CompletionException(innerEx);
+
+        actual.exceptionally(ex -> {
+            Assert.assertEquals(expectedEx.getClass(), ex.getClass());
+            Assert.assertEquals(expectedEx.getMessage(), ex.getMessage());
+            return Optional.empty();
+        }).join();
+        
+        verify(mockUserRepo, times(1)).findById(id);
+    }
+
+    @Test
+    public void getTokenByUserId_WhenFound_ShouldReturnToken() throws InterruptedException, ExecutionException {
+        UUID id = UUID.randomUUID();
+        Optional<UserEntity> entity = Optional.empty();
+        
+        when(mockUserRepo.findById(id)).thenReturn(entity);
+
+        CompletableFuture<Optional<String>> actual = userAccountService.getTokenByUserId(id);
+        
+        Assert.assertFalse(actual.get().isPresent());
+
+        verify(mockUserRepo, times(1)).findById(id);
     }
 
     @Test
@@ -120,7 +172,7 @@ public class UserAccountServiceTests {
         
         Assert.assertThat(actual.get().get(), samePropertyValuesAs(expected.get()));
 
-        verify(mockUserRepo, only()).findByLoginAndIssuer(login, issuer);
+        verify(mockUserRepo, times(1)).findByLoginAndIssuer(login, issuer);
     }
 
     @Test
@@ -136,7 +188,7 @@ public class UserAccountServiceTests {
         
         Assert.assertFalse(actual.get().isPresent());
 
-        verify(mockUserRepo, only()).findByLoginAndIssuer(login, issuer);
+        verify(mockUserRepo, times(1)).findByLoginAndIssuer(login, issuer);
     }
 
     @Test
@@ -158,7 +210,7 @@ public class UserAccountServiceTests {
         
         Assert.assertThat(actual.get().get(), samePropertyValuesAs(expected.get()));
 
-        verify(mockUserRepo, only()).findByEmail(email);
+        verify(mockUserRepo, times(1)).findByEmail(email);
     }
 
     @Test
@@ -173,7 +225,7 @@ public class UserAccountServiceTests {
         
         Assert.assertFalse(actual.get().isPresent());
 
-        verify(mockUserRepo, only()).findByEmail(email);
+        verify(mockUserRepo, times(1)).findByEmail(email);
     }
 
     @Test
@@ -196,7 +248,7 @@ public class UserAccountServiceTests {
 
         Assert.assertEquals(id, actual.get());
 
-        verify(mockUserRepo, only()).save(any(UserEntity.class));
+        verify(mockUserRepo, times(1)).save(any(UserEntity.class));
     }
 
     @Test
@@ -207,7 +259,7 @@ public class UserAccountServiceTests {
 
         userAccountService.deleteUser(id);
 
-        verify(mockUserRepo, only()).deleteById(id);
+        verify(mockUserRepo, times(1)).deleteById(id);
     }
 
     @Test
@@ -229,7 +281,7 @@ public class UserAccountServiceTests {
 
         Assert.assertThat(actual.get(), samePropertyValuesAs(model));
 
-        verify(mockUserRepo, only()).save(entity);
+        verify(mockUserRepo, times(1)).save(entity);
     }
 
     @Test
