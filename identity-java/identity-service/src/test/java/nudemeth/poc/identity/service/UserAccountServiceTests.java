@@ -140,6 +140,36 @@ public class UserAccountServiceTests {
     }
 
     @Test
+    public void getTokenByUserId_When200_ShouldReturnToken() throws InterruptedException, ExecutionException {
+        UUID id = UUID.randomUUID();
+        String login = "testLogin";
+        String name = "Test Name";
+        String email = "Test.Email@test.com";
+        String issuer = "github";
+        String issuerToken = "abc";
+        String encryptedToken = cipherService.encrypt(issuerToken);
+        boolean isEmailConfirmed = false;
+        String validationUrl = "http://mock.validation";
+        String clientId = "testId";
+        String clientSecret = "testSecret";
+        Optional<UserEntity> entity = Optional.of(new UserEntity(id, login, issuer, encryptedToken, name, email, isEmailConfirmed));
+        ValidationResponse validationBody = new ValidationResponse();
+        ResponseEntity<ValidationResponse> validationResponse = new ResponseEntity<ValidationResponse>(validationBody, HttpStatus.OK);
+        
+        when(mockUserRepo.findById(id)).thenReturn(entity);
+        when(mockEnvironment.getProperty("issuer.github.validation.url")).thenReturn(validationUrl);
+        when(mockEnvironment.getProperty("issuer.github.client.id")).thenReturn(clientId);
+        when(mockEnvironment.getProperty("issuer.github.client.secret")).thenReturn(clientSecret);
+        when(mockRestOperations.exchange(eq(validationUrl), any(HttpMethod.class), ArgumentMatchers.<HttpEntity<String>>any(), ArgumentMatchers.<Class<ValidationResponse>>any(), ArgumentMatchers.anyMap())).thenReturn(validationResponse);
+
+        CompletableFuture<Optional<String>> actual = userAccountService.getTokenByUserId(id);
+        
+        Assert.assertTrue(tokenService.verify(actual.get().get()));
+        
+        verify(mockUserRepo, times(1)).findById(id);
+    }
+
+    @Test
     public void getTokenByUserId_WhenFound_ShouldReturnToken() throws InterruptedException, ExecutionException {
         UUID id = UUID.randomUUID();
         Optional<UserEntity> entity = Optional.empty();
