@@ -163,7 +163,7 @@ func TestGetUserToken(t *testing.T) {
 	defer server.Close()
 
 	service := &api.Service{Client: server.Client(), BaseURL: server.URL}
-	req := httptest.NewRequest("GET", "/users/token/"+id, nil)
+	req := httptest.NewRequest("GET", "/users/"+id+"/token", nil)
 	identity(w, req, service)
 
 	resp := w.Result()

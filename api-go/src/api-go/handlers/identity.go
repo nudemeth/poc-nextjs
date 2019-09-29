@@ -25,8 +25,8 @@ func identity(w http.ResponseWriter, req *http.Request, service *api.Service) {
 	var res []byte
 	var err error
 	var status int
-	if strings.Index(req.URL.Path, "/users/token") > -1 && req.Method == "GET" {
-		id := path.Base(req.URL.Path)
+	if strings.HasPrefix(req.URL.Path, "/users") && strings.HasSuffix(req.URL.Path, "/token") && req.Method == "GET" {
+		id := path.Base(strings.Replace(req.URL.Path, "/token", "", 1))
 		res, status, err = service.GetUserToken(id)
 	} else if strings.Index(req.URL.Path, "/users/login") > -1 && req.Method == "GET" {
 		login := path.Base(req.URL.Path)

@@ -197,8 +197,8 @@ func (service *Service) CreateOrUpdateUser(issuer string, token string, login st
 }
 
 func (service *Service) GetUserToken(id string) ([]byte, int, error) {
-	path := "/api/v1/identity/token/user"
-	pathWithParams := fmt.Sprintf(path+"/%s", id)
+	path := "/api/v1/identity/users/%s/token"
+	pathWithParams := fmt.Sprintf(path, id)
 
 	req, err := http.NewRequest("GET", service.BaseURL+pathWithParams, nil)
 	req.Header.Add("Accept", "application/json")
