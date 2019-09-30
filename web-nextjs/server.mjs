@@ -64,7 +64,7 @@ const getUserToken = async (id) => {
             'Accept': 'application/json',
         }
     }
-    const res = await fetch(`${config.api.identity.uri}users/token/${id}`, options)
+    const res = await fetch(`${config.api.identity.uri}users/${id}/token`, options)
     if (!res.ok) {
         return
     }
