@@ -27,15 +27,17 @@ public class GithubIssuerService implements IssuerService {
     private final String userInfoUrlPattern;
     private final String validationUrlPattern;
     private final RestOperations restOperation;
+    private final Environment environment;
     
     @Autowired
     public GithubIssuerService(final RestOperations restOperation, final Environment environment) {
         this.restOperation = restOperation;
-        this.clientId = Optional.ofNullable(System.getenv("GITHUB_CLIENT_ID")).orElse(environment.getProperty("issuer.github.client.id"));
-        this.clientSecret = Optional.ofNullable(System.getenv("GITHUB_CLIENT_SECRET")).orElse(environment.getProperty("issuer.github.client.secret"));
-        this.accessTokenUrlPattern = Optional.ofNullable(System.getenv("GITHUB_TOKEN_URL")).orElse(environment.getProperty("issuer.github.token.url"));
-        this.userInfoUrlPattern = Optional.ofNullable(System.getenv("GITHUB_USER_INFO_URL")).orElse(environment.getProperty("issuer.github.userinfo.url"));
-        this.validationUrlPattern = Optional.ofNullable(System.getenv("GITHUB_VALIDATION_URL")).orElse(environment.getProperty("issuer.github.validation.url"));
+        this.environment = environment;
+        this.clientId = getConfiguration("GITHUB_CLIENT_ID", "issuer.github.client.id");
+        this.clientSecret = getConfiguration("GITHUB_CLIENT_SECRET", "issuer.github.client.secret");
+        this.accessTokenUrlPattern = getConfiguration("GITHUB_TOKEN_URL", "issuer.github.token.url");
+        this.userInfoUrlPattern = getConfiguration("GITHUB_USER_INFO_URL", "issuer.github.userinfo.url");
+        this.validationUrlPattern = getConfiguration("GITHUB_VALIDATION_URL", "issuer.github.validation.url");
     }
 
     @Override
@@ -112,6 +114,10 @@ public class GithubIssuerService implements IssuerService {
         headers.add("Accept", "application/json");
         headers.setBasicAuth(this.clientId, this.clientSecret, Charset.forName("UTF-8"));
         return headers;
+    }
+
+    private String getConfiguration(String envVar, String propVar) {
+        return Optional.ofNullable(System.getenv(envVar)).orElse(environment.getProperty(propVar));
     }
 
 }
