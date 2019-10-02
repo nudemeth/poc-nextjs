@@ -1,8 +1,6 @@
 package api
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -15,9 +13,7 @@ type CatalogService interface {
 
 type IdentityService interface {
 	GetUser(path string, login string, issuer string) ([]byte, int, error)
-	GetIdentityToken(url string) ([]byte, int, error)
-	GetIdentityUserInfo(url string, token string) ([]byte, int, error)
-	CreateOrUpdateUser(path string, issuer string, token string, login string) ([]byte, int, error)
+	CreateOrUpdateIssuerUser(issuer string, code string) ([]byte, int, error)
 	GetUserToken(id string) ([]byte, int, error)
 }
 
@@ -92,10 +88,12 @@ func (service *Service) GetUser(path string, login string, issuer string) ([]byt
 	return body, code, nil
 }
 
-func (service *Service) GetIdentityToken(url string) ([]byte, int, error) {
-	req, err := http.NewRequest("POST", url, nil)
-	req.Header.Add("Content-Type", "application/json")
+func (service *Service) CreateOrUpdateIssuerUser(issuer string, code string) ([]byte, int, error) {
+	url := fmt.Sprintf("/users/issuer/%s/code/%s", issuer, code)
+
+	req, err := http.NewRequest("PUT", service.BaseURL+url, nil)
 	req.Header.Add("Accept", "application/json")
+	req.Header.Add("Content-Type", "application/json")
 
 	if err != nil {
 		log.Printf("Error occur when creating request: service=%s, URI=%s\n%s", "Identity", url, err.Error())
@@ -109,91 +107,16 @@ func (service *Service) GetIdentityToken(url string) ([]byte, int, error) {
 		return nil, 500, err
 	}
 
-	defer res.Body.Close()
-
-	log.Printf("Redirect to: service=%s, URI=%s", "Identity", url)
+	log.Printf("Status: service=%s, URI=%s, code=%d", "Identity", url, res.StatusCode)
 	body, err := ioutil.ReadAll(res.Body)
-	code := res.StatusCode
-
-	if err != nil {
-		log.Printf("Error occur when reading response: service=%s, URI=%s\n%s", "Identity", url, err.Error())
-		return nil, 500, err
-	}
-
-	return body, code, nil
-}
-
-func (service *Service) GetIdentityUserInfo(url string, token string) ([]byte, int, error) {
-	req, err := http.NewRequest("GET", url, nil)
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Authorization", fmt.Sprintf("token %s", token))
-	req.Header.Add("User-Agent", "poc-microservice-dev")
-
-	if err != nil {
-		log.Printf("Error occur when creating request: service=%s, URI=%s\n%s", "Identity", url, err.Error())
-		return nil, 500, err
-	}
-
-	res, err := service.Client.Do(req)
+	statusCode := res.StatusCode
 
 	if err != nil {
 		log.Printf("Error occur when requesting: service=%s, URI=%s\n%s", "Identity", url, err.Error())
 		return nil, 500, err
 	}
 
-	defer res.Body.Close()
-
-	log.Printf("Redirect to: service=%s, URI=%s", "Identity", url)
-	body, err := ioutil.ReadAll(res.Body)
-	code := res.StatusCode
-
-	if err != nil {
-		log.Printf("Error occur when requesting: service=%s, URI=%s\n%s", "Identity", url, err.Error())
-		return nil, 500, err
-	}
-
-	return body, code, nil
-}
-
-func (service *Service) CreateOrUpdateUser(issuer string, token string, login string) ([]byte, int, error) {
-	createOrUpdateUserPath := fmt.Sprintf("/api/v1/identity/users/login/%s?issuer=%s", login, issuer)
-	data := map[string]string{
-		"issuer": issuer,
-		"token":  token,
-		"login":  login}
-	jsonValue, err := json.Marshal(data)
-
-	if err != nil {
-		log.Printf("Error occur when parsing request: service=%s, URI=%s\n%s", "Identity", createOrUpdateUserPath, err.Error())
-	}
-
-	req, err := http.NewRequest("POST", service.BaseURL+createOrUpdateUserPath, bytes.NewBuffer(jsonValue))
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("Content-Type", "application/json")
-
-	if err != nil {
-		log.Printf("Error occur when creating request: service=%s, URI=%s\n%s", "Identity", createOrUpdateUserPath, err.Error())
-		return nil, 500, err
-	}
-
-	res, err := service.Client.Do(req)
-
-	if err != nil {
-		log.Printf("Error occur when requesting: service=%s, URI=%s\n%s", "Identity", createOrUpdateUserPath, err.Error())
-		return nil, 500, err
-	}
-
-	log.Printf("Status: service=%s, URI=%s, code=%d", "Identity", createOrUpdateUserPath, res.StatusCode)
-	body, err := ioutil.ReadAll(res.Body)
-	code := res.StatusCode
-
-	if err != nil {
-		log.Printf("Error occur when requesting: service=%s, URI=%s\n%s", "Identity", createOrUpdateUserPath, err.Error())
-		return nil, 500, err
-	}
-
-	return body, code, nil
+	return body, statusCode, nil
 }
 
 func (service *Service) GetUserToken(id string) ([]byte, int, error) {

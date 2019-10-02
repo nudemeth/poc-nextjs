@@ -2,11 +2,8 @@ package handlers
 
 import (
 	"api-go/api"
-	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"path"
 	"strings"
 )
@@ -32,30 +29,11 @@ func identity(w http.ResponseWriter, req *http.Request, service *api.Service) {
 		login := path.Base(req.URL.Path)
 		issuer := req.URL.Query().Get("issuer")
 		res, status, err = service.GetUser("/api/v1/identity/users/login", login, issuer)
-	} else if strings.Index(req.URL.Path, "/token") > -1 && req.Method == "GET" {
-		issuer := req.URL.Query().Get("issuer")
-		code := req.URL.Query().Get("code")
-		url := getTokenURL(issuer, code)
-		res, status, err = service.GetIdentityToken(url)
-	} else if strings.Index(req.URL.Path, "/userinfo") > -1 && req.Method == "GET" {
-		issuer := req.URL.Query().Get("issuer")
-		token := req.URL.Query().Get("token")
-		url := getUserInfoURL(issuer)
-		res, status, err = service.GetIdentityUserInfo(url, token)
-	} else if strings.Index(req.URL.Path, "/users/login") > -1 && req.Method == "PUT" && req.Body != nil {
-		login := path.Base(req.URL.Path)
-		issuer := req.URL.Query().Get("issuer")
-		decoder := json.NewDecoder(req.Body)
-		var user UserModel
-		err := decoder.Decode(&user)
-
-		if err == nil {
-			issuer := issuer
-			token := user.Token
-			login := login
-			res, status, err = service.CreateOrUpdateUser(issuer, token, login)
-		}
-
+	} else if strings.HasPrefix(req.URL.Path, "/users/issuer/") && strings.Index(req.URL.Path, "/code/") > -1 && req.Method == "PUT" {
+		// /users/issuer/{issuer}/code/{code}
+		segments := strings.Split(req.URL.Path, "/")
+		issuer, code := segments[3], segments[5]
+		res, status, err = service.CreateOrUpdateIssuerUser(issuer, code)
 	} else {
 		log.Printf("Cannot map route: service=%s, URI=%s", "Identity", req.URL.Path)
 		w.WriteHeader(http.StatusNotFound)
@@ -70,25 +48,4 @@ func identity(w http.ResponseWriter, req *http.Request, service *api.Service) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	w.Write(res)
-}
-
-func getTokenURL(issuer string, code string) string {
-	var url string
-	switch strings.ToLower(issuer) {
-	case "github":
-		tokenURL := os.Getenv("GITHUB_TOKEN_URL")
-		url = fmt.Sprintf(tokenURL, code)
-	}
-
-	return url
-}
-
-func getUserInfoURL(issuer string) string {
-	var url string
-	switch strings.ToLower(issuer) {
-	case "github":
-		url = os.Getenv("GITHUB_USER_INFO_URL")
-	}
-
-	return url
 }
