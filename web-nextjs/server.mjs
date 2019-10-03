@@ -18,42 +18,14 @@ const authSites = [
     { name: 'github', url: process.env.GITHUB_AUTH_URL || null }
 ]
 
-const getIssuerToken = (issuer, code) => {
-    const options = {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-        }
-    }
-    return fetch(`${config.api.identity.uri}token?issuer=${issuer}&code=${code}`, options)
-        .then(r => r.json())
-}
-
-const getUserInfo = (issuer, token) => {
-    const options = {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-        }
-    }
-    return fetch(`${config.api.identity.uri}userinfo?issuer=${issuer}&token=${token}`, options)
-        .then(r => r.json())
-}
-
-const createOrUpdateUser = (issuer, token, login) => {
-    const data = {
-        issuer,
-        token,
-        login
-    }
+const createOrUpdateUser = (issuer, code) => {
     const options = {
         method: 'PUT',
         headers: {
             'Accept': 'application/json',
-        },
-        body: JSON.stringify(data)
+        }
     }
-    return fetch(`${config.api.identity.uri}users/login/${login}?issuer=${issuer}`, options)
+    return fetch(`${config.api.identity.uri}/users/issuer/${issuer}/code/${code}`, options)
         .then(r => r.json())
 }
 
@@ -100,9 +72,7 @@ app
                 return res.sendStatus(404)
             }
 
-            const issuerResponse = await getIssuerToken(issuer, code)
-            const userinfo = await getUserInfo(issuer, issuerResponse.access_token)
-            const id = await createOrUpdateUser(issuer, issuerResponse.access_token, userinfo.login)
+            const id = await createOrUpdateUser(issuer, code)
             const token = await getUserToken(id)
 
             if (!token) {

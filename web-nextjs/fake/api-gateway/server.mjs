@@ -10,18 +10,6 @@ const server = jsonServer.create()
 const router = jsonServer.router(path.join(__dirname, 'db.json'))
 const middlewares = jsonServer.defaults()
 
-//TODO: Isolate issuer function
-const getGithubToken = async function(code) {
-    const fakeToken = `12345-${code}-67890`
-    return await { access_token: fakeToken }
-}
-
-const getGithubUserinfo = async function(token) {
-    token
-    const fakeLogin = 'nudemeth'
-    return await { login: fakeLogin }
-}
-
 server.use(middlewares)
 server.get('/api/v1/catalog/items/:id/img', (req, res) => {
     const id = req.params.id
@@ -31,31 +19,10 @@ server.get('/api/v1/catalog/items/:id/img', (req, res) => {
     const imgPath = path.join(__dirname, `${item.imagePath}`)
     res.sendFile(imgPath)
 })
-server.get('/api/v1/identity/token', async (req, res) => {
-    const issuer = req.query.issuer
-    const code = req.query.code
-    let data
-
-    switch (issuer) {
-    case 'github': data = await getGithubToken(code); break
-    default: throw new Error(`Invalid issuer: ${issuer}`)
-    }
-    
-    res.send(data)
-})
-server.get('/api/v1/identity/userinfo', async (req, res) => {
-    const issuer = req.query.issuer
-    const token = req.query.token
-    let data
-    
-    switch (issuer) {
-    case 'github': data = await getGithubUserinfo(token); break
-    default: throw new Error(`Invalid issuer: ${issuer}`)
-    }
-
-    res.send(data)
-})
 server.put('/api/v1/identity/users/login/:login', ({ res }) => {   
+    res.send(JSON.stringify('ec6c1cb4-d3b6-4f0c-908d-722ca798fa87'))
+})
+server.put('/api/v1/identity/users/issuer/:issuer/code/:code', ({ res }) => {   
     res.send(JSON.stringify('ec6c1cb4-d3b6-4f0c-908d-722ca798fa87'))
 })
 server.get('/api/v1/identity/users/:id/token', ({ res }) => {
