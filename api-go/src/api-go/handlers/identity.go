@@ -22,14 +22,14 @@ func identity(w http.ResponseWriter, req *http.Request, service *api.Service) {
 	var res []byte
 	var err error
 	var status int
-	if strings.HasPrefix(req.URL.Path, "/users") && strings.HasSuffix(req.URL.Path, "/token") && req.Method == "GET" {
+	if strings.Index(req.URL.Path, "/users") > -1 && strings.HasSuffix(req.URL.Path, "/token") && req.Method == "GET" {
 		id := path.Base(strings.Replace(req.URL.Path, "/token", "", 1))
 		res, status, err = service.GetUserToken(id)
 	} else if strings.Index(req.URL.Path, "/users/login") > -1 && req.Method == "GET" {
 		login := path.Base(req.URL.Path)
 		issuer := req.URL.Query().Get("issuer")
 		res, status, err = service.GetUser("/api/v1/identity/users/login", login, issuer)
-	} else if strings.HasPrefix(req.URL.Path, "/users/issuer/") && strings.Index(req.URL.Path, "/code/") > -1 && req.Method == "PUT" {
+	} else if strings.Index(req.URL.Path, "/users/issuer/") > -1 && strings.Index(req.URL.Path, "/code/") > -1 && req.Method == "PUT" {
 		// /users/issuer/{issuer}/code/{code}
 		segments := strings.Split(req.URL.Path, "/")
 		issuer, code := segments[3], segments[5]
