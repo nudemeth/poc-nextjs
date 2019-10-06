@@ -93,7 +93,7 @@ app
 
             const parsedUrl = parse(req.url, true)
             const { query } = parsedUrl
-            
+
             app.render(req, res, '/authentication', { ...query, sites: authSites, accessToken: token })
         })
 
@@ -113,7 +113,7 @@ app
             const isResourceRequest = pathname.startsWith('/_next') || pathname.startsWith('/static')
             const hasExpiry = expiry !== undefined
             const isNormalRequest = isResourceRequest || hasExpiry
-            
+
             if (!accessToken) {
                 return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: null })
             }
@@ -121,7 +121,7 @@ app
             if (isNormalRequest) {
                 return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: accessToken })
             }
-            
+
             if (!await canRefreshToken(accessToken)) {
                 res.clearCookie('accessToken')
                 res.clearCookie('exp')
@@ -133,7 +133,7 @@ app
                 secure: !dev,
                 maxAge: refreshTokenLifeTime
             })
-            
+
             return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: accessToken })
         })
 
