@@ -5,10 +5,7 @@ services:
     build:
       context: ./web-nextjs
     environment:
-      - "ENCRYPTION_ALGORITHM=aes-256-cbc"
-      - "ENCRYPTION_SECRET=this is my secret"
-      - "ENCRYPTION_SALT=this is my salt"
-      - "GITHUB_AUTH_URL=https://github.com/login/oauth/authorize?client_id=[PUT_CLIENT_ID_HERE]"
+      - "GITHUB_AUTH_URL=https://github.com/login/oauth/authorize?client_id="
       - "REFRESH_TOKEN_LIFE_TIME=6000"
     networks:
       - microservices-net
@@ -37,6 +34,9 @@ services:
       - "API_BASE_URL=http://api-go.localhost"
       - "API_BASE_URL_TLS=https://api-go.localhost"
       - "SPRING_PROFILES_ACTIVE=prod"
+      - "CIPHER_IV="
+      - "CIPHER_KEY="
+      - "CIPHER_SALT="
       - "GITHUB_CLIENT_ID="
       - "GITHUB_CLIENT_SECRET="
       - "GITHUB_TOKEN_URL=https://github.com/login/oauth/access_token?client_id={client_id}&client_secret={client_secret}&code={code}"
@@ -59,6 +59,7 @@ services:
       - microservices-net
     depends_on: 
       - catalog-csharp
+      - identity-java
 
   nginx:
     container_name: nginx
@@ -73,6 +74,7 @@ services:
       - catalog-csharp
       - web-nextjs
       - api-go
+      - identity-java
 
 networks: 
   microservices-net: 
