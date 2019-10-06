@@ -23,9 +23,9 @@ namespace Catalog.API.Controllers
         [Route("api/v1/catalog/items/{catalogItemId}/img")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetImage(string id)
+        public async Task<IActionResult> GetImage(string catalogItemId)
         {
-            var guid = new Guid(id);
+            var guid = new Guid(catalogItemId);
             var item = await catalogService.GetItem(guid);
 
             if (item == null)
