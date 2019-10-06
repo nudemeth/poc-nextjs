@@ -12,6 +12,7 @@ FROM build AS publish
 RUN dotnet publish --no-restore -c Release -o /app
 
 FROM base AS final
+RUN apt-get update && apt-get install -y iputils-ping
 WORKDIR /app
 COPY --from=publish /app .
 EXPOSE 80 5000
