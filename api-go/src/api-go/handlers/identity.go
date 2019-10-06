@@ -30,9 +30,9 @@ func identity(w http.ResponseWriter, req *http.Request, service *api.Service) {
 		issuer := req.URL.Query().Get("issuer")
 		res, status, err = service.GetUser("/api/v1/identity/users/login", login, issuer)
 	} else if strings.Index(req.URL.Path, "/users/issuer/") > -1 && strings.Index(req.URL.Path, "/code/") > -1 && req.Method == "PUT" {
-		// /users/issuer/{issuer}/code/{code}
+		// /api/v1/identity/users/issuer/{issuer}/code/{code}
 		segments := strings.Split(req.URL.Path, "/")
-		issuer, code := segments[3], segments[5]
+		issuer, code := segments[6], segments[8]
 		res, status, err = service.CreateOrUpdateIssuerUser(issuer, code)
 	} else {
 		log.Printf("Cannot map route: service=%s, URI=%s", "Identity", req.URL.Path)

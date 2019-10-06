@@ -89,7 +89,7 @@ func (service *Service) GetUser(path string, login string, issuer string) ([]byt
 }
 
 func (service *Service) CreateOrUpdateIssuerUser(issuer string, code string) ([]byte, int, error) {
-	url := fmt.Sprintf("/users/issuer/%s/code/%s", issuer, code)
+	url := fmt.Sprintf("/api/v1/identity/users/issuer/%s/code/%s", issuer, code)
 
 	req, err := http.NewRequest("PUT", service.BaseURL+url, nil)
 	req.Header.Add("Accept", "application/json")
