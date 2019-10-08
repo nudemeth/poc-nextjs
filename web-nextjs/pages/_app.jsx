@@ -20,17 +20,16 @@ class MyApp extends App {
 
     static async getInitialProps ({ Component, ctx }) {
         let pageProps = {}
-        const query = ctx.query
-        const store = ctx.store
-
-        if (this.isRedirect(query, ctx.pathname)) {
+        const accessToken = this.getAccessToken(ctx)
+        
+        if (this.isRedirect(accessToken, ctx.pathname)) {
             this.redirect(ctx.res)
         }
-        
+
         //check if run at server
         if (ctx.req) {
-            store.dispatch(storeAccessToken(query.accessToken))
-            store.dispatch(storeAuthSites(query.sites))
+            ctx.store.dispatch(storeAccessToken(accessToken))
+            ctx.store.dispatch(storeAuthSites(ctx.query.sites))
         }
     
         if (Component.getInitialProps) {
@@ -52,8 +51,16 @@ class MyApp extends App {
         res.end()
     }
 
-    static isRedirect(query, pathname) {
-        return !query.accessToken && !config.noAuthPaths.includes(pathname)
+    static isRedirect(accessToken, pathname) {
+        return !accessToken && !config.noAuthPaths.includes(pathname)
+    }
+
+    static getAccessToken(ctx) {
+        if (ctx.req) {
+            return ctx.query.accessToken
+        } else {
+            return ctx.store.getState().identityReducer.accessToken
+        }
     }
 
     componentDidMount() {
