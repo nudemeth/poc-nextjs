@@ -31,6 +31,10 @@ const styles = theme => ({
             width: `calc(100% - ${drawerWidth}px)`,
         },
     },
+    logoutLink: {
+        textDecoration: 'none',
+        color: 'inherit'
+    }
 })
 
 class Header extends React.Component {
@@ -57,11 +61,8 @@ class Header extends React.Component {
         this.setState({ anchorEl: null })
     }
 
-    handleLogoutClick = () => {
-        window.location.href = '/logout'
-    }
-
     login = () => {
+        const { classes } = this.props
         const accessToken = this.props.accessToken
         if (accessToken) {
             const decoded = jwt.decode(accessToken, { complete: true })
@@ -76,7 +77,7 @@ class Header extends React.Component {
                     </Button>
                     <Menu id='account-menu' anchorEl={this.state.anchorEl} open={Boolean(this.state.anchorEl)} onClose={this.handleAccountMenuClose}>
                         <MenuItem onClick={this.handleAccountMenuClose}>Profile</MenuItem>
-                        <MenuItem onClick={this.handleLogoutClick}>Logout</MenuItem>
+                        <MenuItem><a href='/logout' className={classes.logoutLink}>Logout</a></MenuItem>
                     </Menu>
                 </React.Fragment>
             )
