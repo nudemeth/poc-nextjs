@@ -6,7 +6,10 @@ function * loadCatalogTypesWorker() {
     const { catalogTypeReducer: { catalogTypes } } = yield effects.select()
     if (!catalogTypes || catalogTypes.length === 0) {
         try {
-            const res = yield effects.call(catalogApi.getCatalogTypes)
+            const { identityReducer: { accessToken } } = yield effects.select()
+            const options = { headers: { 'Authorization': `Bearer ${accessToken}` } }
+            const res = yield effects.call(catalogApi.getCatalogTypes, options)
+            //TODO: handle unauthorized
             const data = yield res.json()
             yield effects.put(actions.loadCatalogTypesSuccess(data))
         } catch(err) {

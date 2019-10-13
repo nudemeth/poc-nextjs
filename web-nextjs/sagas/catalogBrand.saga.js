@@ -6,7 +6,10 @@ function * loadCatalogBrandsWorker() {
     const { catalogBrandReducer: { catalogBrands } } = yield effects.select()
     if (!catalogBrands || catalogBrands.length === 0) {
         try {
-            const res = yield effects.call(catalogApi.getCatalogBrands)
+            const { identityReducer: { accessToken } } = yield effects.select()
+            const options = { headers: { 'Authorization': `Bearer ${accessToken}` } }
+            const res = yield effects.call(catalogApi.getCatalogBrands, options)
+            //TODO: handle unauthorized
             const data = yield res.json()
             yield effects.put(actions.loadCatalogBrandsSuccess(data))
         } catch(err) {

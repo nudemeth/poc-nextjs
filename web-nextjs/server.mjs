@@ -12,7 +12,6 @@ import config from './config'
 const __dirname = path.resolve()
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
-const refreshTokenLifeTime = parseInt(process.env.REFRESH_TOKEN_LIFE_TIME) || 1000 * 60 * 60
 
 const authSites = [
     { name: 'github', url: process.env.GITHUB_AUTH_URL || null }
@@ -41,18 +40,6 @@ const getUserToken = async (id) => {
         return
     }
     return res.json()
-}
-
-const canRefreshToken = async (accessToken) => {
-    const decoded = jwt.decode(accessToken)
-    if (!decoded) {
-        return false
-    }
-    const token = await getUserToken(decoded.id)
-    if (!token) {
-        return false
-    }
-    return true
 }
 
 app
@@ -85,12 +72,6 @@ app
                 sameSite: true,
             })
 
-            res.cookie('exp', Date.now(), {
-                httpOnly: true,
-                secure: !dev,
-                maxAge: refreshTokenLifeTime
-            })
-
             const parsedUrl = parse(req.url, true)
             const { query } = parsedUrl
 
@@ -101,40 +82,38 @@ app
             const parsedUrl = parse(req.url, true)
             const { query } = parsedUrl
             res.clearCookie('accessToken')
-            res.clearCookie('exp')
             return app.render(req, res, '/logout', query)
         })
 
         server.get('*', async (req, res) => {
             const accessToken = req.cookies.accessToken
-            const expiry = req.cookies.exp
             const parsedUrl = parse(req.url, true)
             const { pathname, query } = parsedUrl
             const isResourceRequest = pathname.startsWith('/_next') || pathname.startsWith('/static')
-            const hasExpiry = expiry !== undefined
-            const isNormalRequest = isResourceRequest || hasExpiry
 
             if (!accessToken) {
                 return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: null })
             }
 
-            if (isNormalRequest) {
+            if (isResourceRequest) {
                 return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: accessToken })
             }
 
-            if (!await canRefreshToken(accessToken)) {
+            const payload = jwt.decode(accessToken)
+
+            if (!payload || !payload.id) {
                 res.clearCookie('accessToken')
-                res.clearCookie('exp')
                 return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: null })
             }
 
-            res.cookie('exp', Date.now(), {
-                httpOnly: true,
-                secure: !dev,
-                maxAge: refreshTokenLifeTime
-            })
+            const newAccessToken = await getUserToken(payload.id)
 
-            return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: accessToken })
+            if (!newAccessToken) {
+                res.clearCookie('accessToken')
+                return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: null })
+            }
+
+            return app.render(req, res, pathname, { ...query, sites: authSites, accessToken: newAccessToken })
         })
 
         server.listen(port, (err) => {

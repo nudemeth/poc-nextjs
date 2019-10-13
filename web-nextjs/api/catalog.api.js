@@ -30,12 +30,12 @@ class CatalogApi extends Api {
         return await this.tryFetch(`${this.host}items`)
     }
 
-    getCatalogTypes = async () => {
-        return await this.tryFetch(`${this.host}catalogTypes`)
+    getCatalogTypes = async (options) => {
+        return await this.tryFetch(`${this.host}catalogTypes`, options)
     }
 
-    getCatalogBrands = async () => {
-        return await this.tryFetch(`${this.host}catalogBrands`)
+    getCatalogBrands = async (options) => {
+        return await this.tryFetch(`${this.host}catalogBrands`, options)
     }
 
     getItemImage = async (catalogItemId) => {
