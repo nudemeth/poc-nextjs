@@ -20,20 +20,27 @@ class MyApp extends App {
 
     static async getInitialProps ({ Component, ctx }) {
         let pageProps = {}
-        const accessToken = this.getAccessToken(ctx)
-        
-        if (this.isRedirect(accessToken, ctx.pathname)) {
-            this.redirect(ctx.res)
-        }
 
-        //check if run at server
-        if (ctx.req) {
-            ctx.store.dispatch(storeAccessToken(accessToken))
+        if (ctx.isServer) {
+            ctx.store.dispatch(storeAccessToken(ctx.query.accessToken))
             ctx.store.dispatch(storeAuthSites(ctx.query.sites))
         }
-    
+
         if (Component.getInitialProps) {
             pageProps = await Component.getInitialProps({ ctx })
+        }
+
+        if (!ctx.isServer) {
+            return { pageProps }
+        }
+
+        // Wait Saga task to be done on server side
+        await ctx.store.waitSagaTaskDone(ctx.isServer)
+
+        const accessToken = ctx.store.getState().identityReducer.accessToken
+
+        if (this.isRedirect(accessToken, ctx.pathname)) {
+            this.redirect(ctx.res)
         }
 
         return { pageProps }
@@ -55,19 +62,19 @@ class MyApp extends App {
         return !accessToken && !config.noAuthPaths.includes(pathname)
     }
 
-    static getAccessToken(ctx) {
-        if (ctx.req) {
-            return ctx.query.accessToken
-        } else {
-            return ctx.store.getState().identityReducer.accessToken
-        }
-    }
-
     componentDidMount() {
         // Remove the server-side injected CSS.
         const jssStyles = document.querySelector('#jss-server-side')
         if (jssStyles && jssStyles.parentNode) {
             jssStyles.parentNode.removeChild(jssStyles)
+        }
+    }
+
+    componentDidUpdate() {
+        const accessToken = this.props.store.getState().identityReducer.accessToken
+        const pathname = this.props.router.pathname
+        if (MyApp.isRedirect(accessToken, pathname)) {
+            this.props.router.push('/login')
         }
     }
 
@@ -100,4 +107,4 @@ class MyApp extends App {
     }
 }
 
-export default withRedux(configureStore)(withReduxSaga()(MyApp))
+export default withRedux(configureStore)(withReduxSaga(MyApp))

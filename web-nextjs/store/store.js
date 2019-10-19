@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware } from 'redux'
-import createSagaMiddleware from 'redux-saga'
+import createSagaMiddleware, { END } from 'redux-saga'
 import rootReducer from '../reducers/root.reducer'
 import rootSaga from '../sagas/root.saga'
 
@@ -18,6 +18,13 @@ export default function configureStore (initialState) {
 
     store.runSagaTask = () => {
         store.sagaTask = sagaMiddleware.run(rootSaga)
+    }
+
+    store.waitSagaTaskDone = async (isServer) => {
+        if (isServer) {
+            store.dispatch(END)
+            await store.sagaTask.done
+        }
     }
     
     store.runSagaTask()

@@ -13,6 +13,11 @@ export default function identityReducer(state = initialState, action) {
             ...state,
             ...{ sites: action.payload.sites }
         }
+    case actionTypes.REVOKE_ACCESS_TOKEN:
+        return {
+            ...state,
+            ...{ accessToken: action.payload.accessToken }
+        }
     default: return state
     }
 }
