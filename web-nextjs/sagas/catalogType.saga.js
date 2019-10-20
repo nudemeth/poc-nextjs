@@ -1,5 +1,6 @@
 import * as effects from 'redux-saga/effects'
 import * as actions from '../actions/catalogType.actions'
+import { revokeAccessToken } from '../actions/identity.actions'
 import catalogApi from '../api/catalog.api'
 
 function * loadCatalogTypesWorker() {
@@ -9,11 +10,18 @@ function * loadCatalogTypesWorker() {
             const { identityReducer: { accessToken } } = yield effects.select()
             const options = { headers: { 'Authorization': `Bearer ${accessToken}` } }
             const res = yield effects.call(catalogApi.getCatalogTypes, options)
-            //TODO: handle unauthorized
+            if (res.status !== 200) {
+                throw res.status
+            }
             const data = yield res.json()
             yield effects.put(actions.loadCatalogTypesSuccess(data))
         } catch(err) {
-            yield effects.put(actions.loadCatalogTypesFailure(err))
+            if (err === 401) {
+                yield effects.put(revokeAccessToken())
+            } else {
+                yield effects.put(actions.loadCatalogTypesFailure(err))
+            }
+            
         }
     }
 }
