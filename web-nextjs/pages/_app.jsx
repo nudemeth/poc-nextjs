@@ -39,41 +39,53 @@ class MyApp extends App {
 
         const accessToken = ctx.store.getState().identityReducer.accessToken
 
-        if (this.isRedirect(accessToken, ctx.pathname)) {
-            this.redirect(ctx.res)
+        if (this.isRedirectToLogin(accessToken, ctx.pathname)) {
+            this.redirect(ctx.res, '/login')
+        }
+        if (this.isRedirectToHome(accessToken, ctx.pathname)) {
+            this.redirect(ctx.res, '/')
         }
 
         return { pageProps }
     }
 
-    static redirect(res) {
+    static redirect(res, path) {
         if (!res) {
-            Router.push('/login')
+            Router.push(path)
             return
         }
 
         res.writeHead(302, {
-            Location: '/login'
+            Location: path
         })
         res.end()
     }
 
-    static isRedirect(accessToken, pathname) {
+    static isRedirectToLogin(accessToken, pathname) {
         return !accessToken && !config.noAuthPaths.includes(pathname)
+    }
+
+    static isRedirectToHome(accessToken, pathname) {
+        return accessToken && pathname === '/login'
     }
 
     componentDidMount() {
         // Remove the server-side injected CSS.
         const jssStyles = document.querySelector('#jss-server-side')
+        const accessToken = this.props.store.getState().identityReducer.accessToken
+        const pathname = this.props.router.pathname
         if (jssStyles && jssStyles.parentNode) {
             jssStyles.parentNode.removeChild(jssStyles)
+        }
+        if (MyApp.isRedirectToHome(accessToken, pathname)) {
+            this.props.router.push('/')
         }
     }
 
     componentDidUpdate() {
         const accessToken = this.props.store.getState().identityReducer.accessToken
         const pathname = this.props.router.pathname
-        if (MyApp.isRedirect(accessToken, pathname)) {
+        if (MyApp.isRedirectToLogin(accessToken, pathname)) {
             this.props.router.push('/login')
         }
     }
