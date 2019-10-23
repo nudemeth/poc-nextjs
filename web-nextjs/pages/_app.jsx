@@ -30,10 +30,6 @@ class MyApp extends App {
             pageProps = await Component.getInitialProps({ ctx })
         }
 
-        if (!ctx.isServer) {
-            return { pageProps }
-        }
-
         // Wait Saga task to be done on server side
         await ctx.store.waitSagaTaskDone(ctx.isServer)
 

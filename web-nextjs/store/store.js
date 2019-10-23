@@ -21,9 +21,11 @@ export default function configureStore (initialState) {
     }
 
     store.waitSagaTaskDone = async (isServer) => {
-        if (isServer) {
-            store.dispatch(END)
-            await store.sagaTask.done
+        store.dispatch(END)
+        await store.sagaTask.done
+        if (!isServer) {
+            // Run again for client
+            store.runSagaTask()
         }
     }
     
