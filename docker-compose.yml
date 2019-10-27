@@ -70,10 +70,8 @@ services:
     networks: 
       - microservices-net
     depends_on: 
-      - catalog-csharp
       - web-nextjs
       - api-go
-      - identity-java
 
 networks: 
   microservices-net: 
