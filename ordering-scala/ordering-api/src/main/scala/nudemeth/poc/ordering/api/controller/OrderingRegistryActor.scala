@@ -2,10 +2,11 @@ package nudemeth.poc.ordering.api.controller
 
 import java.util.UUID
 
-import akka.actor.{ Actor, ActorLogging, Props }
+import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import akka.pattern.pipe
 import nudemeth.poc.ordering.api.application.query.OrderQueryable
 import nudemeth.poc.ordering.api.application.query.viewmodel.Order
+import nudemeth.poc.ordering.api.infrastructure.service.IdentityService
 
 import scala.concurrent.ExecutionContext
 
@@ -22,9 +23,11 @@ object OrderingRegistryActor {
 class OrderingRegistryActor(repository: OrderQueryable) extends Actor with ActorLogging {
   import nudemeth.poc.ordering.api.controller.OrderingRegistryActor._
   implicit val ec: ExecutionContext = context.dispatcher
+  val identityService: ActorRef = context.actorOf(IdentityService.props, "identity-actor")
 
   def receive: Receive = {
     case GetOrders =>
+      identityService ! ""
       val userName = UUID.fromString("6bc6cfae-b04e-4b53-ba23-1a1b7260b121")
       repository.getOrdersByUserNameAsync(userName).pipeTo(sender())
     case GetOrder(id) =>
