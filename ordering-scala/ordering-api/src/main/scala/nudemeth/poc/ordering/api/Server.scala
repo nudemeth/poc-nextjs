@@ -10,6 +10,7 @@ import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
 import nudemeth.poc.ordering.api.application.query.{ OrderQuery, OrderQueryable }
 import nudemeth.poc.ordering.api.controller.{ OrderingRegistryActor, OrderingRoutes }
+import nudemeth.poc.ordering.api.infrastructure.service.IdentityService
 
 //#main-class
 object Server extends App with OrderingRoutes {
@@ -23,7 +24,8 @@ object Server extends App with OrderingRoutes {
   //#server-bootstrapping
 
   val orderingRepo: OrderQueryable = new OrderQuery()
-  val orderingRegistryActor: ActorRef = system.actorOf(OrderingRegistryActor.props(orderingRepo), "ordering-actor")
+  var identityActor: ActorRef = system.actorOf(IdentityService.props, "identity-actor")
+  val orderingRegistryActor: ActorRef = system.actorOf(OrderingRegistryActor.props(orderingRepo, identityActor), "ordering-actor")
 
   //#main-class
   // from the OrderingRoutes trait
