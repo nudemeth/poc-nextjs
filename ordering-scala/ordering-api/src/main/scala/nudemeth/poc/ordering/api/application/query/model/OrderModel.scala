@@ -1,6 +1,6 @@
 package nudemeth.poc.ordering.api.application.query.model
 
-import java.time.ZonedDateTime
+import java.time.{ OffsetDateTime, ZonedDateTime }
 import java.util.UUID
 
 import com.outworkers.phantom.Table
@@ -17,7 +17,7 @@ abstract class OrderModel extends Table[OrderModel, OrderEntity] {
   override def tableName: String = "order_by_id"
 
   object orderId extends Col[UUID] with PrimaryKey { override lazy val name = "order_id" }
-  object orderDate extends Col[ZonedDateTime] { override lazy val name = "order_date" }
+  object orderDate extends Col[OffsetDateTime] { override lazy val name = "order_date" }
   object description extends Col[String]
   object addressCity extends Col[String] { override lazy val name = "address_city" }
   object addressCountry extends Col[String] { override lazy val name = "address_country" }

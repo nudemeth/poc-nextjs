@@ -9,7 +9,7 @@ import akka.http.scaladsl.server.directives.RouteDirectives.complete
 import akka.http.scaladsl.server.Route
 import akka.pattern.ask
 import akka.util.Timeout
-import nudemeth.poc.ordering.api.application.query.viewmodel.Order
+import nudemeth.poc.ordering.api.application.query.viewmodel.{ Order, OrderSummary }
 import nudemeth.poc.ordering.api.controller.OrderingRegistryActor._
 
 import scala.concurrent.Future
@@ -35,7 +35,7 @@ trait OrderingRoutes extends JsonSupport {
 
   val getOrdersRoute: Route = get {
     pathEndOrSingleSlash {
-      val orders: Future[Vector[Order]] = (orderingRegistryActor ? GetOrders).mapTo[Vector[Order]]
+      val orders: Future[Vector[OrderSummary]] = (orderingRegistryActor ? GetOrders).mapTo[Vector[OrderSummary]]
       complete(orders)
     }
   }

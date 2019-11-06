@@ -1,11 +1,11 @@
 package nudemeth.poc.ordering.api.application.query.entity
 
-import java.time.ZonedDateTime
+import java.time.OffsetDateTime
 import java.util.UUID
 
 case class OrderEntity(
   orderId: UUID,
-  orderDate: ZonedDateTime,
+  orderDate: OffsetDateTime,
   description: String,
   addressCity: String,
   addressCountry: String,

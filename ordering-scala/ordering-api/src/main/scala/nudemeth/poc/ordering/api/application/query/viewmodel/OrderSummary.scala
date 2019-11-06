@@ -1,12 +1,11 @@
 package nudemeth.poc.ordering.api.application.query.viewmodel
 
+import java.time.OffsetDateTime
 import java.util.UUID
-
-import com.outworkers.phantom.jdk8.ZonedDateTime
 
 case class OrderSummary(
   orderNumber: UUID,
-  date: ZonedDateTime,
+  date: OffsetDateTime,
   status: String,
   total: Double) {
 

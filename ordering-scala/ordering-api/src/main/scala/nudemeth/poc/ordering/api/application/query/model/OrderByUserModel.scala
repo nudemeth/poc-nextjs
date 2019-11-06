@@ -1,12 +1,13 @@
 package nudemeth.poc.ordering.api.application.query.model
 
+import java.time.OffsetDateTime
 import java.util.UUID
 
 import com.outworkers.phantom.Table
 import com.outworkers.phantom.builder.query.{ DeleteQuery, InsertQuery }
 import com.outworkers.phantom.builder.{ Chainned, Specified, Unlimited, Unordered }
 import com.outworkers.phantom.dsl._
-import com.outworkers.phantom.jdk8._
+import com.outworkers.phantom.jdk8.indexed._
 import com.outworkers.phantom.keys.PartitionKey
 import nudemeth.poc.ordering.api.application.query.entity.OrderByUserEntity
 import shapeless.HNil
@@ -18,7 +19,7 @@ abstract class OrderByUserModel extends Table[OrderByUserModel, OrderByUserEntit
 
   object buyerId extends Col[UUID] with PartitionKey { override lazy val name = "buyer_id" }
   object orderId extends Col[UUID] with ClusteringOrder { override lazy val name = "order_id" }
-  object orderDate extends Col[ZonedDateTime] { override lazy val name = "order_date" }
+  object orderDate extends Col[OffsetDateTime] { override lazy val name = "order_date" }
   object statusName extends Col[String] { override lazy val name = "status_name" }
   object total extends Col[Int]
 

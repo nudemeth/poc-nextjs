@@ -1,11 +1,11 @@
 package nudemeth.poc.ordering.api.controller
 
-import java.time.ZonedDateTime
+import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import nudemeth.poc.ordering.api.application.query.viewmodel.{ Order, OrderItem }
+import nudemeth.poc.ordering.api.application.query.viewmodel.{ Order, OrderItem, OrderSummary }
 import nudemeth.poc.ordering.api.controller.OrderingRegistryActor.ActionPerformed
 import spray.json._
 
@@ -22,12 +22,12 @@ trait JsonSupport extends SprayJsonSupport {
     }
   }
 
-  implicit object ZonedDateTimeFormat extends JsonFormat[ZonedDateTime] {
+  implicit object OffsetDateTimeFormat extends JsonFormat[OffsetDateTime] {
     private val parser: DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-    def write(timestamp: ZonedDateTime) = JsString(timestamp.format(parser))
-    def read(value: JsValue): ZonedDateTime = {
+    def write(timestamp: OffsetDateTime) = JsString(timestamp.format(parser))
+    def read(value: JsValue): OffsetDateTime = {
       value match {
-        case JsString(timestamp) => ZonedDateTime.from(parser.parse(timestamp))
+        case JsString(timestamp) => OffsetDateTime.from(parser.parse(timestamp))
         case _ => throw DeserializationException("Expected ISO datetime format string")
       }
     }
@@ -44,8 +44,19 @@ trait JsonSupport extends SprayJsonSupport {
     }
   }
 
+  implicit object OrderSummaryListFormat extends RootJsonFormat[Vector[OrderSummary]] {
+    def write(orders: Vector[OrderSummary]) = JsArray(orders.map(o => o.toJson))
+    def read(value: JsValue): Vector[OrderSummary] = {
+      value match {
+        case JsArray(arr) => arr.map(_.convertTo[OrderSummary])
+        case _ => throw DeserializationException("Expected array of OrderSummary")
+      }
+    }
+  }
+
   implicit val orderItemJsonFormat: RootJsonFormat[OrderItem] = jsonFormat4(OrderItem)
   implicit val orderJsonFormat: RootJsonFormat[Order] = jsonFormat10(Order)
+  implicit val orderSummaryJsonFormat: RootJsonFormat[OrderSummary] = jsonFormat4(OrderSummary)
 
   implicit val actionPerformedJsonFormat: RootJsonFormat[ActionPerformed] = jsonFormat1(ActionPerformed)
 }
