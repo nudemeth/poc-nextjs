@@ -32,13 +32,11 @@ class OrderingRegistryActor(repository: OrderQueryable, identityActor: ActorRef)
 
   def receive: Receive = {
     case GetOrders =>
-      /*ask(identityActor, RequestUUID("header")).mapTo[String]
-        .map(uuid => {
-          repository.getOrdersByUserNameAsync(UUID.fromString(uuid))
-        })
-        .pipeTo(sender())*/
-      val userName = UUID.fromString("2f17c7e4-a6b6-4ba0-a1eb-9b4f6d2ce4df")
-      repository.getOrdersByUserNameAsync(userName).pipeTo(sender())
+      val result = for {
+        uuid <- (identityActor ? RequestUUID("header")).mapTo[UUID]
+        orderSummary <- repository.getOrdersByUserNameAsync(uuid)
+      } yield orderSummary
+      result.pipeTo(sender())
     case GetOrder(id) =>
       repository.getOrderAsync(id).pipeTo(sender())
     case CreateOrder(order) =>
