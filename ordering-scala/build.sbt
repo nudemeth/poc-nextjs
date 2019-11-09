@@ -41,7 +41,9 @@ lazy val api = (project in file("./ordering-api"))
       "com.outworkers"    %% "phantom-dsl"          % phantomVersion,
       "com.outworkers"    %% "phantom-jdk8"         % phantomVersion,
 
-      "ch.qos.logback"    % "logback-classic"      % logbackVersion   % Runtime,
+      "ch.qos.logback"    %  "logback-classic"      % logbackVersion   % Runtime,
+
+      "com.pauldijou"     %% "jwt-core"             % "4.2.0"
     )
   )
 

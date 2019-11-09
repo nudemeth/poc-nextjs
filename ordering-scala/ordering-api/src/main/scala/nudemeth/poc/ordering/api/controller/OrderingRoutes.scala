@@ -7,13 +7,16 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.directives.MethodDirectives.{ get, post }
 import akka.http.scaladsl.server.directives.RouteDirectives.complete
 import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.server.directives.Credentials
 import akka.pattern.ask
 import akka.util.Timeout
 import nudemeth.poc.ordering.api.application.query.viewmodel.{ Order, OrderSummary }
 import nudemeth.poc.ordering.api.controller.OrderingRegistryActor._
+import pdi.jwt.{ Jwt, JwtOptions }
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.util.{ Failure, Success }
 
 trait OrderingRoutes extends JsonSupport {
   // we leave these abstract, since they will be provided by the App
@@ -33,12 +36,28 @@ trait OrderingRoutes extends JsonSupport {
         deleteOrderRoute)
     }
 
-  val getOrdersRoute: Route = get {
-    pathEndOrSingleSlash {
-      val orders: Future[Vector[OrderSummary]] = (orderingRegistryActor ? GetOrders).mapTo[Vector[OrderSummary]]
-      complete(orders)
+  def tokenAuthenticator(credentials: Credentials): Option[String] = {
+    credentials match {
+      case Credentials.Provided(token) =>
+        Jwt.decode(token, JwtOptions(signature = false)) match {
+          case Success(value) => Some(value.content)
+          case Failure(ex) =>
+            log.warning(s"Invalid token: $token, error=${ex.getMessage}")
+            None
+        }
+      case _ => None
     }
   }
+
+  val getOrdersRoute: Route = get {
+    pathEndOrSingleSlash {
+      authenticateOAuth2(realm = "api", tokenAuthenticator) { jwt =>
+        val orders: Future[Vector[OrderSummary]] = (orderingRegistryActor ? GetOrders).mapTo[Vector[OrderSummary]]
+        complete(orders)
+      }
+    }
+  }
+
   val postOrderRoute: Route = post {
     pathEndOrSingleSlash {
       entity(as[Order]) { order =>
