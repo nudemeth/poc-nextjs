@@ -12,11 +12,10 @@ import akka.pattern.ask
 import akka.util.Timeout
 import nudemeth.poc.ordering.api.application.query.viewmodel.{ Order, OrderSummary }
 import nudemeth.poc.ordering.api.controller.OrderingRegistryActor._
-import pdi.jwt.{ Jwt, JwtOptions }
+import nudemeth.poc.ordering.api.infrastructure.service.IdentityService.{ ExtractUserIdentity, UserIdentity }
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.util.{ Failure, Success }
 
 trait OrderingRoutes extends JsonSupport {
   // we leave these abstract, since they will be provided by the App
@@ -24,6 +23,7 @@ trait OrderingRoutes extends JsonSupport {
   lazy val log = Logging(system, classOf[OrderingRoutes])
   // other dependencies that APIRoutes use
   def orderingRegistryActor: ActorRef
+  def identityRegistryActor: ActorRef
   // Required by the `ask` (?) method below
   implicit lazy val timeout: Timeout = Timeout(5.seconds) // usually we'd obtain the timeout from the system's configuration
 
@@ -36,23 +36,17 @@ trait OrderingRoutes extends JsonSupport {
         deleteOrderRoute)
     }
 
-  def tokenAuthenticator(credentials: Credentials): Option[String] = {
+  def tokenAuthenticator(credentials: Credentials): Future[Option[UserIdentity]] = {
     credentials match {
-      case Credentials.Provided(token) =>
-        Jwt.decode(token, JwtOptions(signature = false)) match {
-          case Success(value) => Some(value.content)
-          case Failure(ex) =>
-            log.warning(s"Invalid token: $token, error=${ex.getMessage}")
-            None
-        }
-      case _ => None
+      case Credentials.Provided(token) => (identityRegistryActor ? ExtractUserIdentity(token)).mapTo[Option[UserIdentity]]
+      case _ => Future.successful(None)
     }
   }
 
   val getOrdersRoute: Route = get {
     pathEndOrSingleSlash {
-      authenticateOAuth2(realm = "api", tokenAuthenticator) { jwt =>
-        val orders: Future[Vector[OrderSummary]] = (orderingRegistryActor ? GetOrders).mapTo[Vector[OrderSummary]]
+      authenticateOAuth2Async(realm = "api", tokenAuthenticator) { identity =>
+        val orders: Future[Vector[OrderSummary]] = (orderingRegistryActor ? GetOrders(identity)).mapTo[Vector[OrderSummary]]
         complete(orders)
       }
     }

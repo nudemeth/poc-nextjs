@@ -17,7 +17,7 @@ class OrderQuery extends OrderQueryable {
     } yield m
   }
 
-  override def getOrdersByUserNameAsync(userId: UUID): Future[Vector[OrderSummary]] = {
+  override def getOrdersByUserIdAsync(userId: UUID): Future[Vector[OrderSummary]] = {
     for {
       e <- OrderDatabase.OrderByUserModel.getByUserName(userId)
       m <- mapToViewModels(e)

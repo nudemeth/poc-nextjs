@@ -24,8 +24,8 @@ object Server extends App with OrderingRoutes {
   //#server-bootstrapping
 
   val orderingRepo: OrderQueryable = new OrderQuery()
-  var identityActor: ActorRef = system.actorOf(IdentityService.props, "identity-actor")
-  val orderingRegistryActor: ActorRef = system.actorOf(OrderingRegistryActor.props(orderingRepo, identityActor), "ordering-actor")
+  var identityRegistryActor: ActorRef = system.actorOf(IdentityService.props, "identity-actor")
+  val orderingRegistryActor: ActorRef = system.actorOf(OrderingRegistryActor.props(orderingRepo), "ordering-actor")
 
   //#main-class
   // from the OrderingRoutes trait

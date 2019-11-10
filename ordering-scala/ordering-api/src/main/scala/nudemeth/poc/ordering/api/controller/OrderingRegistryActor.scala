@@ -4,39 +4,33 @@ import java.util.UUID
 
 import akka.actor.{ Actor, ActorLogging, ActorRef, Props }
 import akka.pattern.pipe
-import akka.pattern.ask
 import akka.util.Timeout
 
 import scala.concurrent.duration._
 import nudemeth.poc.ordering.api.application.query.OrderQueryable
 import nudemeth.poc.ordering.api.application.query.viewmodel.Order
-import nudemeth.poc.ordering.api.infrastructure.service.IdentityService.RequestUUID
+import nudemeth.poc.ordering.api.infrastructure.service.IdentityService.UserIdentity
 
 import scala.concurrent.ExecutionContext
-import scala.util.{ Failure, Success }
 
 object OrderingRegistryActor {
   final case class ActionPerformed(description: String)
-  final case object GetOrders
+  final case class GetOrders(userIdentity: UserIdentity)
   final case class CreateOrder(order: Order)
   final case class GetOrder(id: UUID)
   final case class DeleteOrder(id: UUID)
 
-  def props(repository: OrderQueryable, identityActor: ActorRef): Props = Props(new OrderingRegistryActor(repository, identityActor))
+  def props(repository: OrderQueryable): Props = Props(new OrderingRegistryActor(repository))
 }
 
-class OrderingRegistryActor(repository: OrderQueryable, identityActor: ActorRef) extends Actor with ActorLogging {
+class OrderingRegistryActor(repository: OrderQueryable) extends Actor with ActorLogging {
   import nudemeth.poc.ordering.api.controller.OrderingRegistryActor._
   implicit val ec: ExecutionContext = context.dispatcher
   implicit val timeout: Timeout = 10.seconds
 
   def receive: Receive = {
-    case GetOrders =>
-      val result = for {
-        uuid <- (identityActor ? RequestUUID("header")).mapTo[UUID]
-        orderSummary <- repository.getOrdersByUserNameAsync(uuid)
-      } yield orderSummary
-      result.pipeTo(sender())
+    case GetOrders(userIdentity: UserIdentity) =>
+      repository.getOrdersByUserIdAsync(userIdentity.id).pipeTo(sender())
     case GetOrder(id) =>
       repository.getOrderAsync(id).pipeTo(sender())
     case CreateOrder(order) =>
