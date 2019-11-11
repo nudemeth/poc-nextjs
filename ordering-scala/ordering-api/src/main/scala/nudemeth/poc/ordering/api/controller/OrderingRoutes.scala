@@ -29,11 +29,13 @@ trait OrderingRoutes extends JsonSupport {
 
   lazy val orderingRoutes: Route =
     pathPrefix("api" / "v1" / "orders") {
-      concat(
-        getOrdersRoute,
-        postOrderRoute,
-        getOrderRoute,
-        deleteOrderRoute)
+      authenticateOAuth2Async(realm = "api", tokenAuthenticator) { userIdentity =>
+        concat(
+          getOrdersRoute(userIdentity),
+          postOrderRoute,
+          getOrderRoute,
+          deleteOrderRoute)
+      }
     }
 
   def tokenAuthenticator(credentials: Credentials): Future[Option[UserIdentity]] = {
@@ -43,12 +45,10 @@ trait OrderingRoutes extends JsonSupport {
     }
   }
 
-  val getOrdersRoute: Route = get {
+  private def getOrdersRoute(userIdentity: UserIdentity): Route = get {
     pathEndOrSingleSlash {
-      authenticateOAuth2Async(realm = "api", tokenAuthenticator) { identity =>
-        val orders: Future[Vector[OrderSummary]] = (orderingRegistryActor ? GetOrders(identity)).mapTo[Vector[OrderSummary]]
-        complete(orders)
-      }
+      val orders: Future[Vector[OrderSummary]] = (orderingRegistryActor ? GetOrders(userIdentity)).mapTo[Vector[OrderSummary]]
+      complete(orders)
     }
   }
 

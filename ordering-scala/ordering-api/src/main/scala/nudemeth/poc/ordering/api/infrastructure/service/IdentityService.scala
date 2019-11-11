@@ -3,7 +3,7 @@ package nudemeth.poc.ordering.api.infrastructure.service
 import java.util.UUID
 
 import akka.actor.{ Actor, ActorLogging, Props }
-import pdi.jwt.{ Jwt, JwtClaim, JwtOptions }
+import pdi.jwt.{ Jwt, JwtOptions }
 
 import scala.util.{ Failure, Success, Try }
 import spray.json._
