@@ -2,7 +2,7 @@ package nudemeth.poc.ordering.api.controller
 
 import java.util.UUID
 
-import akka.actor.{ Actor, ActorLogging, ActorRef, Props }
+import akka.actor.{ Actor, ActorLogging, Props }
 import akka.pattern.pipe
 import akka.util.Timeout
 

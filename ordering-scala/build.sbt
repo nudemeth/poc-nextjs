@@ -21,8 +21,8 @@ lazy val root = (project in file("."))
 
 
 lazy val api = (project in file("./ordering-api"))
-  .aggregate(domain)
-  .dependsOn(domain)
+  .aggregate(domain, infrastructure)
+  .dependsOn(domain, infrastructure)
   .settings(commonSettings: _*)
   .settings(
     name := "ordering-api",
@@ -52,6 +52,21 @@ lazy val domain = (project in file("./ordering-domain"))
   .settings(
     name := "ordering-domain",
     libraryDependencies ++= Seq(
+      "org.scalatest"     %% "scalatest"            % "3.0.5"         % Test
+    )
+  )
+  .disablePlugins(RevolverPlugin)
+
+lazy val infrastructure = (project in file("./ordering-infrastructure"))
+  .aggregate(domain)
+  .dependsOn(domain)
+  .settings(commonSettings: _*)
+  .settings(
+    name := "ordering-infrastructure",
+    libraryDependencies ++= Seq(
+      "com.outworkers"    %% "phantom-dsl"          % phantomVersion,
+      "com.outworkers"    %% "phantom-jdk8"         % phantomVersion,
+
       "org.scalatest"     %% "scalatest"            % "3.0.5"         % Test
     )
   )
