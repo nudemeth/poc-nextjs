@@ -36,7 +36,7 @@ server.put('/api/v1/identity/users/issuer/:issuer/code/:code', ({ res }) => {
     res.send(JSON.stringify('ec6c1cb4-d3b6-4f0c-908d-722ca798fa87'))
 })
 server.get('/api/v1/identity/users/:id/token', ({ res }) => {
-    res.send(JSON.stringify('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMzQ1LTY3ODkwLTEyMzQ1LTY3ODkwIiwibG9naW4iOiJudWRlbWV0aCJ9.dah0nTw1wPaOzNiCeQvnPnhhKFnUmMoL0783Sz6jsho'))
+    res.send(JSON.stringify('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJmMTdjN2U0LWE2YjYtNGJhMC1hMWViLTliNGY2ZDJjZTRkZiIsImxvZ2luIjoibnVkZW1ldGgifQ.XT-YuoVlojwxFBc-K5uJTe6kzKpIDXZEO81c6WaFD1k'))
 })
 server.get('/api/v1/catalog/catalogBrands', (req, res, next) => {
     if (isAuthorized(req)) {
