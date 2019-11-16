@@ -38,6 +38,8 @@ lazy val api = (project in file("./ordering-api"))
       "org.scalatest"     %% "scalatest"            % "3.0.5"         % Test,
       "org.scala-lang"    %  "scala-reflect"        % scalaMainVersion,
 
+      "com.datastax.oss"  %  "java-driver-core"     % "4.3.0",
+
       "com.outworkers"    %% "phantom-dsl"          % phantomVersion,
       "com.outworkers"    %% "phantom-jdk8"         % phantomVersion,
 

@@ -23,7 +23,7 @@ abstract class OrderByUserModel extends Table[OrderByUserModel, OrderByUserEntit
   object statusName extends Col[String] { override lazy val name = "status_name" }
   object total extends Col[Int]
 
-  def getByUserName(userId: UUID): Future[List[OrderByUserEntity]] = {
+  def getByBuyerId(userId: UUID): Future[List[OrderByUserEntity]] = {
     select
       .where(_.buyerId eqs userId)
       .consistencyLevel_=(ConsistencyLevel.ONE)
