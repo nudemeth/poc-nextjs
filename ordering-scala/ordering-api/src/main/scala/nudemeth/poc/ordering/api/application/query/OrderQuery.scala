@@ -5,44 +5,51 @@ import java.time.ZoneOffset
 import java.util.UUID
 
 import com.datastax.oss.driver.api.core.{ CqlIdentifier, CqlSession }
+import com.typesafe.config.ConfigFactory
 import nudemeth.poc.ordering.api.application.query.entity.{ CardTypeEntity, OrderByUserEntity, OrderEntity }
 import nudemeth.poc.ordering.api.application.query.viewmodel._
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
+import scala.collection.JavaConverters._
+import scala.compat.java8.FutureConverters._
+
 class OrderQuery extends OrderQueryable {
 
-  def getOrdersByUserIdAsync2(id: UUID): Future[Vector[OrderSummary]] = {
-    val session = CqlSession.builder()
-      .addContactPoint(new InetSocketAddress("ordering-db", 9042))
-      .withAuthCredentials("sa", "P@ssw0rd")
-      .withKeyspace("ordering")
-      .build()
+  private val config = ConfigFactory.load()
+  private val session = CqlSession.builder()
+    .addContactPoints(config.getStringList("cassandra.host").asScala.map(h => {
+      new InetSocketAddress(h, 9042)
+    }).asJavaCollection)
+    .withAuthCredentials(config.getString("cassandra.username"), config.getString("cassandra.password"))
+    .withKeyspace(config.getString("cassandra.keyspace"))
+    .build()
 
-    val result = autoClose(session) { session =>
-      val query = session
-        .prepare("SELECT order_id, order_date, status_name, total FROM order_by_buyer_id WHERE buyer_id = :buyerId")
-        .bind().setUuid("buyerId", id)
-      val rs = session.execute(query)
-      Iterator.continually(rs.iterator().next()).map { r =>
-        OrderSummary(
-          r.getUuid(CqlIdentifier.fromCql("order_id")),
-          r.getInstant(CqlIdentifier.fromCql("order_date")).atOffset(ZoneOffset.UTC),
-          r.getString(CqlIdentifier.fromCql("status_name")),
-          r.getInt(CqlIdentifier.fromCql("total")))
-      }
-        .toVector
+  private val getOrdersByUserIdAsyncCql = "SELECT order_id, order_date, status_name, total FROM order_by_buyer_id WHERE buyer_id = :buyerId"
+
+  override def finalize(): Unit = {
+    if (!session.isClosed) {
+      session.close()
     }
-    Future.successful(result)
+    super.finalize()
   }
 
-  private def autoClose[A <: AutoCloseable, B](closeable: A)(func: A => B): B = {
-    try {
-      func(closeable)
-    } finally {
-      closeable.close()
+  def getOrdersByUserIdAsync(id: UUID): Future[Vector[OrderSummary]] = {
+    val query = session
+      .prepare(getOrdersByUserIdAsyncCql)
+      .bind()
+      .setUuid("buyerId", id)
+    val result = session.execute(query).asScala.map { r =>
+      OrderSummary(
+        r.getUuid(CqlIdentifier.fromCql("order_id")),
+        r.getInstant(CqlIdentifier.fromCql("order_date")).atOffset(ZoneOffset.UTC),
+        r.getString(CqlIdentifier.fromCql("status_name")),
+        r.getInt(CqlIdentifier.fromCql("total")))
     }
+      .toVector
+
+    Future.successful(result)
   }
 
   override def getOrderAsync(id: UUID): Future[Option[Order]] = {
@@ -52,12 +59,13 @@ class OrderQuery extends OrderQueryable {
     } yield m
   }
 
-  override def getOrdersByUserIdAsync(userId: UUID): Future[Vector[OrderSummary]] = {
+  /*
+  override def getOrdersByUserIdAsync2(userId: UUID): Future[Vector[OrderSummary]] = {
     for {
       e <- OrderDatabase.OrderByUserModel.getByBuyerId(userId)
       m <- mapToViewModels(e)
     } yield m
-  }
+  }*/
 
   override def getCardTypesAsync: Future[Vector[CardType]] = {
     for {
