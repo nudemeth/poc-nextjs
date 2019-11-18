@@ -4,6 +4,7 @@ import java.net.InetSocketAddress
 import java.time.ZoneOffset
 import java.util.UUID
 
+import com.datastax.oss.driver.api.core.cql.{ AsyncResultSet, Row }
 import com.datastax.oss.driver.api.core.{ CqlIdentifier, CqlSession }
 import com.typesafe.config.ConfigFactory
 import nudemeth.poc.ordering.api.application.query.entity.{ CardTypeEntity, OrderByUserEntity, OrderEntity }
@@ -11,7 +12,6 @@ import nudemeth.poc.ordering.api.application.query.viewmodel._
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-
 import scala.collection.JavaConverters._
 import scala.compat.java8.FutureConverters._
 
@@ -40,7 +40,16 @@ class OrderQuery extends OrderQueryable {
       .prepare(getOrdersByUserIdAsyncCql)
       .bind()
       .setUuid("buyerId", id)
-    val result = session.execute(query).asScala.map { r =>
+
+    session.executeAsync(query).toScala.map { r =>
+      r.currentPage().asScala
+    }.map { r =>
+      buildOrderSummary(r)
+    }
+  }
+
+  private def buildOrderSummary(rows: Iterable[Row]): Vector[OrderSummary] = {
+    rows.map { r =>
       OrderSummary(
         r.getUuid(CqlIdentifier.fromCql("order_id")),
         r.getInstant(CqlIdentifier.fromCql("order_date")).atOffset(ZoneOffset.UTC),
@@ -48,8 +57,6 @@ class OrderQuery extends OrderQueryable {
         r.getInt(CqlIdentifier.fromCql("total")))
     }
       .toVector
-
-    Future.successful(result)
   }
 
   override def getOrderAsync(id: UUID): Future[Option[Order]] = {
