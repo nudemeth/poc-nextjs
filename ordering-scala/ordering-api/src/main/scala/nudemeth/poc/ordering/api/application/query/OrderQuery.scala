@@ -4,10 +4,10 @@ import java.net.InetSocketAddress
 import java.time.ZoneOffset
 import java.util.UUID
 
-import com.datastax.oss.driver.api.core.cql.{ AsyncResultSet, Row }
+import com.datastax.oss.driver.api.core.cql.Row
 import com.datastax.oss.driver.api.core.{ CqlIdentifier, CqlSession }
 import com.typesafe.config.ConfigFactory
-import nudemeth.poc.ordering.api.application.query.entity.{ CardTypeEntity, OrderByUserEntity, OrderEntity }
+import nudemeth.poc.ordering.api.application.query.entity.{ CardTypeEntity, OrderEntity }
 import nudemeth.poc.ordering.api.application.query.viewmodel._
 
 import scala.concurrent.Future
@@ -66,14 +66,6 @@ class OrderQuery extends OrderQueryable {
     } yield m
   }
 
-  /*
-  override def getOrdersByUserIdAsync2(userId: UUID): Future[Vector[OrderSummary]] = {
-    for {
-      e <- OrderDatabase.OrderByUserModel.getByBuyerId(userId)
-      m <- mapToViewModels(e)
-    } yield m
-  }*/
-
   override def getCardTypesAsync: Future[Vector[CardType]] = {
     for {
       e <- OrderDatabase.CardTypeModel.list()
@@ -89,17 +81,6 @@ class OrderQuery extends OrderQueryable {
     entities.map(e => {
       CardType(e.name)
     })
-  }
-
-  private def mapToViewModels(entities: List[OrderByUserEntity]): Future[Vector[OrderSummary]] = Future {
-    entities.map(e => {
-      OrderSummary(
-        e.orderId,
-        e.orderDate,
-        e.statusName,
-        e.total)
-    })
-      .toVector
   }
 
   private def mapToViewModel(mbEntity: Option[OrderEntity]): Future[Option[Order]] = Future {

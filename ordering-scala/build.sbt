@@ -66,6 +66,8 @@ lazy val infrastructure = (project in file("./ordering-infrastructure"))
   .settings(
     name := "ordering-infrastructure",
     libraryDependencies ++= Seq(
+      "com.typesafe"      %  "config"               % "1.4.0",
+
       "com.outworkers"    %% "phantom-dsl"          % phantomVersion,
       "com.outworkers"    %% "phantom-jdk8"         % phantomVersion,
 
