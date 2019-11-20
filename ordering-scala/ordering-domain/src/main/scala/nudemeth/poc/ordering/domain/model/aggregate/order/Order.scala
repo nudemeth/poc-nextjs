@@ -1,8 +1,10 @@
 package nudemeth.poc.ordering.domain.model.aggregate.order
 
 import java.time.Instant
+import java.util.UUID
 
 case class Order(
+  id: UUID,
   userId: String,
   userName: String,
   address: Option[Address],
