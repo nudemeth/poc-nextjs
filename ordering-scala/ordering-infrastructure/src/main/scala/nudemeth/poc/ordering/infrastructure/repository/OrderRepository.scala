@@ -1,7 +1,7 @@
 package nudemeth.poc.ordering.infrastructure.repository
 import java.util.UUID
 
-import nudemeth.poc.ordering.domain.model.aggregate.order.{ Order, OrderItem }
+import nudemeth.poc.ordering.domain.model.aggregate.order.{Address, Order, OrderItem}
 import nudemeth.poc.ordering.infrastructure.repository.entity.OrderEntity
 
 import scala.concurrent.Future
@@ -9,10 +9,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class OrderRepository extends OrderRepositoryOperations {
   override def getOrderAsync(id: UUID): Future[Option[Order]] = {
-    for {
-      e <- OrderDatabase.OrderModel.getById(id)
-      m <- mapToViewModel(e)
-    } yield m
+    OrderDatabase.OrderModel.getById(id).map { e =>
+      mapToDomainModel(e)
+    }
   }
 
   override def addOrderAsync(order: Order): Future[Order] = {
@@ -23,7 +22,21 @@ class OrderRepository extends OrderRepositoryOperations {
     Future.successful()
   }
 
-  private def mapToViewModel(mbEntity: Option[OrderEntity]): Future[Option[Order]] = Future {
-    None
+  private def mapToDomainModel(mbEntity: Option[OrderEntity]): Option[Order] =  {
+    mbEntity.map { e =>
+      Order(
+        e.orderId,
+        None,
+        None,
+        Some(Address(e.addressStreet, e.addressCity, e.addressState, e.addressCountry, e.addressZipCode)),
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None
+      )
+    }
   }
 }
