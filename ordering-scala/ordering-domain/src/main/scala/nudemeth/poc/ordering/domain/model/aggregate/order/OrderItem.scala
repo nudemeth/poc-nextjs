@@ -1,11 +1,13 @@
 package nudemeth.poc.ordering.domain.model.aggregate.order
 
+import java.util.UUID
+
 case class OrderItem(
-  productId: Int,
+  productId: UUID,
   productName: String,
+  pictureUrl: String,
   unitPrice: BigDecimal,
   discount: BigDecimal,
-  pictureUrl: String,
-  units: Int = 1) {
+  units: Int) {
 
 }

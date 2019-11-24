@@ -1,7 +1,7 @@
 package nudemeth.poc.ordering.infrastructure.repository
 import java.util.UUID
 
-import nudemeth.poc.ordering.domain.model.aggregate.order.{Address, Order, OrderItem}
+import nudemeth.poc.ordering.domain.model.aggregate.order.{ Address, Order, OrderItem }
 import nudemeth.poc.ordering.infrastructure.repository.entity.OrderEntity
 
 import scala.concurrent.Future
@@ -22,21 +22,25 @@ class OrderRepository extends OrderRepositoryOperations {
     Future.successful()
   }
 
-  private def mapToDomainModel(mbEntity: Option[OrderEntity]): Option[Order] =  {
+  private def mapToDomainModel(mbEntity: Option[OrderEntity]): Option[Order] = {
     mbEntity.map { e =>
       Order(
         e.orderId,
-        None,
-        None,
+        Some(e.buyerId),
+        e.orderDate.toInstant,
         Some(Address(e.addressStreet, e.addressCity, e.addressState, e.addressCountry, e.addressZipCode)),
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None
-      )
+        e.statusName,
+        e.orderItems.map { i =>
+          OrderItem(
+            i._1,
+            i._2._1,
+            i._2._2,
+            i._2._3,
+            i._2._4,
+            i._2._5)
+        }.toVector,
+        e.paymentMethodId,
+        Some(e.description))
     }
   }
 }

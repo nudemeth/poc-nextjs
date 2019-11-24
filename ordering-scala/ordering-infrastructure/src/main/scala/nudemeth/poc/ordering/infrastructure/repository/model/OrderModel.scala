@@ -17,6 +17,7 @@ abstract class OrderModel extends Table[OrderModel, OrderEntity] {
   override def tableName: String = "order_by_id"
 
   object orderId extends Col[UUID] with PrimaryKey { override lazy val name = "order_id" }
+  object buyerId extends Col[UUID] { override lazy val name = "buyer_id" }
   object orderDate extends Col[OffsetDateTime] { override lazy val name = "order_date" }
   object description extends Col[String]
   object addressCity extends Col[String] { override lazy val name = "address_city" }
@@ -25,7 +26,8 @@ abstract class OrderModel extends Table[OrderModel, OrderEntity] {
   object addressStreet extends Col[String] { override lazy val name = "address_street" }
   object addressZipCode extends Col[String] { override lazy val name = "address_zip_code" }
   object statusName extends Col[String] { override lazy val name = "status_name" }
-  object orderItems extends MapColumn[String, (Int, Double, String)] { override lazy val name = "order_items" }
+  object paymentMethodId extends OptionalCol[UUID] { override lazy val name = "payment_method_id" }
+  object orderItems extends MapColumn[UUID, (String, String, BigDecimal, BigDecimal, Int)] { override lazy val name = "order_items" }
 
   def getById(id: UUID): Future[Option[OrderEntity]] = {
     select
@@ -38,6 +40,7 @@ abstract class OrderModel extends Table[OrderModel, OrderEntity] {
   def saveOrUpdateTransaction(order: OrderEntity): InsertQuery[OrderModel, OrderEntity, Specified, HNil] = {
     insert
       .value(_.orderId, order.orderId)
+      .value(_.buyerId, order.buyerId)
       .value(_.orderDate, order.orderDate)
       .value(_.description, order.description)
       .value(_.addressCity, order.addressCity)
@@ -46,6 +49,7 @@ abstract class OrderModel extends Table[OrderModel, OrderEntity] {
       .value(_.addressStreet, order.addressStreet)
       .value(_.addressZipCode, order.addressZipCode)
       .value(_.statusName, order.statusName)
+      .value(_.paymentMethodId, order.paymentMethodId)
       .value(_.orderItems, order.orderItems)
       .consistencyLevel_=(ConsistencyLevel.ALL)
   }

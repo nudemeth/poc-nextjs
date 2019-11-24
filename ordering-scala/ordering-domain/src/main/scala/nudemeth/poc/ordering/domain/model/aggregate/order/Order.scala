@@ -5,15 +5,12 @@ import java.util.UUID
 
 case class Order(
   orderId: UUID,
-  userId: Option[String],
-  userName: Option[String],
+  buyerId: Option[UUID],
+  orderDate: Instant,
   address: Option[Address],
-  cardTypeId: Option[Int],
-  cardNumber: Option[String],
-  cardSecurityNumber: Option[String],
-  cardHolderName: Option[String],
-  cardExpiration: Option[Instant],
-  buyerId: Option[Int] = None,
-  paymentMethodId: Option[Int] = None) {
+  orderStatus: String,
+  orderItems: Vector[OrderItem],
+  paymentMethodId: Option[UUID],
+  description: Option[String]) {
 
 }

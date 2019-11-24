@@ -5,6 +5,7 @@ import java.util.UUID
 
 case class OrderEntity(
   orderId: UUID,
+  buyerId: UUID,
   orderDate: OffsetDateTime,
   description: String,
   addressCity: String,
@@ -13,6 +14,7 @@ case class OrderEntity(
   addressStreet: String,
   addressZipCode: String,
   statusName: String,
-  orderItems: Map[String, (Int, Double, String)]) {
+  paymentMethodId: Option[UUID],
+  orderItems: Map[UUID, (String, String, BigDecimal, BigDecimal, Int)]) {
 
 }
