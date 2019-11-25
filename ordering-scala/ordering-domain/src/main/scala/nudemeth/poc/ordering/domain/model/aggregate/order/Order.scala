@@ -10,7 +10,6 @@ case class Order(
   address: Option[Address],
   orderStatus: String,
   orderItems: Vector[OrderItem],
-  paymentMethodId: Option[UUID],
   description: Option[String]) {
 
 }

@@ -26,7 +26,12 @@ abstract class OrderModel extends Table[OrderModel, OrderEntity] {
   object addressStreet extends Col[String] { override lazy val name = "address_street" }
   object addressZipCode extends Col[String] { override lazy val name = "address_zip_code" }
   object statusName extends Col[String] { override lazy val name = "status_name" }
-  object paymentMethodId extends OptionalCol[UUID] { override lazy val name = "payment_method_id" }
+  object paymentMethodAlias extends Col[String] { override lazy val name = "payment_method_alias" }
+  object paymentMethodCardNumber extends Col[String] { override lazy val name = "payment_method_card_number" }
+  object paymentMethodCardSecurityNumber extends Col[String] { override lazy val name = "payment_method_card_security_number" }
+  object paymentMethodCardHolderName extends Col[String] { override lazy val name = "payment_method_card_holder_name" }
+  object paymentMethodCardExpiration extends Col[OffsetDateTime] { override lazy val name = "payment_method_card_expiration" }
+  object paymentMethodCardType extends Col[String] { override lazy val name = "payment_method_card_type" }
   object orderItems extends MapColumn[UUID, (String, String, BigDecimal, BigDecimal, Int)] { override lazy val name = "order_items" }
 
   def getById(id: UUID): Future[Option[OrderEntity]] = {
@@ -49,7 +54,12 @@ abstract class OrderModel extends Table[OrderModel, OrderEntity] {
       .value(_.addressStreet, order.addressStreet)
       .value(_.addressZipCode, order.addressZipCode)
       .value(_.statusName, order.statusName)
-      .value(_.paymentMethodId, order.paymentMethodId)
+      .value(_.paymentMethodAlias, order.paymentMethodAlias)
+      .value(_.paymentMethodCardNumber, order.paymentMethodCardNumber)
+      .value(_.paymentMethodCardSecurityNumber, order.paymentMethodCardSecurityNumber)
+      .value(_.paymentMethodCardHolderName, order.paymentMethodCardHolderName)
+      .value(_.paymentMethodCardExpiration, order.paymentMethodCardExpiration) //TODO: Can be removed?
+      .value(_.paymentMethodCardType, order.paymentMethodCardType)
       .value(_.orderItems, order.orderItems)
       .consistencyLevel_=(ConsistencyLevel.ALL)
   }

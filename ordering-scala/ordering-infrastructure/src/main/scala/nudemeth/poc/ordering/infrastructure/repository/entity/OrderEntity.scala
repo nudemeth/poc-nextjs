@@ -14,7 +14,12 @@ case class OrderEntity(
   addressStreet: String,
   addressZipCode: String,
   statusName: String,
-  paymentMethodId: Option[UUID],
+  paymentMethodAlias: String,
+  paymentMethodCardNumber: String,
+  paymentMethodCardSecurityNumber: String,
+  paymentMethodCardHolderName: String,
+  paymentMethodCardExpiration: OffsetDateTime,
+  paymentMethodCardType: String,
   orderItems: Map[UUID, (String, String, BigDecimal, BigDecimal, Int)]) {
 
 }

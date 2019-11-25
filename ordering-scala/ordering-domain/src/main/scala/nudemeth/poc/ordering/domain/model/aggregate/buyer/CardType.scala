@@ -6,4 +6,12 @@ object CardType extends Enumeration {
   val Amex: CardType = Value("Amex")
   val Visa: CardType = Value("Visa")
   val MasterCard: CardType = Value("MasterCard")
+
+  def apply(x: String): CardType = {
+    x match {
+      case "Amex" => Amex
+      case "Visa" => Visa
+      case "MasterCard" => MasterCard
+    }
+  }
 }
