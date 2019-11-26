@@ -9,6 +9,5 @@ import scala.concurrent.Future
 
 trait OrderRepositoryOperations {
   def getOrderAsync(id: UUID): Future[Option[(Order, PaymentMethod)]]
-  def addOrderAsync(order: Order): Future[Order]
-  def updateOrderAsync(order: Order): Future[Unit]
+  def addOrUpdateOrderAsync(order: Order, paymentMethod: PaymentMethod): Future[Unit]
 }

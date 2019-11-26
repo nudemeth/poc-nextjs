@@ -7,7 +7,7 @@ case class OrderEntity(
   orderId: UUID,
   buyerId: UUID,
   orderDate: OffsetDateTime,
-  description: String,
+  description: Option[String],
   addressCity: String,
   addressCountry: String,
   addressState: Option[String],

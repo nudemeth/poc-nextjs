@@ -19,7 +19,7 @@ abstract class OrderModel extends Table[OrderModel, OrderEntity] {
   object orderId extends Col[UUID] with PrimaryKey { override lazy val name = "order_id" }
   object buyerId extends Col[UUID] { override lazy val name = "buyer_id" }
   object orderDate extends Col[OffsetDateTime] { override lazy val name = "order_date" }
-  object description extends Col[String]
+  object description extends OptionalCol[String]
   object addressCity extends Col[String] { override lazy val name = "address_city" }
   object addressCountry extends Col[String] { override lazy val name = "address_country" }
   object addressState extends OptionalCol[String] { override lazy val name = "address_state" }

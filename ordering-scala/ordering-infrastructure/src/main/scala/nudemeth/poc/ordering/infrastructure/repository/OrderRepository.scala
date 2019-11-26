@@ -1,4 +1,5 @@
 package nudemeth.poc.ordering.infrastructure.repository
+import java.time.ZoneOffset
 import java.util.UUID
 
 import nudemeth.poc.ordering.domain.model.aggregate.buyer.{ CardType, PaymentMethod }
@@ -15,12 +16,28 @@ class OrderRepository extends OrderRepositoryOperations {
     }
   }
 
-  override def addOrderAsync(order: Order): Future[Order] = {
-    Future.successful(order)
-  }
-
-  override def updateOrderAsync(order: Order): Future[Unit] = {
-    Future.successful()
+  override def addOrUpdateOrderAsync(order: Order, paymentMethod: PaymentMethod): Future[Unit] = {
+    OrderDatabase.OrderModel.saveOrUpdate(OrderEntity(
+      order.orderId,
+      order.buyerId,
+      order.orderDate.atOffset(ZoneOffset.UTC),
+      order.description,
+      order.address.city,
+      order.address.country,
+      order.address.state,
+      order.address.street,
+      order.address.zipCode,
+      order.orderStatus,
+      paymentMethod.alias,
+      paymentMethod.cardNumber,
+      paymentMethod.cardSecurityNumber,
+      paymentMethod.cardHolderName,
+      paymentMethod.cardExpiration.atOffset(ZoneOffset.UTC),
+      paymentMethod.cardType.toString,
+      order.orderItems.map { o =>
+        o.productId -> (o.productName, o.pictureUrl, o.unitPrice, o.discount, o.units)
+      }.toMap))
+      .map(_ => ())
   }
 
   private def mapToDomainModel(mbEntity: Option[OrderEntity]): Option[(Order, PaymentMethod)] = {
@@ -28,9 +45,9 @@ class OrderRepository extends OrderRepositoryOperations {
       (
         Order(
           e.orderId,
-          Some(e.buyerId),
+          e.buyerId,
           e.orderDate.toInstant,
-          Some(Address(e.addressStreet, e.addressCity, e.addressState, e.addressCountry, e.addressZipCode)),
+          Address(e.addressStreet, e.addressCity, e.addressState, e.addressCountry, e.addressZipCode),
           e.statusName,
           e.orderItems.map { i =>
             OrderItem(
@@ -41,7 +58,7 @@ class OrderRepository extends OrderRepositoryOperations {
               i._2._4,
               i._2._5)
           }.toVector,
-          Some(e.description)),
+          e.description),
           PaymentMethod(
             e.paymentMethodAlias,
             e.paymentMethodCardNumber,
