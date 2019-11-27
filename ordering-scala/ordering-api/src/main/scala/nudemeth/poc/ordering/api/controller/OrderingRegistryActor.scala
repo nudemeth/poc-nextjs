@@ -37,6 +37,6 @@ class OrderingRegistryActor(repository: OrderQueryable) extends Actor with Actor
       sender() ! ""
     case DeleteOrder(id) =>
       val userName = UUID.fromString("6bc6cfae-b04e-4b53-ba23-1a1b7260b121")
-      repository.deleteOrderAsync(id, userName).pipeTo(sender())
+    //repository.deleteOrderAsync(id, userName).pipeTo(sender())
   }
 }

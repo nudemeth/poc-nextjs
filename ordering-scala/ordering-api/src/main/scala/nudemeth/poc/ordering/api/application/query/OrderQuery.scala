@@ -7,7 +7,6 @@ import java.util.UUID
 import com.datastax.oss.driver.api.core.cql.Row
 import com.datastax.oss.driver.api.core.{ CqlIdentifier, CqlSession }
 import com.typesafe.config.ConfigFactory
-import nudemeth.poc.ordering.api.application.query.entity.{ CardTypeEntity, OrderEntity }
 import nudemeth.poc.ordering.api.application.query.viewmodel._
 
 import scala.concurrent.Future
@@ -60,45 +59,10 @@ class OrderQuery extends OrderQueryable {
   }
 
   override def getOrderAsync(id: UUID): Future[Option[Order]] = {
-    for {
-      e <- OrderDatabase.OrderModel.getById(id)
-      m <- mapToViewModel(e)
-    } yield m
+    Future.successful(None)
   }
 
   override def getCardTypesAsync: Future[Vector[CardType]] = {
-    for {
-      e <- OrderDatabase.CardTypeModel.list()
-      m <- mapToViewModel(e)
-    } yield m
-  }
-
-  override def deleteOrderAsync(id: UUID, userId: UUID): Future[Boolean] = {
-    OrderDatabase.delete(id, userId).map(r => r.wasApplied())
-  }
-
-  private def mapToViewModel(entities: Vector[CardTypeEntity]): Future[Vector[CardType]] = Future {
-    entities.map(e => {
-      CardType(e.name)
-    })
-  }
-
-  private def mapToViewModel(mbEntity: Option[OrderEntity]): Future[Option[Order]] = Future {
-    mbEntity match {
-      case None => None
-      case Some(e) => Some(Order(
-        e.orderId,
-        e.orderDate,
-        e.statusName,
-        e.description,
-        e.addressStreet,
-        e.addressCity,
-        e.addressZipCode,
-        e.addressCountry,
-        e.orderItems.map(ee => {
-          OrderItem(ee._1, ee._2._1, ee._2._2, ee._2._3)
-        }).toVector,
-        e.orderItems.size))
-    }
+    Future.successful(Vector())
   }
 }
