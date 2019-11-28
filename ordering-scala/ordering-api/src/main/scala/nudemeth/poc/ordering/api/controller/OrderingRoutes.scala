@@ -10,7 +10,7 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.directives.Credentials
 import akka.pattern.ask
 import akka.util.Timeout
-import nudemeth.poc.ordering.api.application.query.viewmodel.{ Order, OrderSummary }
+import nudemeth.poc.ordering.api.application.query.viewmodel.{ CardType, Order, OrderSummary }
 import nudemeth.poc.ordering.api.controller.OrderingRegistryActor._
 import nudemeth.poc.ordering.api.infrastructure.service.IdentityService.{ ExtractUserIdentity, UserIdentity }
 
@@ -32,9 +32,8 @@ trait OrderingRoutes extends JsonSupport {
       authenticateOAuth2Async(realm = "api", tokenAuthenticator) { userIdentity =>
         concat(
           getOrdersRoute(userIdentity),
-          postOrderRoute,
           getOrderRoute,
-          deleteOrderRoute)
+          getCardTypesRoute)
       }
     }
 
@@ -52,18 +51,15 @@ trait OrderingRoutes extends JsonSupport {
     }
   }
 
-  val postOrderRoute: Route = post {
-    pathEndOrSingleSlash {
-      entity(as[Order]) { order =>
-        val orderCreated: Future[ActionPerformed] =
-          (orderingRegistryActor ? CreateOrder(order)).mapTo[ActionPerformed]
-        onSuccess(orderCreated) { performed =>
-          log.info("Created order [{}]: {}", order.orderNumber.toString, performed.description)
-          complete((StatusCodes.Created, performed))
-        }
+  val getCardTypesRoute: Route = get {
+    path("cardtypes") {
+      pathEndOrSingleSlash {
+        val cardTypes: Future[Vector[CardType]] = (orderingRegistryActor ? GetCardTypes()).mapTo[Vector[CardType]]
+        complete(cardTypes)
       }
     }
   }
+
   val getOrderRoute: Route = get {
     path(JavaUUID) { id =>
       val maybeOrder: Future[Option[Order]] = (orderingRegistryActor ? GetOrder(id)).mapTo[Option[Order]]
@@ -72,14 +68,5 @@ trait OrderingRoutes extends JsonSupport {
       }
     }
   }
-  val deleteOrderRoute: Route = delete {
-    path(JavaUUID) { id =>
-      val userDeleted: Future[ActionPerformed] =
-        (orderingRegistryActor ? DeleteOrder(id)).mapTo[ActionPerformed]
-      onSuccess(userDeleted) { performed =>
-        log.info("Deleted order [{}]: {}", id.toString, performed.description)
-        complete((StatusCodes.OK, performed))
-      }
-    }
-  }
+
 }

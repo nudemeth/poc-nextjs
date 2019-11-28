@@ -8,7 +8,6 @@ import akka.util.Timeout
 
 import scala.concurrent.duration._
 import nudemeth.poc.ordering.api.application.query.OrderQueryable
-import nudemeth.poc.ordering.api.application.query.viewmodel.Order
 import nudemeth.poc.ordering.api.infrastructure.service.IdentityService.UserIdentity
 
 import scala.concurrent.ExecutionContext
@@ -16,9 +15,10 @@ import scala.concurrent.ExecutionContext
 object OrderingRegistryActor {
   final case class ActionPerformed(description: String)
   final case class GetOrders(userIdentity: UserIdentity)
-  final case class CreateOrder(order: Order)
+  final case class GetCardTypes()
   final case class GetOrder(id: UUID)
-  final case class DeleteOrder(id: UUID)
+  final case class CancelOrder(requestId: String)
+  final case class ShipOrder(requestId: String)
 
   def props(repository: OrderQueryable): Props = Props(new OrderingRegistryActor(repository))
 }
@@ -33,10 +33,11 @@ class OrderingRegistryActor(repository: OrderQueryable) extends Actor with Actor
       repository.getOrdersByUserIdAsync(userIdentity.id).pipeTo(sender())
     case GetOrder(id) =>
       repository.getOrderAsync(id).pipeTo(sender())
-    case CreateOrder(order) =>
+    case GetCardTypes() =>
       sender() ! ""
-    case DeleteOrder(id) =>
-      val userName = UUID.fromString("6bc6cfae-b04e-4b53-ba23-1a1b7260b121")
-    //repository.deleteOrderAsync(id, userName).pipeTo(sender())
+    case CancelOrder(requestId) =>
+      sender() ! ""
+    case ShipOrder(requestId) =>
+      sender() ! ""
   }
 }

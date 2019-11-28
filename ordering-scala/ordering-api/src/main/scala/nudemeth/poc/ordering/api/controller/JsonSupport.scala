@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import nudemeth.poc.ordering.api.application.query.viewmodel.{ Order, OrderItem, OrderSummary }
+import nudemeth.poc.ordering.api.application.query.viewmodel.{ CardType, Order, OrderItem, OrderSummary }
 import nudemeth.poc.ordering.api.controller.OrderingRegistryActor.ActionPerformed
 import spray.json._
 
@@ -54,9 +54,19 @@ trait JsonSupport extends SprayJsonSupport {
     }
   }
 
+  implicit object CardTypeListFormat extends RootJsonFormat[Vector[CardType]] {
+    def write(orders: Vector[CardType]) = JsArray(orders.map(o => o.toJson))
+    def read(value: JsValue): Vector[CardType] = {
+      value match {
+        case JsArray(arr) => arr.map(_.convertTo[CardType])
+        case _ => throw DeserializationException("Expected array of CardType")
+      }
+    }
+  }
+
   implicit val orderItemJsonFormat: RootJsonFormat[OrderItem] = jsonFormat4(OrderItem)
   implicit val orderJsonFormat: RootJsonFormat[Order] = jsonFormat10(Order)
   implicit val orderSummaryJsonFormat: RootJsonFormat[OrderSummary] = jsonFormat4(OrderSummary)
-
+  implicit val cardTypesJsonFormat: RootJsonFormat[CardType] = jsonFormat1(CardType)
   implicit val actionPerformedJsonFormat: RootJsonFormat[ActionPerformed] = jsonFormat1(ActionPerformed)
 }
