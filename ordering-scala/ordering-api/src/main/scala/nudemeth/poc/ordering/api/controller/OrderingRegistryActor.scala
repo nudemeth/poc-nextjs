@@ -5,6 +5,7 @@ import java.util.UUID
 import akka.actor.{ Actor, ActorLogging, Props }
 import akka.pattern.pipe
 import akka.util.Timeout
+import nudemeth.poc.ordering.api.application.command.CancelOrderCommand
 
 import scala.concurrent.duration._
 import nudemeth.poc.ordering.api.application.query.OrderQueryable
@@ -17,8 +18,8 @@ object OrderingRegistryActor {
   final case class GetOrders(userIdentity: UserIdentity)
   final case class GetCardTypes()
   final case class GetOrder(id: UUID)
-  final case class CancelOrder(requestId: String)
-  final case class ShipOrder(requestId: String)
+  final case class CancelOrder(command: CancelOrderCommand, requestId: UUID)
+  final case class ShipOrder(requestId: UUID)
 
   def props(repository: OrderQueryable): Props = Props(new OrderingRegistryActor(repository))
 }
@@ -35,8 +36,8 @@ class OrderingRegistryActor(repository: OrderQueryable) extends Actor with Actor
       repository.getOrderAsync(id).pipeTo(sender())
     case GetCardTypes() =>
       sender() ! ""
-    case CancelOrder(requestId) =>
-      sender() ! ""
+    case CancelOrder(command, requestId) =>
+      sender() ! true
     case ShipOrder(requestId) =>
       sender() ! ""
   }

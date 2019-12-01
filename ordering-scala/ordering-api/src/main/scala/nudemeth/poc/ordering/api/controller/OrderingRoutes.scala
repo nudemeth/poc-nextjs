@@ -1,5 +1,7 @@
 package nudemeth.poc.ordering.api.controller
 
+import java.util.UUID
+
 import akka.actor.{ ActorRef, ActorSystem }
 import akka.event.Logging
 import akka.http.scaladsl.model.StatusCodes
@@ -10,6 +12,7 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.directives.Credentials
 import akka.pattern.ask
 import akka.util.Timeout
+import nudemeth.poc.ordering.api.application.command.CancelOrderCommand
 import nudemeth.poc.ordering.api.application.query.viewmodel.{ CardType, Order, OrderSummary }
 import nudemeth.poc.ordering.api.controller.OrderingRegistryActor._
 import nudemeth.poc.ordering.api.infrastructure.service.IdentityService.{ ExtractUserIdentity, UserIdentity }
@@ -65,6 +68,26 @@ trait OrderingRoutes extends JsonSupport {
       val maybeOrder: Future[Option[Order]] = (orderingRegistryActor ? GetOrder(id)).mapTo[Option[Order]]
       rejectEmptyResponse {
         complete(maybeOrder)
+      }
+    }
+  }
+
+  val cancelOrderRoute: Route = put {
+    path("cancel") {
+      pathEndOrSingleSlash {
+        headerValueByName("x-requestid") { requestId =>
+          val requestUuid = UUID.fromString(requestId)
+          entity(as[CancelOrderCommand]) { command =>
+            extractExecutionContext { implicit executor =>
+              val result = (orderingRegistryActor ? CancelOrder(command, requestUuid)).mapTo[Boolean]
+              val statusCode = result.map {
+                case true => StatusCodes.OK
+                case false => StatusCodes.BadRequest
+              }
+              complete(statusCode)
+            }
+          }
+        }
       }
     }
   }
