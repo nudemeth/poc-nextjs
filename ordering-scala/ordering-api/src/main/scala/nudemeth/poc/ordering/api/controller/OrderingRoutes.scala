@@ -12,7 +12,7 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.directives.Credentials
 import akka.pattern.ask
 import akka.util.Timeout
-import nudemeth.poc.ordering.api.application.command.CancelOrderCommand
+import nudemeth.poc.ordering.api.application.command.{ CancelOrderCommand, ShipOrderCommand }
 import nudemeth.poc.ordering.api.application.query.viewmodel.{ CardType, Order, OrderSummary }
 import nudemeth.poc.ordering.api.controller.OrderingRegistryActor._
 import nudemeth.poc.ordering.api.infrastructure.service.IdentityService.{ ExtractUserIdentity, UserIdentity }
@@ -36,7 +36,9 @@ trait OrderingRoutes extends JsonSupport {
         concat(
           getOrdersRoute(userIdentity),
           getOrderRoute,
-          getCardTypesRoute)
+          getCardTypesRoute,
+          cancelOrderRoute,
+          shipOrderRoute)
       }
     }
 
@@ -80,6 +82,26 @@ trait OrderingRoutes extends JsonSupport {
           entity(as[CancelOrderCommand]) { command =>
             extractExecutionContext { implicit executor =>
               val result = (orderingRegistryActor ? CancelOrder(command, requestUuid)).mapTo[Boolean]
+              val statusCode = result.map {
+                case true => StatusCodes.OK
+                case false => StatusCodes.BadRequest
+              }
+              complete(statusCode)
+            }
+          }
+        }
+      }
+    }
+  }
+
+  val shipOrderRoute: Route = put {
+    path("ship") {
+      pathEndOrSingleSlash {
+        headerValueByName("x-requestid") { requestId =>
+          val requestUuid = UUID.fromString(requestId)
+          entity(as[ShipOrderCommand]) { command =>
+            extractExecutionContext { implicit executor =>
+              val result = (orderingRegistryActor ? ShipOrder(command, requestUuid)).mapTo[Boolean]
               val statusCode = result.map {
                 case true => StatusCodes.OK
                 case false => StatusCodes.BadRequest

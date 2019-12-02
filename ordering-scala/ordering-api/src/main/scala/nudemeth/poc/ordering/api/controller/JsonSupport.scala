@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import nudemeth.poc.ordering.api.application.command.CancelOrderCommand
+import nudemeth.poc.ordering.api.application.command.{ CancelOrderCommand, ShipOrderCommand }
 import nudemeth.poc.ordering.api.application.query.viewmodel.{ CardType, Order, OrderItem, OrderSummary }
 import nudemeth.poc.ordering.api.controller.OrderingRegistryActor.ActionPerformed
 import spray.json._
@@ -71,4 +71,5 @@ trait JsonSupport extends SprayJsonSupport {
   implicit val cardTypesJsonFormat: RootJsonFormat[CardType] = jsonFormat1(CardType)
   implicit val actionPerformedJsonFormat: RootJsonFormat[ActionPerformed] = jsonFormat1(ActionPerformed)
   implicit val cancelOrderCommandJsonFormat: RootJsonFormat[CancelOrderCommand] = jsonFormat1(CancelOrderCommand)
+  implicit val shipOrderCommandJsonFormat: RootJsonFormat[ShipOrderCommand] = jsonFormat1(ShipOrderCommand)
 }
