@@ -81,8 +81,7 @@ trait OrderingRoutes extends JsonSupport {
           val requestUuid = UUID.fromString(requestId)
           entity(as[CancelOrderCommand]) { command =>
             extractExecutionContext { implicit executor =>
-              val result = (orderingRegistryActor ? CancelOrder(command, requestUuid)).mapTo[Boolean]
-              val statusCode = result.map {
+              val statusCode = (orderingRegistryActor ? CancelOrder(command, requestUuid)).mapTo[Boolean].map {
                 case true => StatusCodes.OK
                 case false => StatusCodes.BadRequest
               }
@@ -101,8 +100,7 @@ trait OrderingRoutes extends JsonSupport {
           val requestUuid = UUID.fromString(requestId)
           entity(as[ShipOrderCommand]) { command =>
             extractExecutionContext { implicit executor =>
-              val result = (orderingRegistryActor ? ShipOrder(command, requestUuid)).mapTo[Boolean]
-              val statusCode = result.map {
+              val statusCode = (orderingRegistryActor ? ShipOrder(command, requestUuid)).mapTo[Boolean].map {
                 case true => StatusCodes.OK
                 case false => StatusCodes.BadRequest
               }
