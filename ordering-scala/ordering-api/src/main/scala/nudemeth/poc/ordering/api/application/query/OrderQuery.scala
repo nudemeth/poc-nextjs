@@ -25,7 +25,8 @@ class OrderQuery extends OrderQueryable {
     .withKeyspace(config.getString("cassandra.keyspace"))
     .build()
 
-  private val getOrdersByUserIdAsyncCql = "SELECT order_id, order_date, status_name, total FROM order_by_buyer_id WHERE buyer_id = :buyerId"
+  private val getOrdersByUserIdCql = "SELECT order_id, order_date, status_name, total FROM order_by_buyer_id WHERE buyer_id = :buyerId"
+  private val getCardTypesCql = "SELECT name FROM card_type"
 
   override def finalize(): Unit = {
     if (!session.isClosed) {
@@ -36,7 +37,7 @@ class OrderQuery extends OrderQueryable {
 
   def getOrdersByUserIdAsync(id: UUID): Future[Vector[OrderSummary]] = {
     val query = session
-      .prepare(getOrdersByUserIdAsyncCql)
+      .prepare(getOrdersByUserIdCql)
       .bind()
       .setUuid("buyerId", id)
 
@@ -54,8 +55,7 @@ class OrderQuery extends OrderQueryable {
         r.getInstant(CqlIdentifier.fromCql("order_date")).atOffset(ZoneOffset.UTC),
         r.getString(CqlIdentifier.fromCql("status_name")),
         r.getInt(CqlIdentifier.fromCql("total")))
-    }
-      .toVector
+    }.toVector
   }
 
   override def getOrderAsync(id: UUID): Future[Option[Order]] = {
@@ -63,6 +63,21 @@ class OrderQuery extends OrderQueryable {
   }
 
   override def getCardTypesAsync: Future[Vector[CardType]] = {
-    Future.successful(Vector())
+    val query = session
+      .prepare(getCardTypesCql)
+      .bind()
+
+    session.executeAsync(query).toScala.map { r =>
+      r.currentPage().asScala
+    }.map { r =>
+      buildCardTypes(r)
+    }
+  }
+
+  private def buildCardTypes(rows: Iterable[Row]): Vector[CardType] = {
+    rows.map { r =>
+      CardType(
+        r.getString(CqlIdentifier.fromCql("name")))
+    }.toVector
   }
 }
