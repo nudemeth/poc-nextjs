@@ -49,8 +49,7 @@ class OrderQuery extends OrderQueryable {
         row.getUuid(CqlIdentifier.fromCql("order_id")),
         row.getInstant(CqlIdentifier.fromCql("order_date")).atOffset(ZoneOffset.UTC),
         row.getString(CqlIdentifier.fromCql("status_name")),
-        row.getInt(CqlIdentifier.fromCql("total"))
-      )
+        row.getInt(CqlIdentifier.fromCql("total")))
     } yield orderSummary
   }
 

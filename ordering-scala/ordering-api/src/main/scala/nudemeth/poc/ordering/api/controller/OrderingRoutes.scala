@@ -8,7 +8,7 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.directives.MethodDirectives.{ get, post }
 import akka.http.scaladsl.server.directives.RouteDirectives.complete
-import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.server.{ Route, ValidationRejection }
 import akka.http.scaladsl.server.directives.Credentials
 import akka.pattern.ask
 import akka.util.Timeout
@@ -17,8 +17,9 @@ import nudemeth.poc.ordering.api.application.query.viewmodel.{ CardType, Order, 
 import nudemeth.poc.ordering.api.controller.OrderingRegistryActor._
 import nudemeth.poc.ordering.api.infrastructure.service.IdentityService.{ ExtractUserIdentity, UserIdentity }
 
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.concurrent.duration._
+import scala.util.{ Failure, Success, Try }
 
 trait OrderingRoutes extends JsonSupport {
   // we leave these abstract, since they will be provided by the App
@@ -74,21 +75,19 @@ trait OrderingRoutes extends JsonSupport {
     }
   }
 
-  val cancelOrderRoute: Route = put {
-    path("cancel") {
-      pathEndOrSingleSlash {
-        headerValueByName("x-requestid") { requestId =>
-          val requestUuid = UUID.fromString(requestId)
-          entity(as[CancelOrderCommand]) { command =>
-            extractExecutionContext { implicit executor =>
-              val statusCode = (orderingRegistryActor ? CancelOrder(command, requestUuid)).mapTo[Boolean].map {
-                case true => StatusCodes.OK
-                case false => StatusCodes.BadRequest
-              }
-              complete(statusCode)
-            }
-          }
-        }
+  private def doCancel(requestUuid: UUID, command: CancelOrderCommand)(implicit executor: ExecutionContext): Route = {
+    val statusCode = (orderingRegistryActor ? CancelOrder(command, requestUuid)).mapTo[Boolean].map {
+      case true => StatusCodes.OK
+      case false => StatusCodes.BadRequest
+    }
+    complete(statusCode)
+  }
+
+  val cancelOrderRoute: Route = (put & path("cancel") & pathEndOrSingleSlash & extractExecutionContext) { implicit executor =>
+    (headerValueByName("x-requestid") & entity(as[CancelOrderCommand])) { (requestId, command) =>
+      Try(UUID.fromString(requestId)) match {
+        case Failure(ex) => reject(ValidationRejection(s"Invalid request id: $requestId", Some(ex)))
+        case Success(requestUuid) => doCancel(requestUuid, command)
       }
     }
   }
@@ -97,14 +96,16 @@ trait OrderingRoutes extends JsonSupport {
     path("ship") {
       pathEndOrSingleSlash {
         headerValueByName("x-requestid") { requestId =>
-          val requestUuid = UUID.fromString(requestId)
-          entity(as[ShipOrderCommand]) { command =>
-            extractExecutionContext { implicit executor =>
-              val statusCode = (orderingRegistryActor ? ShipOrder(command, requestUuid)).mapTo[Boolean].map {
-                case true => StatusCodes.OK
-                case false => StatusCodes.BadRequest
+          Try(UUID.fromString(requestId)) match {
+            case Failure(ex) => reject(ValidationRejection(s"Invalid request id: $requestId", Some(ex)))
+            case Success(requestUuid) => entity(as[ShipOrderCommand]) { command =>
+              extractExecutionContext { implicit executor =>
+                val statusCode = (orderingRegistryActor ? ShipOrder(command, requestUuid)).mapTo[Boolean].map {
+                  case true => StatusCodes.OK
+                  case false => StatusCodes.BadRequest
+                }
+                complete(statusCode)
               }
-              complete(statusCode)
             }
           }
         }
