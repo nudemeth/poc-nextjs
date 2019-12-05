@@ -92,25 +92,20 @@ trait OrderingRoutes extends JsonSupport {
     }
   }
 
-  val shipOrderRoute: Route = put {
-    path("ship") {
-      pathEndOrSingleSlash {
-        headerValueByName("x-requestid") { requestId =>
-          Try(UUID.fromString(requestId)) match {
-            case Failure(ex) => reject(ValidationRejection(s"Invalid request id: $requestId", Some(ex)))
-            case Success(requestUuid) => entity(as[ShipOrderCommand]) { command =>
-              extractExecutionContext { implicit executor =>
-                val statusCode = (orderingRegistryActor ? ShipOrder(command, requestUuid)).mapTo[Boolean].map {
-                  case true => StatusCodes.OK
-                  case false => StatusCodes.BadRequest
-                }
-                complete(statusCode)
-              }
-            }
-          }
-        }
+  private def doShip(requestUuid: UUID, command: ShipOrderCommand)(implicit executor: ExecutionContext): Route = {
+    val statusCode = (orderingRegistryActor ? ShipOrder(command, requestUuid)).mapTo[Boolean].map {
+      case true => StatusCodes.OK
+      case false => StatusCodes.BadRequest
+    }
+    complete(statusCode)
+  }
+
+  val shipOrderRoute: Route = (put & path("ship") & pathEndOrSingleSlash & extractExecutionContext) { implicit executor =>
+    (headerValueByName("x-requestid") & entity(as[ShipOrderCommand])) { (requestId, command) =>
+      Try(UUID.fromString(requestId)) match {
+        case Failure(ex) => reject(ValidationRejection(s"Invalid request id: $requestId", Some(ex)))
+        case Success(requestUuid) => doShip(requestUuid, command)
       }
     }
   }
-
 }
