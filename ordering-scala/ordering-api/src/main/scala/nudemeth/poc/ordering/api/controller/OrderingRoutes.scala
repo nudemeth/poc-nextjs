@@ -50,28 +50,20 @@ trait OrderingRoutes extends JsonSupport {
     }
   }
 
-  private def getOrdersRoute(userIdentity: UserIdentity): Route = get {
-    pathEndOrSingleSlash {
-      val orders: Future[Vector[OrderSummary]] = (orderingRegistryActor ? GetOrders(userIdentity)).mapTo[Vector[OrderSummary]]
-      complete(orders)
-    }
+  private def getOrdersRoute(userIdentity: UserIdentity): Route = (get & pathEndOrSingleSlash) {
+    val orders: Future[Vector[OrderSummary]] = (orderingRegistryActor ? GetOrders(userIdentity)).mapTo[Vector[OrderSummary]]
+    complete(orders)
   }
 
-  val getCardTypesRoute: Route = get {
-    path("cardtypes") {
-      pathEndOrSingleSlash {
-        val cardTypes: Future[Vector[CardType]] = (orderingRegistryActor ? GetCardTypes()).mapTo[Vector[CardType]]
-        complete(cardTypes)
-      }
-    }
+  val getCardTypesRoute: Route = (get & path("cardtypes") & pathEndOrSingleSlash) {
+    val cardTypes: Future[Vector[CardType]] = (orderingRegistryActor ? GetCardTypes()).mapTo[Vector[CardType]]
+    complete(cardTypes)
   }
 
-  val getOrderRoute: Route = get {
-    path(JavaUUID) { id =>
-      val maybeOrder: Future[Option[Order]] = (orderingRegistryActor ? GetOrder(id)).mapTo[Option[Order]]
-      rejectEmptyResponse {
-        complete(maybeOrder)
-      }
+  val getOrderRoute: Route = (get & path(JavaUUID) & pathEnd) { id =>
+    val maybeOrder: Future[Option[Order]] = (orderingRegistryActor ? GetOrder(id)).mapTo[Option[Order]]
+    rejectEmptyResponse {
+      complete(maybeOrder)
     }
   }
 
