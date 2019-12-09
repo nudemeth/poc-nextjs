@@ -4,7 +4,6 @@ import java.net.InetSocketAddress
 import java.time.ZoneOffset
 import java.util.UUID
 
-import com.datastax.oss.driver.api.core.cql.Row
 import com.datastax.oss.driver.api.core.{ CqlIdentifier, CqlSession }
 import com.typesafe.config.ConfigFactory
 import nudemeth.poc.ordering.api.application.query.viewmodel._
@@ -26,6 +25,11 @@ class OrderQuery extends OrderQueryable {
     .build()
 
   private val getOrdersByUserIdCql = "SELECT order_id, order_date, status_name, total FROM order_by_buyer_id WHERE buyer_id = :buyerId"
+  private val getOrderCql = """SELECT
+                              | order_id, order_date, description, address_city, address_country,
+                              | address_state, address_street, address_zip_code, status_name, order_items
+                              | FROM order_by_id
+                              | WHERE order_id = :orderId""".stripMargin.stripLineEnd
   private val getCardTypesCql = "SELECT name FROM card_type"
 
   override def finalize(): Unit = {
@@ -54,7 +58,26 @@ class OrderQuery extends OrderQueryable {
   }
 
   override def getOrderAsync(id: UUID): Future[Option[Order]] = {
-    Future.successful(None)
+    val query = session
+      .prepare(getOrderCql)
+      .bind()
+      .setUuid("orderId", id)
+
+    for {
+      result <- session.executeAsync(query).toScala
+    } yield for {
+      row <- Option(result.one())
+      order = Order(
+        row.getUuid(CqlIdentifier.fromCql("order_id")),
+        row.getInstant(CqlIdentifier.fromCql("order_id")).atOffset(ZoneOffset.UTC),
+        row.getString(CqlIdentifier.fromCql("status_name")),
+        row.getString(CqlIdentifier.fromCql("description")),
+        row.getString(CqlIdentifier.fromCql("address_street")),
+        row.getString(CqlIdentifier.fromCql("address_city")),
+        row.getString(CqlIdentifier.fromCql("address_zip_code")),
+        row.getString(CqlIdentifier.fromCql("address_country")),
+        row.getList(CqlIdentifier.fromCql("order_items"), OrderItem.getClass).asInstanceOf[java.util.List[OrderItem]].asScala.toVector)
+    } yield order
   }
 
   override def getCardTypesAsync: Future[Vector[CardType]] = {
