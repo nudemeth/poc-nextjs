@@ -4,6 +4,8 @@ import java.net.InetSocketAddress
 import java.time.ZoneOffset
 import java.util.UUID
 
+import com.datastax.oss.driver.api.core.cql.Row
+import com.datastax.oss.driver.api.core.data.TupleValue
 import com.datastax.oss.driver.api.core.{ CqlIdentifier, CqlSession }
 import com.typesafe.config.ConfigFactory
 import nudemeth.poc.ordering.api.application.query.viewmodel._
@@ -67,6 +69,7 @@ class OrderQuery extends OrderQueryable {
       result <- session.executeAsync(query).toScala
     } yield for {
       row <- Option(result.one())
+      orderItems = getOrderItems(row)
       order = Order(
         row.getUuid(CqlIdentifier.fromCql("order_id")),
         row.getInstant(CqlIdentifier.fromCql("order_id")).atOffset(ZoneOffset.UTC),
@@ -76,7 +79,7 @@ class OrderQuery extends OrderQueryable {
         row.getString(CqlIdentifier.fromCql("address_city")),
         row.getString(CqlIdentifier.fromCql("address_zip_code")),
         row.getString(CqlIdentifier.fromCql("address_country")),
-        row.getList(CqlIdentifier.fromCql("order_items"), OrderItem.getClass).asInstanceOf[java.util.List[OrderItem]].asScala.toVector)
+        orderItems)
     } yield order
   }
 
@@ -91,5 +94,15 @@ class OrderQuery extends OrderQueryable {
       row <- result.currentPage().asScala.toVector
       cardTypes = CardType(row.getString(CqlIdentifier.fromCql("name")))
     } yield cardTypes
+  }
+
+  private def getOrderItems(row: Row): Vector[OrderItem] = {
+    row.getMap(CqlIdentifier.fromCql("order_items"), classOf[String], classOf[TupleValue]).asScala.map { o =>
+      OrderItem(
+        o._1,
+        o._2.getInt(0),
+        o._2.getBigDecimal(1),
+        o._2.getString(2))
+    }.toVector
   }
 }

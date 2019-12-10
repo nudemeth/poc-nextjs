@@ -3,7 +3,7 @@ package nudemeth.poc.ordering.api.application.query.viewmodel
 case class OrderItem(
   productName: String,
   units: Int,
-  unitPrice: Double,
+  unitPrice: BigDecimal,
   pictureUrl: String) {
 
 }
