@@ -35,7 +35,7 @@ class OrderingRegistryActor(repository: OrderQueryable) extends Actor with Actor
     case GetOrder(id) =>
       repository.getOrderAsync(id).pipeTo(sender())
     case GetCardTypes() =>
-      sender() ! ""
+      repository.getCardTypesAsync.pipeTo(sender())
     case CancelOrder(command, requestId) =>
       sender() ! true
     case ShipOrder(command, requestId) =>
