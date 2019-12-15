@@ -8,8 +8,10 @@ import akka.actor.{ ActorRef, ActorSystem }
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
+import nudemeth.poc.ordering.api.application.command.{ CancelOrderCommand, IdentifiedCommand, IdentifiedCommandHandler }
 import nudemeth.poc.ordering.api.application.query.{ OrderQuery, OrderQueryable }
 import nudemeth.poc.ordering.api.controller.{ OrderingRegistryActor, OrderingRoutes }
+import nudemeth.poc.ordering.api.infrastructure.mediator.{ Mediator, Request, RequestHandler }
 import nudemeth.poc.ordering.api.infrastructure.service.IdentityService
 
 //#main-class
@@ -23,9 +25,12 @@ object Server extends App with OrderingRoutes {
   implicit val executionContext: ExecutionContext = system.dispatcher
   //#server-bootstrapping
 
+  val handlers: Map[Class[_], RequestHandler[Request[_], _]] = Map(
+    classOf[IdentifiedCommand[CancelOrderCommand, Boolean]] -> IdentifiedCommandHandler[CancelOrderCommand, Boolean]())
+  val mediator: Mediator = new Mediator(handlers)
   val orderingRepo: OrderQueryable = new OrderQuery()
   var identityRegistryActor: ActorRef = system.actorOf(IdentityService.props, "identity-actor")
-  val orderingRegistryActor: ActorRef = system.actorOf(OrderingRegistryActor.props(orderingRepo), "ordering-actor")
+  val orderingRegistryActor: ActorRef = system.actorOf(OrderingRegistryActor.props(orderingRepo, mediator), "ordering-actor")
 
   //#main-class
   // from the OrderingRoutes trait

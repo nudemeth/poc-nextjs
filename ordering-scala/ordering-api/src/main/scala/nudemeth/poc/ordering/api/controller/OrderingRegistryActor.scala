@@ -5,10 +5,11 @@ import java.util.UUID
 import akka.actor.{ Actor, ActorLogging, Props }
 import akka.pattern.pipe
 import akka.util.Timeout
-import nudemeth.poc.ordering.api.application.command.{ CancelOrderCommand, ShipOrderCommand }
+import nudemeth.poc.ordering.api.application.command.{ CancelOrderCommand, IdentifiedCommand, ShipOrderCommand }
 
 import scala.concurrent.duration._
 import nudemeth.poc.ordering.api.application.query.OrderQueryable
+import nudemeth.poc.ordering.api.infrastructure.mediator.MediatorDuty
 import nudemeth.poc.ordering.api.infrastructure.service.IdentityService.UserIdentity
 
 import scala.concurrent.ExecutionContext
@@ -21,10 +22,10 @@ object OrderingRegistryActor {
   final case class CancelOrder(command: CancelOrderCommand, requestId: UUID)
   final case class ShipOrder(command: ShipOrderCommand, requestId: UUID)
 
-  def props(repository: OrderQueryable): Props = Props(new OrderingRegistryActor(repository))
+  def props(repository: OrderQueryable, mediator: MediatorDuty): Props = Props(new OrderingRegistryActor(repository, mediator))
 }
 
-class OrderingRegistryActor(repository: OrderQueryable) extends Actor with ActorLogging {
+class OrderingRegistryActor(repository: OrderQueryable, mediator: MediatorDuty) extends Actor with ActorLogging {
   import nudemeth.poc.ordering.api.controller.OrderingRegistryActor._
   implicit val ec: ExecutionContext = context.dispatcher
   implicit val timeout: Timeout = 10.seconds
@@ -37,7 +38,8 @@ class OrderingRegistryActor(repository: OrderQueryable) extends Actor with Actor
     case GetCardTypes() =>
       repository.getCardTypesAsync.pipeTo(sender())
     case CancelOrder(command, requestId) =>
-      sender() ! true
+      val requestCancelOrder = IdentifiedCommand[CancelOrderCommand, Boolean](command, requestId)
+      mediator.send(requestCancelOrder).pipeTo(sender())
     case ShipOrder(command, requestId) =>
       sender() ! true
   }

@@ -1,5 +1,5 @@
 package nudemeth.poc.ordering.api.infrastructure.mediator
 
-trait Request[TResponse] {
+trait Request[+TResponse] {
 
 }
