@@ -25,7 +25,7 @@ object Server extends App with OrderingRoutes {
   implicit val executionContext: ExecutionContext = system.dispatcher
   //#server-bootstrapping
 
-  val handlers: Map[Class[_], RequestHandler[Request[_], _]] = Map(
+  val handlers: Map[Class[_ <: Request[Any]], RequestHandler[Request[Any], Any]] = Map(
     classOf[IdentifiedCommand[CancelOrderCommand, Boolean]] -> IdentifiedCommandHandler[CancelOrderCommand, Boolean]())
   val mediator: Mediator = new Mediator(handlers)
   val orderingRepo: OrderQueryable = new OrderQuery()
