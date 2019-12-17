@@ -4,7 +4,7 @@ import nudemeth.poc.ordering.api.infrastructure.mediator.{ MediatorDuty, Request
 
 import scala.concurrent.Future
 
-class CancelOrderCommandHandler extends RequestHandler[CancelOrderCommand, Boolean] {
+case class CancelOrderCommandHandler() extends RequestHandler[CancelOrderCommand, Boolean] {
   override def handle(request: CancelOrderCommand, mediator: MediatorDuty): Future[Boolean] = {
     Future.successful(true)
   }
