@@ -25,9 +25,9 @@ object Server extends App with OrderingRoutes {
   implicit val executionContext: ExecutionContext = system.dispatcher
   //#server-bootstrapping
 
-  val handlers: Map[_ <: RequestHandler[_ <: Request[Any], Any], Class[_ <: Request[Any]]] = Map(
-    CancelOrderCommandHandler() -> classOf[CancelOrderCommand],
-    IdentifiedCommandHandler[CancelOrderCommand, Boolean]() -> classOf[IdentifiedCommand[CancelOrderCommand, Boolean]])
+  val handlers: Map[Class[_ <: Request[Any]], _ <: RequestHandler[_ <: Request[Any], Any]] = Map(
+    classOf[CancelOrderCommand] -> CancelOrderCommandHandler(),
+    classOf[IdentifiedCommand[CancelOrderCommand, Boolean]] -> IdentifiedCommandHandler[CancelOrderCommand, Boolean]())
   val mediator: Mediator = new Mediator(handlers)
   val orderingRepo: OrderQueryable = new OrderQuery()
   var identityRegistryActor: ActorRef = system.actorOf(IdentityService.props, "identity-actor")
