@@ -41,6 +41,7 @@ class OrderingRegistryActor(repository: OrderQueryable, mediator: MediatorDuty) 
       val requestCancelOrder = IdentifiedCommand[CancelOrderCommand, Boolean](command, requestId)
       mediator.send(requestCancelOrder).pipeTo(sender())
     case ShipOrder(command, requestId) =>
-      sender() ! true
+      val requestShipOrder = IdentifiedCommand[ShipOrderCommand, Boolean](command, requestId)
+      mediator.send(requestShipOrder).pipeTo(sender())
   }
 }

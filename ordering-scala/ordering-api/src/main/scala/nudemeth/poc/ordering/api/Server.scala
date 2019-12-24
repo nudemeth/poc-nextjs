@@ -28,7 +28,8 @@ object Server extends App with OrderingRoutes {
   val handlers: Map[Class[_ <: Request[Any]], _ <: RequestHandler[_ <: Request[Any], Any]] = Map(
     classOf[CancelOrderCommand] -> CancelOrderCommandHandler(),
     classOf[ShipOrderCommand] -> ShipOrderCommandHandler(),
-    classOf[IdentifiedCommand[CancelOrderCommand, Boolean]] -> IdentifiedCommandHandler[CancelOrderCommand, Boolean]())
+    classOf[IdentifiedCommand[CancelOrderCommand, Boolean]] -> IdentifiedCommandHandler[CancelOrderCommand, Boolean](),
+    classOf[IdentifiedCommand[ShipOrderCommand, Boolean]] -> IdentifiedCommandHandler[ShipOrderCommand, Boolean]())
   val mediator: Mediator = new Mediator(handlers)
   val orderingRepo: OrderQueryable = new OrderQuery()
   var identityRegistryActor: ActorRef = system.actorOf(IdentityService.props, "identity-actor")
