@@ -8,7 +8,7 @@ import nudemeth.poc.ordering.infrastructure.repository.entity.CardTypeEntity
 import scala.concurrent.Future
 
 abstract class CardTypeModel extends Table[CardTypeModel, CardTypeEntity] {
-  override def tableName: String = "CardType"
+  override def tableName: String = "card_type"
 
   object name extends Col[String] with PartitionKey
 
