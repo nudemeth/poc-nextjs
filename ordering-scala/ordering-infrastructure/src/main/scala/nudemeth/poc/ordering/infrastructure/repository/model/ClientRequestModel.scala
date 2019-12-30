@@ -22,6 +22,13 @@ abstract class ClientRequestModel extends Table[ClientRequestModel, ClientReques
   object name extends Col[String]
   object time extends Col[OffsetDateTime]
 
+  def getById(requestId: UUID): Future[Option[ClientRequestEntity]] = {
+    select
+      .where(_.requestId eqs requestId)
+      .consistencyLevel_=(ConsistencyLevel.ONE)
+      .one()
+  }
+
   def saveOrUpdate(request: ClientRequestEntity): Future[ResultSet] = saveOrUpdateTransaction(request).future()
   def saveOrUpdateTransaction(request: ClientRequestEntity): InsertQuery[ClientRequestModel, ClientRequestEntity, Specified, HNil] = {
     insert
