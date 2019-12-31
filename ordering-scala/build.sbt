@@ -66,6 +66,8 @@ lazy val infrastructure = (project in file("./ordering-infrastructure"))
   .settings(
     name := "ordering-infrastructure",
     libraryDependencies ++= Seq(
+      "org.scala-lang"    %  "scala-reflect"        % scalaMainVersion,
+
       "com.typesafe"      %  "config"               % "1.4.0",
 
       "com.outworkers"    %% "phantom-dsl"          % phantomVersion,
