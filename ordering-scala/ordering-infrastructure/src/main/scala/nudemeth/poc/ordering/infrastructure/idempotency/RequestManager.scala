@@ -4,15 +4,14 @@ import java.util.UUID
 
 import nudemeth.poc.ordering.domain.exception.OrderingDomainException
 import nudemeth.poc.ordering.infrastructure.OrderingContext
-import nudemeth.poc.ordering.infrastructure.repository.OrderDatabase
 import nudemeth.poc.ordering.infrastructure.repository.entity.ClientRequestEntity
 
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.reflect.runtime.universe._
 
-case class RequestManager(context: OrderingContext) extends RequestManagerOperations {
+case class RequestManager() extends RequestManagerOperations {
   override def existAsync(id: UUID)(implicit executor: ExecutionContext): Future[Boolean] = {
-    OrderDatabase.ClientRequestModel.getById(id).map(_.isDefined)
+    OrderingContext.ClientRequestModel.getById(id).map(_.isDefined)
   }
 
   override def createRequestForCommandAsync[T](id: UUID)(implicit executor: ExecutionContext, tag: TypeTag[T]): Future[Unit] = {
@@ -21,7 +20,7 @@ case class RequestManager(context: OrderingContext) extends RequestManagerOperat
         throw OrderingDomainException(s"Request with $id already exists")
       }
       val clientRequest = ClientRequestEntity(id, typeOf[T].typeSymbol.fullName, OffsetDateTime.now())
-      OrderDatabase.ClientRequestModel.saveOrUpdate(clientRequest).map(_ => ())
+      OrderingContext.ClientRequestModel.saveOrUpdate(clientRequest).map(_ => ())
     }
   }
 }

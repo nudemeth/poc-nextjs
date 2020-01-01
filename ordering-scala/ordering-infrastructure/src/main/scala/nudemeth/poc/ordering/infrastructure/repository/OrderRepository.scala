@@ -4,6 +4,7 @@ import java.util.UUID
 
 import nudemeth.poc.ordering.domain.model.aggregate.buyer.{ CardType, PaymentMethod }
 import nudemeth.poc.ordering.domain.model.aggregate.order.{ Address, Order, OrderItem }
+import nudemeth.poc.ordering.infrastructure.OrderingContext
 import nudemeth.poc.ordering.infrastructure.repository.entity.OrderEntity
 
 import scala.concurrent.Future
@@ -11,13 +12,13 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class OrderRepository extends OrderRepositoryOperations {
   override def getOrderAsync(id: UUID): Future[Option[(Order, PaymentMethod)]] = {
-    OrderDatabase.OrderModel.getById(id).map { e =>
+    OrderingContext.OrderModel.getById(id).map { e =>
       mapToDomainModel(e)
     }
   }
 
   override def addOrUpdateOrderAsync(order: Order, paymentMethod: PaymentMethod): Future[Unit] = {
-    OrderDatabase.OrderModel.saveOrUpdate(OrderEntity(
+    OrderingContext.OrderModel.saveOrUpdate(OrderEntity(
       order.orderId,
       order.buyerId,
       order.orderDate.atOffset(ZoneOffset.UTC),
