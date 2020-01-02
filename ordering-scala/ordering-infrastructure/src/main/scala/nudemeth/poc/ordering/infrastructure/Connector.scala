@@ -1,4 +1,4 @@
-package nudemeth.poc.ordering.infrastructure.repository
+package nudemeth.poc.ordering.infrastructure
 
 import com.outworkers.phantom.connectors.{ CassandraConnection, ContactPoints }
 import com.typesafe.config.ConfigFactory

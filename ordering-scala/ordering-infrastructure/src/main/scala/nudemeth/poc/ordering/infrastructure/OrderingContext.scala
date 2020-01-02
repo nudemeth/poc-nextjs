@@ -4,7 +4,6 @@ import java.util.UUID
 
 import com.outworkers.phantom.connectors.CassandraConnection
 import com.outworkers.phantom.dsl._
-import nudemeth.poc.ordering.infrastructure.repository.Connector
 import nudemeth.poc.ordering.infrastructure.repository.entity.{ OrderByUserEntity, OrderEntity }
 import nudemeth.poc.ordering.infrastructure.repository.model._
 
