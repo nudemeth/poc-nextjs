@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS ordering.order_by_id (
    payment_method_card_holder_name TEXT,
    payment_method_card_expiration TIMESTAMP,
    payment_method_card_type TEXT,
-   order_items map<TEXT, FROZEN <tuple<INT, DOUBLE, TEXT>>>, -- {product_name, {units, unit_price, picture_url}}
+   order_items map<TEXT, FROZEN <tuple<INT, DECIMAL, TEXT>>>, -- {product_name, {units, unit_price, picture_url}}
    PRIMARY KEY (order_id)
 );
 
