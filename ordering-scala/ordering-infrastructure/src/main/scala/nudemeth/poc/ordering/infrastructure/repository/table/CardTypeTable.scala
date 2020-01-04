@@ -1,4 +1,4 @@
-package nudemeth.poc.ordering.infrastructure.repository.model
+package nudemeth.poc.ordering.infrastructure.repository.table
 
 import com.outworkers.phantom.Table
 import com.outworkers.phantom.dsl._
@@ -7,7 +7,7 @@ import nudemeth.poc.ordering.infrastructure.repository.entity.CardTypeEntity
 
 import scala.concurrent.Future
 
-abstract class CardTypeModel extends Table[CardTypeModel, CardTypeEntity] {
+abstract class CardTypeTable extends Table[CardTypeTable, CardTypeEntity] {
   override def tableName: String = "card_type"
 
   object name extends Col[String] with PartitionKey

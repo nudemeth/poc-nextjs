@@ -1,4 +1,4 @@
-package nudemeth.poc.ordering.infrastructure.repository.model
+package nudemeth.poc.ordering.infrastructure.repository.table
 
 import java.time.OffsetDateTime
 import java.util.UUID
@@ -14,7 +14,7 @@ import shapeless.HNil
 
 import scala.concurrent.Future
 
-abstract class OrderByUserModel extends Table[OrderByUserModel, OrderByUserEntity] {
+abstract class OrderByBuyerTable extends Table[OrderByBuyerTable, OrderByUserEntity] {
   override def tableName: String = "order_by_buyer_id"
 
   object buyerId extends Col[UUID] with PartitionKey { override lazy val name = "buyer_id" }
@@ -31,7 +31,7 @@ abstract class OrderByUserModel extends Table[OrderByUserModel, OrderByUserEntit
   }
 
   def saveOrUpdate(order: OrderByUserEntity): Future[ResultSet] = saveOrUpdateTransaction(order).future()
-  def saveOrUpdateTransaction(order: OrderByUserEntity): InsertQuery[OrderByUserModel, OrderByUserEntity, Specified, HNil] = {
+  def saveOrUpdateTransaction(order: OrderByUserEntity): InsertQuery[OrderByBuyerTable, OrderByUserEntity, Specified, HNil] = {
     insert
       .value(_.buyerId, order.buyerId)
       .value(_.orderId, order.orderId)
@@ -42,7 +42,7 @@ abstract class OrderByUserModel extends Table[OrderByUserModel, OrderByUserEntit
   }
 
   def deleteByUserIdAndId(userName: UUID, id: UUID): Future[ResultSet] = deleteByUserIdAndIdTransaction(userName, id).future()
-  def deleteByUserIdAndIdTransaction(userId: UUID, id: UUID): DeleteQuery[OrderByUserModel, OrderByUserEntity, Unlimited, Unordered, Specified, Chainned, HNil] = {
+  def deleteByUserIdAndIdTransaction(userId: UUID, id: UUID): DeleteQuery[OrderByBuyerTable, OrderByUserEntity, Unlimited, Unordered, Specified, Chainned, HNil] = {
     delete
       .where(_.buyerId eqs userId)
       .and(_.orderId eqs id)

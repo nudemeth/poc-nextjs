@@ -1,4 +1,4 @@
-package nudemeth.poc.ordering.infrastructure.repository.model
+package nudemeth.poc.ordering.infrastructure.repository.table
 
 import java.time.OffsetDateTime
 import java.util.UUID
@@ -15,7 +15,7 @@ import shapeless.HNil
 
 import scala.concurrent.Future
 
-abstract class ClientRequestModel extends Table[ClientRequestModel, ClientRequestEntity] {
+abstract class ClientRequestTable extends Table[ClientRequestTable, ClientRequestEntity] {
   override def tableName: String = "client_request"
 
   object requestId extends Col[UUID] with PrimaryKey { override lazy val name = "request_id" }
@@ -30,7 +30,7 @@ abstract class ClientRequestModel extends Table[ClientRequestModel, ClientReques
   }
 
   def saveOrUpdate(request: ClientRequestEntity): Future[ResultSet] = saveOrUpdateTransaction(request).future()
-  def saveOrUpdateTransaction(request: ClientRequestEntity): InsertQuery[ClientRequestModel, ClientRequestEntity, Specified, HNil] = {
+  def saveOrUpdateTransaction(request: ClientRequestEntity): InsertQuery[ClientRequestTable, ClientRequestEntity, Specified, HNil] = {
     insert
       .value(_.requestId, request.id)
       .value(_.name, request.name)

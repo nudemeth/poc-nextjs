@@ -2,23 +2,24 @@ package nudemeth.poc.ordering.infrastructure.repository
 import java.time.ZoneOffset
 import java.util.UUID
 
+import com.outworkers.phantom.dsl._
 import nudemeth.poc.ordering.domain.model.aggregate.buyer.{ CardType, PaymentMethod }
 import nudemeth.poc.ordering.domain.model.aggregate.order.{ Address, Order, OrderItem }
-import nudemeth.poc.ordering.infrastructure.OrderingContext
-import nudemeth.poc.ordering.infrastructure.repository.entity.OrderEntity
+import nudemeth.poc.ordering.infrastructure.{ Connector, OrderingContext }
+import nudemeth.poc.ordering.infrastructure.repository.entity.{ OrderByUserEntity, OrderEntity }
 
 import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
 
 class OrderRepository extends OrderRepositoryOperations {
+  implicit val session: Session = Connector.connector.session
   override def getOrderAsync(id: UUID): Future[Option[(Order, PaymentMethod)]] = {
-    OrderingContext.OrderModel.getById(id).map { e =>
+    OrderingContext.OrderTable.getById(id).map { e =>
       mapToDomainModel(e)
     }
   }
 
   override def addOrUpdateOrderAsync(order: Order, paymentMethod: PaymentMethod): Future[Unit] = {
-    OrderingContext.OrderModel.saveOrUpdate(OrderEntity(
+    val orderByIdEntity = OrderEntity(
       order.orderId,
       order.buyerId,
       order.orderDate.atOffset(ZoneOffset.UTC),
@@ -37,8 +38,13 @@ class OrderRepository extends OrderRepositoryOperations {
       paymentMethod.cardType.toString,
       order.orderItems.map { o =>
         o.productId -> (o.productName, o.pictureUrl, o.unitPrice, o.discount, o.units)
-      }.toMap))
-      .map(_ => ())
+      }.toMap)
+    val orderByBuyerEntity = OrderByUserEntity(order.orderId, order.buyerId, order.orderDate.atOffset(ZoneOffset.UTC), order.orderStatus, order.orderItems.size)
+    Batch.logged
+      .add(OrderingContext.OrderTable.saveOrUpdateTransaction(orderByIdEntity))
+      .add(OrderingContext.OrderByBuyerTable.saveOrUpdateTransaction(orderByBuyerEntity))
+      .future()
+      .flatMap(_ => Future.unit)
   }
 
   private def mapToDomainModel(mbEntity: Option[OrderEntity]): Option[(Order, PaymentMethod)] = {

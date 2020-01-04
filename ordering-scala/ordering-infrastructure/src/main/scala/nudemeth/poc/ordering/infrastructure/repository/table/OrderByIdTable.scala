@@ -1,4 +1,4 @@
-package nudemeth.poc.ordering.infrastructure.repository.model
+package nudemeth.poc.ordering.infrastructure.repository.table
 
 import java.time.OffsetDateTime
 import java.util.UUID
@@ -13,7 +13,7 @@ import shapeless.HNil
 
 import scala.concurrent.Future
 
-abstract class OrderModel extends Table[OrderModel, OrderEntity] {
+abstract class OrderByIdTable extends Table[OrderByIdTable, OrderEntity] {
   override def tableName: String = "order_by_id"
 
   object orderId extends Col[UUID] with PrimaryKey { override lazy val name = "order_id" }
@@ -42,7 +42,7 @@ abstract class OrderModel extends Table[OrderModel, OrderEntity] {
   }
 
   def saveOrUpdate(order: OrderEntity): Future[ResultSet] = saveOrUpdateTransaction(order).future()
-  def saveOrUpdateTransaction(order: OrderEntity): InsertQuery[OrderModel, OrderEntity, Specified, HNil] = {
+  def saveOrUpdateTransaction(order: OrderEntity): InsertQuery[OrderByIdTable, OrderEntity, Specified, HNil] = {
     insert
       .value(_.orderId, order.orderId)
       .value(_.buyerId, order.buyerId)
@@ -65,7 +65,7 @@ abstract class OrderModel extends Table[OrderModel, OrderEntity] {
   }
 
   def deleteById(id: UUID): Future[ResultSet] = deleteByIdTransaction(id).future()
-  def deleteByIdTransaction(id: UUID): DeleteQuery[OrderModel, OrderEntity, Unlimited, Unordered, Specified, Chainned, HNil] = {
+  def deleteByIdTransaction(id: UUID): DeleteQuery[OrderByIdTable, OrderEntity, Unlimited, Unordered, Specified, Chainned, HNil] = {
     delete
       .where(_.orderId eqs id)
       .consistencyLevel_=(ConsistencyLevel.ONE)
