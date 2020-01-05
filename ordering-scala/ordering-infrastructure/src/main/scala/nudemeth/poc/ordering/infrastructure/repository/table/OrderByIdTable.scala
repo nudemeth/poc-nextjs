@@ -8,12 +8,12 @@ import com.outworkers.phantom.builder.{ Chainned, Specified, Unlimited, Unordere
 import com.outworkers.phantom.builder.query.{ DeleteQuery, InsertQuery }
 import com.outworkers.phantom.dsl._
 import com.outworkers.phantom.jdk8.indexed._
-import nudemeth.poc.ordering.infrastructure.repository.entity.OrderEntity
+import nudemeth.poc.ordering.infrastructure.repository.entity.OrderByIdEntity
 import shapeless.HNil
 
 import scala.concurrent.Future
 
-abstract class OrderByIdTable extends Table[OrderByIdTable, OrderEntity] {
+abstract class OrderByIdTable extends Table[OrderByIdTable, OrderByIdEntity] {
   override def tableName: String = "order_by_id"
 
   object orderId extends Col[UUID] with PrimaryKey { override lazy val name = "order_id" }
@@ -34,15 +34,15 @@ abstract class OrderByIdTable extends Table[OrderByIdTable, OrderEntity] {
   object paymentMethodCardType extends Col[String] { override lazy val name = "payment_method_card_type" }
   object orderItems extends MapColumn[UUID, (String, String, BigDecimal, BigDecimal, Int)] { override lazy val name = "order_items" }
 
-  def getById(id: UUID): Future[Option[OrderEntity]] = {
+  def getById(id: UUID): Future[Option[OrderByIdEntity]] = {
     select
       .where(_.orderId eqs id)
       .consistencyLevel_=(ConsistencyLevel.ONE)
       .one()
   }
 
-  def saveOrUpdate(order: OrderEntity): Future[ResultSet] = saveOrUpdateTransaction(order).future()
-  def saveOrUpdateTransaction(order: OrderEntity): InsertQuery[OrderByIdTable, OrderEntity, Specified, HNil] = {
+  def saveOrUpdate(order: OrderByIdEntity): Future[ResultSet] = saveOrUpdateTransaction(order).future()
+  def saveOrUpdateTransaction(order: OrderByIdEntity): InsertQuery[OrderByIdTable, OrderByIdEntity, Specified, HNil] = {
     insert
       .value(_.orderId, order.orderId)
       .value(_.buyerId, order.buyerId)
@@ -65,7 +65,7 @@ abstract class OrderByIdTable extends Table[OrderByIdTable, OrderEntity] {
   }
 
   def deleteById(id: UUID): Future[ResultSet] = deleteByIdTransaction(id).future()
-  def deleteByIdTransaction(id: UUID): DeleteQuery[OrderByIdTable, OrderEntity, Unlimited, Unordered, Specified, Chainned, HNil] = {
+  def deleteByIdTransaction(id: UUID): DeleteQuery[OrderByIdTable, OrderByIdEntity, Unlimited, Unordered, Specified, Chainned, HNil] = {
     delete
       .where(_.orderId eqs id)
       .consistencyLevel_=(ConsistencyLevel.ONE)
