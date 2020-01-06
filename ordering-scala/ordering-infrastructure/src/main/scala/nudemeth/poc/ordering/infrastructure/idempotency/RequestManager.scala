@@ -4,7 +4,7 @@ import java.util.UUID
 
 import nudemeth.poc.ordering.domain.exception.OrderingDomainException
 import nudemeth.poc.ordering.infrastructure.OrderingContext
-import nudemeth.poc.ordering.infrastructure.repository.entity.ClientRequestEntity
+import nudemeth.poc.ordering.infrastructure.idempotency.entity.ClientRequestEntity
 
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.reflect.runtime.universe._
@@ -19,7 +19,7 @@ case class RequestManager() extends RequestManagerOperations {
       if (r) {
         throw OrderingDomainException(s"Request with $id already exists")
       }
-      val clientRequest = ClientRequestEntity(id, typeOf[T].typeSymbol.fullName, OffsetDateTime.now())
+      val clientRequest = entity.ClientRequestEntity(id, typeOf[T].typeSymbol.fullName, OffsetDateTime.now())
       OrderingContext.ClientRequestTable.saveOrUpdate(clientRequest).map(_ => ())
     }
   }

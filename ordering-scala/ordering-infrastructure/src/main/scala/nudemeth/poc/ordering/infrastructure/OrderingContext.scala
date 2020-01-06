@@ -2,6 +2,7 @@ package nudemeth.poc.ordering.infrastructure
 
 import com.outworkers.phantom.connectors.CassandraConnection
 import com.outworkers.phantom.dsl._
+import nudemeth.poc.ordering.infrastructure.idempotency.table._
 import nudemeth.poc.ordering.infrastructure.repository.table._
 
 class OrderingContext(override val connector: CassandraConnection) extends Database[OrderingContext](connector) {

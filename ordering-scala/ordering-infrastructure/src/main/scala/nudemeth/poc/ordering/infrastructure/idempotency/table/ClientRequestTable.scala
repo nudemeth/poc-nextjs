@@ -1,4 +1,4 @@
-package nudemeth.poc.ordering.infrastructure.repository.table
+package nudemeth.poc.ordering.infrastructure.idempotency.table
 
 import java.time.OffsetDateTime
 import java.util.UUID
@@ -6,11 +6,11 @@ import java.util.UUID
 import com.datastax.driver.core.ConsistencyLevel
 import com.outworkers.phantom.builder.Specified
 import com.outworkers.phantom.builder.query.InsertQuery
-import com.outworkers.phantom.{ ResultSet, Table }
 import com.outworkers.phantom.dsl._
 import com.outworkers.phantom.jdk8.indexed._
 import com.outworkers.phantom.keys.PrimaryKey
-import nudemeth.poc.ordering.infrastructure.repository.entity.ClientRequestEntity
+import com.outworkers.phantom.{ ResultSet, Table }
+import nudemeth.poc.ordering.infrastructure.idempotency.entity.ClientRequestEntity
 import shapeless.HNil
 
 import scala.concurrent.Future
