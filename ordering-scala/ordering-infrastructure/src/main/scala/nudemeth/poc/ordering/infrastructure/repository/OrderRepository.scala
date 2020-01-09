@@ -3,6 +3,7 @@ import java.time.ZoneOffset
 import java.util.UUID
 
 import com.outworkers.phantom.dsl._
+import nudemeth.poc.ordering.domain.model.aggregate.OrderPayment
 import nudemeth.poc.ordering.domain.model.aggregate.buyer.{ CardType, PaymentMethod }
 import nudemeth.poc.ordering.domain.model.aggregate.order.{ Address, Order, OrderItem }
 import nudemeth.poc.ordering.infrastructure.{ Connector, OrderingContext }
@@ -13,7 +14,7 @@ import scala.concurrent.Future
 class OrderRepository extends OrderRepositoryOperations {
   implicit val session: Session = Connector.connector.session
 
-  override def getOrderAsync(id: UUID): Future[Option[(Order, PaymentMethod)]] = {
+  override def getOrderAsync(id: UUID): Future[Option[OrderPayment]] = {
     OrderingContext.OrderTable.getById(id).map { e =>
       mapToDomainModel(e)
     }
@@ -46,9 +47,9 @@ class OrderRepository extends OrderRepositoryOperations {
       .map(_ => ())
   }
 
-  private def mapToDomainModel(mbEntity: Option[OrderByIdEntity]): Option[(Order, PaymentMethod)] = {
+  private def mapToDomainModel(mbEntity: Option[OrderByIdEntity]): Option[OrderPayment] = {
     mbEntity.map { e =>
-      (
+      OrderPayment(
         Order(
           e.orderId,
           e.buyerId,
@@ -65,13 +66,13 @@ class OrderRepository extends OrderRepositoryOperations {
               i._2._5)
           }.toVector,
           e.description),
-          PaymentMethod(
-            e.paymentMethodAlias,
-            e.paymentMethodCardNumber,
-            e.paymentMethodCardSecurityNumber,
-            e.paymentMethodCardHolderName,
-            e.paymentMethodCardExpiration.toInstant,
-            CardType(e.paymentMethodCardNumber)))
+        PaymentMethod(
+          e.paymentMethodAlias,
+          e.paymentMethodCardNumber,
+          e.paymentMethodCardSecurityNumber,
+          e.paymentMethodCardHolderName,
+          e.paymentMethodCardExpiration.toInstant,
+          CardType(e.paymentMethodCardNumber)))
     }
   }
 }

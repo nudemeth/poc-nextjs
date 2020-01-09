@@ -7,14 +7,11 @@ import scala.concurrent.{ ExecutionContext, Future }
 
 case class CancelOrderCommandHandler(orderRepository: OrderRepositoryOperations) extends RequestHandler[CancelOrderCommand, Boolean] {
   override def handle(command: CancelOrderCommand, mediator: MediatorDuty)(implicit executor: ExecutionContext): Future[Boolean] = {
-    val orderToUpdate = orderRepository.getOrderAsync(command.orderId)
-    orderToUpdate.flatMap { o =>
-      if (o.isEmpty) {
-        Future.successful(false)
-      } else {
-        val updatedOrder = o.get._1.setCancelledStatus()
-        orderRepository.addOrUpdateOrderAsync(updatedOrder, o.get._2).map(_ => true)
-      }
+    orderRepository.getOrderAsync(command.orderId).flatMap {
+      case None => Future.successful(false)
+      case Some(o) =>
+        val updatedOrder = o.order.setCancelledStatus()
+        orderRepository.addOrUpdateOrderAsync(updatedOrder, o.paymentMethod).map(_ => true)
     }
   }
 }
