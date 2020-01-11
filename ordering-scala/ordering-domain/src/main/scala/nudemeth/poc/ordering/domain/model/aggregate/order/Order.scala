@@ -18,7 +18,15 @@ case class Order(
     if (orderStatus == "Paid" || orderStatus == "Shipped") {
       raiseStatusChangeException("Cancelled")
     }
-    this.copy(orderStatus = "Cancelled", description = Some("The order was shipped."))
+    this.copy(orderStatus = "Cancelled", description = Some("The order was cancelled."))
+    //AddDomainEvent
+  }
+
+  def setShippedStatus(): Order = {
+    if (orderStatus != "Paid") {
+      raiseStatusChangeException("Shipped")
+    }
+    this.copy(orderStatus = "Shipped", description = Some("The order was shipped."))
     //AddDomainEvent
   }
 
