@@ -9,7 +9,7 @@ import nudemeth.poc.ordering.api.application.command.{ CancelOrderCommand, Ident
 
 import scala.concurrent.duration._
 import nudemeth.poc.ordering.api.application.query.OrderQueryable
-import nudemeth.poc.ordering.api.infrastructure.mediator.MediatorDuty
+import nudemeth.poc.ordering.util.mediator.MediatorDuty
 import nudemeth.poc.ordering.api.infrastructure.service.IdentityService.UserIdentity
 
 import scala.concurrent.ExecutionContext

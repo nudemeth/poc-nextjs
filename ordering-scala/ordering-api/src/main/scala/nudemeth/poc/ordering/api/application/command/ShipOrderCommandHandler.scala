@@ -1,11 +1,11 @@
 package nudemeth.poc.ordering.api.application.command
 
-import nudemeth.poc.ordering.api.infrastructure.mediator.{ MediatorDuty, RequestHandler }
-import nudemeth.poc.ordering.infrastructure.repository.OrderRepositoryOperations
+import nudemeth.poc.ordering.domain.model.aggregate.OrderPaymentRepositoryOperations
+import nudemeth.poc.ordering.util.mediator.{ MediatorDuty, RequestHandler }
 
 import scala.concurrent.{ ExecutionContext, Future }
 
-case class ShipOrderCommandHandler(orderRepository: OrderRepositoryOperations) extends RequestHandler[ShipOrderCommand, Boolean] {
+case class ShipOrderCommandHandler(orderRepository: OrderPaymentRepositoryOperations) extends RequestHandler[ShipOrderCommand, Boolean] {
   override def handle(command: ShipOrderCommand, mediator: MediatorDuty)(implicit executor: ExecutionContext): Future[Boolean] = {
     orderRepository.getOrderAsync(command.orderId).flatMap {
       case None => Future.successful(false)

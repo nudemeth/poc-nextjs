@@ -11,8 +11,9 @@ import akka.stream.ActorMaterializer
 import nudemeth.poc.ordering.api.application.command.{ CancelOrderCommand, CancelOrderCommandHandler, IdentifiedCommand, IdentifiedCommandHandler, ShipOrderCommand, ShipOrderCommandHandler }
 import nudemeth.poc.ordering.api.application.query.{ OrderQuery, OrderQueryable }
 import nudemeth.poc.ordering.api.controller.{ OrderingRegistryActor, OrderingRoutes }
-import nudemeth.poc.ordering.api.infrastructure.mediator.{ Mediator, Request, RequestHandler }
+import nudemeth.poc.ordering.util.mediator.{ Mediator, Request, RequestHandler }
 import nudemeth.poc.ordering.api.infrastructure.service.IdentityService
+import nudemeth.poc.ordering.infrastructure.repository.OrderPaymentRepository
 
 //#main-class
 object Server extends App with OrderingRoutes {
@@ -25,15 +26,16 @@ object Server extends App with OrderingRoutes {
   implicit val executionContext: ExecutionContext = system.dispatcher
   //#server-bootstrapping
 
+  val orderingRepo: OrderPaymentRepository = new OrderPaymentRepository()
+  val orderingQuery: OrderQueryable = new OrderQuery()
   val handlers: Map[Class[_ <: Request[Any]], _ <: RequestHandler[_ <: Request[Any], Any]] = Map(
-    classOf[CancelOrderCommand] -> CancelOrderCommandHandler(),
-    classOf[ShipOrderCommand] -> ShipOrderCommandHandler(),
+    classOf[CancelOrderCommand] -> CancelOrderCommandHandler(orderingRepo),
+    classOf[ShipOrderCommand] -> ShipOrderCommandHandler(orderingRepo),
     classOf[IdentifiedCommand[CancelOrderCommand, Boolean]] -> IdentifiedCommandHandler[CancelOrderCommand, Boolean](),
     classOf[IdentifiedCommand[ShipOrderCommand, Boolean]] -> IdentifiedCommandHandler[ShipOrderCommand, Boolean]())
   val mediator: Mediator = new Mediator(handlers)
-  val orderingRepo: OrderQueryable = new OrderQuery()
   var identityRegistryActor: ActorRef = system.actorOf(IdentityService.props, "identity-actor")
-  val orderingRegistryActor: ActorRef = system.actorOf(OrderingRegistryActor.props(orderingRepo, mediator), "ordering-actor")
+  val orderingRegistryActor: ActorRef = system.actorOf(OrderingRegistryActor.props(orderingQuery, mediator), "ordering-actor")
 
   //#main-class
   // from the OrderingRoutes trait

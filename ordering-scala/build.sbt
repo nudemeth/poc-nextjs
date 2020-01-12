@@ -21,8 +21,8 @@ lazy val root = (project in file("."))
 
 
 lazy val api = (project in file("./ordering-api"))
-  .aggregate(domain, infrastructure)
-  .dependsOn(domain, infrastructure)
+  .aggregate(domain, infrastructure, util)
+  .dependsOn(domain, infrastructure, util)
   .settings(commonSettings: _*)
   .settings(
     name := "ordering-api",
@@ -50,6 +50,8 @@ lazy val api = (project in file("./ordering-api"))
   )
 
 lazy val domain = (project in file("./ordering-domain"))
+  .aggregate(util)
+  .dependsOn(util)
   .settings(commonSettings: _*)
   .settings(
     name := "ordering-domain",
@@ -60,8 +62,8 @@ lazy val domain = (project in file("./ordering-domain"))
   .disablePlugins(RevolverPlugin)
 
 lazy val infrastructure = (project in file("./ordering-infrastructure"))
-  .aggregate(domain)
-  .dependsOn(domain)
+  .aggregate(domain, util)
+  .dependsOn(domain, util)
   .settings(commonSettings: _*)
   .settings(
     name := "ordering-infrastructure",
@@ -77,3 +79,9 @@ lazy val infrastructure = (project in file("./ordering-infrastructure"))
     )
   )
   .disablePlugins(RevolverPlugin)
+
+lazy val util = (project in file("./ordering-util"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "ordering-util"
+  )

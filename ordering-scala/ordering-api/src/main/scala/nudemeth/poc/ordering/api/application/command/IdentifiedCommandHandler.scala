@@ -1,6 +1,6 @@
 package nudemeth.poc.ordering.api.application.command
 
-import nudemeth.poc.ordering.api.infrastructure.mediator.{ MediatorDuty, Request, RequestHandler }
+import nudemeth.poc.ordering.util.mediator.{ MediatorDuty, Request, RequestHandler }
 
 import scala.concurrent.{ ExecutionContext, Future }
 
