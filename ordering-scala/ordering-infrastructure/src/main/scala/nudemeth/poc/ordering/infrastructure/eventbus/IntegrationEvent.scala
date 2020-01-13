@@ -3,4 +3,7 @@ package nudemeth.poc.ordering.infrastructure.eventbus
 import java.time.Instant
 import java.util.UUID
 
-case class IntegrationEvent(id: UUID, creationDate: Instant)
+class IntegrationEvent() {
+  val id: UUID = UUID.randomUUID()
+  val creationDate: Instant = Instant.now()
+}
