@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS ordering.order_by_id (
    payment_method_card_holder_name TEXT,
    payment_method_card_expiration TIMESTAMP,
    payment_method_card_type TEXT,
-   order_items map<TEXT, FROZEN <tuple<INT, DECIMAL, TEXT>>>, -- {product_name, {units, unit_price, picture_url}}
+   order_items MAP<TEXT, FROZEN <tuple<INT, DECIMAL, TEXT>>>, -- {product_name, {units, unit_price, picture_url}}
    PRIMARY KEY (order_id)
 );
 
@@ -49,15 +49,22 @@ CREATE TABLE IF NOT EXISTS ordering.card_type (
 );
 
 CREATE TABLE IF NOT EXISTS ordering.payment_method (
-   buyer_id UUID,
-   payment_method_id UUID,
-   alias TEXT,
-   card_number TEXT,
-   card_security_number TEXT,
-   card_holder_name TEXT,
-   card_expiration TIMESTAMP,
-   card_type TEXT,
-   PRIMARY KEY (buyer_id, payment_method_id)
+    buyer_id UUID,
+    payment_method_id UUID,
+    alias TEXT,
+    card_number TEXT,
+    card_security_number TEXT,
+    card_holder_name TEXT,
+    card_expiration TIMESTAMP,
+    card_type TEXT,
+    PRIMARY KEY (buyer_id, payment_method_id)
+);
+
+CREATE TABLE IF NOT EXISTS ordering.payment_method (
+    buyer_id UUID,
+    name TEXT,
+    payment_methods LIST<TEXT, TEXT, TEXT, TEXT, TIMESTAMP, TEXT>,
+    PRIMARY KEY (buyer_id)
 );
 
 INSERT INTO ordering.card_type (name) VALUES('VISA');
