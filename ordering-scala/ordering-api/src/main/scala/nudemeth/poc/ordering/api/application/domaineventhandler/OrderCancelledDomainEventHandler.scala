@@ -4,15 +4,18 @@ import nudemeth.poc.ordering.api.application.integrationevent.OrderingIntegratio
 import nudemeth.poc.ordering.api.application.integrationevent.event.OrderStatusChangedToCancelledIntegrationEvent
 import nudemeth.poc.ordering.domain.event.OrderCancelledDomainEvent
 import nudemeth.poc.ordering.domain.model.aggregate.OrderPaymentRepositoryOperations
+import nudemeth.poc.ordering.domain.model.aggregate.buyer.BuyerRepositoryOperations
 import nudemeth.poc.ordering.util.mediator.NotificationHandler
 
 import scala.concurrent.{ ExecutionContext, Future }
 
-case class OrderCancelledDomainEventHandler(orderPaymentRepo: OrderPaymentRepositoryOperations, orderingIntegrationEventService: OrderingIntegrationEventServiceOperations) extends NotificationHandler[OrderCancelledDomainEvent] {
+case class OrderCancelledDomainEventHandler(orderPaymentRepo: OrderPaymentRepositoryOperations, buyerRepo: BuyerRepositoryOperations, orderingIntegrationEventService: OrderingIntegrationEventServiceOperations) extends NotificationHandler[OrderCancelledDomainEvent] {
   override def handle(notification: OrderCancelledDomainEvent)(implicit executor: ExecutionContext): Future[Unit] = {
-    //val order = orderPaymentRepo.getOrderAsync(notification.order.orderId)
-    //val orderStatusChangedToCancelledIntegrationEvent = OrderStatusChangedToCancelledIntegrationEvent()
-    //orderingIntegrationEventService.publishThroughEventBusAsync(orderStatusChangedToCancelledIntegrationEvent)
-    Future.unit
+    for {
+      order <- orderPaymentRepo.getOrderAsync(notification.order.orderId)
+      buyer <- buyerRepo.find(order.get.order.buyerId)
+      event = OrderStatusChangedToCancelledIntegrationEvent(order.get.order.orderId, order.get.order.orderStatus, buyer.get.name)
+      result <- orderingIntegrationEventService.publishThroughEventBusAsync(event)
+    } yield result
   }
 }
