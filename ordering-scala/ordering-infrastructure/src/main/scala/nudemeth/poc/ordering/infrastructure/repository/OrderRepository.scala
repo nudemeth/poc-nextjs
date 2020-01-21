@@ -3,15 +3,15 @@ import java.time.ZoneOffset
 import java.util.UUID
 
 import com.outworkers.phantom.dsl._
-import nudemeth.poc.ordering.domain.model.aggregate.{ OrderPayment, OrderPaymentRepositoryOperations }
+import nudemeth.poc.ordering.domain.model.aggregate.order
 import nudemeth.poc.ordering.domain.model.aggregate.buyer.{ CardType, PaymentMethod }
-import nudemeth.poc.ordering.domain.model.aggregate.order.{ Address, Order, OrderItem }
+import nudemeth.poc.ordering.domain.model.aggregate.order.{ Address, Order, OrderItem, OrderPayment, OrderPaymentRepositoryOperations }
 import nudemeth.poc.ordering.infrastructure.{ Connector, OrderingContext }
 import nudemeth.poc.ordering.infrastructure.repository.entity.{ OrderByBuyerEntity, OrderByIdEntity }
 
 import scala.concurrent.Future
 
-class OrderPaymentRepository extends OrderPaymentRepositoryOperations {
+class OrderRepository extends OrderPaymentRepositoryOperations {
   implicit val session: Session = Connector.connector.session
 
   override def getOrderAsync(id: UUID): Future[Option[OrderPayment]] = {
@@ -49,7 +49,7 @@ class OrderPaymentRepository extends OrderPaymentRepositoryOperations {
 
   private def mapToDomainModel(mbEntity: Option[OrderByIdEntity]): Option[OrderPayment] = {
     mbEntity.map { e =>
-      OrderPayment(
+      order.OrderPayment(
         Order(
           e.orderId,
           e.buyerId,

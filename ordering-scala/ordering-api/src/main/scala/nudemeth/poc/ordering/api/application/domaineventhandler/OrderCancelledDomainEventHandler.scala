@@ -3,8 +3,8 @@ package nudemeth.poc.ordering.api.application.domaineventhandler
 import nudemeth.poc.ordering.api.application.integrationevent.OrderingIntegrationEventServiceOperations
 import nudemeth.poc.ordering.api.application.integrationevent.event.OrderStatusChangedToCancelledIntegrationEvent
 import nudemeth.poc.ordering.domain.event.OrderCancelledDomainEvent
-import nudemeth.poc.ordering.domain.model.aggregate.OrderPaymentRepositoryOperations
 import nudemeth.poc.ordering.domain.model.aggregate.buyer.BuyerRepositoryOperations
+import nudemeth.poc.ordering.domain.model.aggregate.order.OrderPaymentRepositoryOperations
 import nudemeth.poc.ordering.util.mediator.NotificationHandler
 
 import scala.concurrent.{ ExecutionContext, Future }

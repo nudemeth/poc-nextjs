@@ -1,6 +1,6 @@
 package nudemeth.poc.ordering.api.application.command
 
-import nudemeth.poc.ordering.domain.model.aggregate.OrderPaymentRepositoryOperations
+import nudemeth.poc.ordering.domain.model.aggregate.order.OrderPaymentRepositoryOperations
 import nudemeth.poc.ordering.util.mediator.{ MediatorDuty, RequestHandler }
 
 import scala.concurrent.{ ExecutionContext, Future }

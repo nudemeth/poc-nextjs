@@ -13,7 +13,7 @@ import nudemeth.poc.ordering.api.application.query.{ OrderQuery, OrderQueryable 
 import nudemeth.poc.ordering.api.controller.{ OrderingRegistryActor, OrderingRoutes }
 import nudemeth.poc.ordering.util.mediator.{ Mediator, Request, RequestHandler }
 import nudemeth.poc.ordering.api.infrastructure.service.IdentityService
-import nudemeth.poc.ordering.infrastructure.repository.OrderPaymentRepository
+import nudemeth.poc.ordering.infrastructure.repository.OrderRepository
 
 //#main-class
 object Server extends App with OrderingRoutes {
@@ -26,7 +26,7 @@ object Server extends App with OrderingRoutes {
   implicit val executionContext: ExecutionContext = system.dispatcher
   //#server-bootstrapping
 
-  val orderingRepo: OrderPaymentRepository = new OrderPaymentRepository()
+  val orderingRepo: OrderRepository = new OrderRepository()
   val orderingQuery: OrderQueryable = new OrderQuery()
   val handlers: Map[Class[_ <: Request[Any]], _ <: RequestHandler[_ <: Request[Any], Any]] = Map(
     classOf[CancelOrderCommand] -> CancelOrderCommandHandler(orderingRepo),
