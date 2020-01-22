@@ -10,6 +10,7 @@ class OrderingContext(override val connector: CassandraConnection) extends Datab
   object OrderByBuyerTable extends OrderByBuyerTable with connector.Connector
   object CardTypeTable extends CardTypeTable with connector.Connector
   object ClientRequestTable extends ClientRequestTable with connector.Connector
+  object BuyerTable extends BuyerTable with connector.Connector
 }
 
 object OrderingContext extends OrderingContext(Connector.connector)
