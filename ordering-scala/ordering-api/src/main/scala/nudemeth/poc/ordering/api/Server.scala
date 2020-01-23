@@ -13,7 +13,8 @@ import nudemeth.poc.ordering.api.application.query.{ OrderQuery, OrderQueryable 
 import nudemeth.poc.ordering.api.controller.{ OrderingRegistryActor, OrderingRoutes }
 import nudemeth.poc.ordering.util.mediator.{ Mediator, Request, RequestHandler }
 import nudemeth.poc.ordering.api.infrastructure.service.IdentityService
-import nudemeth.poc.ordering.infrastructure.repository.OrderRepository
+import nudemeth.poc.ordering.domain.model.aggregate.buyer.BuyerRepositoryOperations
+import nudemeth.poc.ordering.infrastructure.repository.{ BuyerRepository, OrderRepository }
 
 //#main-class
 object Server extends App with OrderingRoutes {
@@ -26,11 +27,12 @@ object Server extends App with OrderingRoutes {
   implicit val executionContext: ExecutionContext = system.dispatcher
   //#server-bootstrapping
 
-  val orderingRepo: OrderRepository = new OrderRepository()
+  val orderRepo: OrderRepository = new OrderRepository()
+  val buyerRepo: BuyerRepositoryOperations = BuyerRepository()
   val orderingQuery: OrderQueryable = new OrderQuery()
   val handlers: Map[Class[_ <: Request[Any]], _ <: RequestHandler[_ <: Request[Any], Any]] = Map(
-    classOf[CancelOrderCommand] -> CancelOrderCommandHandler(orderingRepo),
-    classOf[ShipOrderCommand] -> ShipOrderCommandHandler(orderingRepo),
+    classOf[CancelOrderCommand] -> CancelOrderCommandHandler(orderRepo),
+    classOf[ShipOrderCommand] -> ShipOrderCommandHandler(orderRepo),
     classOf[IdentifiedCommand[CancelOrderCommand, Boolean]] -> IdentifiedCommandHandler[CancelOrderCommand, Boolean](),
     classOf[IdentifiedCommand[ShipOrderCommand, Boolean]] -> IdentifiedCommandHandler[ShipOrderCommand, Boolean]())
   val mediator: Mediator = new Mediator(handlers)
