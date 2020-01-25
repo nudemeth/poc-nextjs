@@ -56,6 +56,7 @@ lazy val domain = (project in file("./ordering-domain"))
   .settings(
     name := "ordering-domain",
     libraryDependencies ++= Seq(
+      "com.typesafe.akka" %% "akka-actor-typed"     % akkaVersion,
       "org.scalatest"     %% "scalatest"            % "3.0.5"         % Test
     )
   )
