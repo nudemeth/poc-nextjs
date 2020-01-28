@@ -2,32 +2,27 @@ package nudemeth.poc.ordering.api.controller
 
 import java.util.UUID
 
-import akka.actor.{ ActorRef, ActorSystem }
-import akka.event.Logging
+import akka.actor.typed.{ ActorRef, ActorSystem }
+import akka.actor.typed.scaladsl.AskPattern._
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.directives.MethodDirectives.{ get, post }
 import akka.http.scaladsl.server.directives.RouteDirectives.complete
 import akka.http.scaladsl.server.{ Route, ValidationRejection }
 import akka.http.scaladsl.server.directives.Credentials
-import akka.pattern.ask
 import akka.util.Timeout
 import nudemeth.poc.ordering.api.application.command.{ CancelOrderCommand, ShipOrderCommand }
 import nudemeth.poc.ordering.api.application.query.viewmodel.{ CardType, Order, OrderSummary }
 import nudemeth.poc.ordering.api.controller.OrderingRegistryActor._
+import nudemeth.poc.ordering.api.infrastructure.service.IdentityService
 import nudemeth.poc.ordering.api.infrastructure.service.IdentityService.{ ExtractUserIdentity, UserIdentity }
 
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.concurrent.duration._
 import scala.util.{ Failure, Success, Try }
 
-trait OrderingRoutes extends JsonSupport {
-  // we leave these abstract, since they will be provided by the App
-  implicit def system: ActorSystem
-  lazy val log = Logging(system, classOf[OrderingRoutes])
-  // other dependencies that APIRoutes use
-  def orderingRegistryActor: ActorRef
-  def identityRegistryActor: ActorRef
+class OrderingRoutes(orderingRegistryActor: ActorRef[OrderingRegistryActor.Command], identityRegistryActor: ActorRef[IdentityService.Command])(implicit system: ActorSystem[_]) extends JsonSupport {
+
   // Required by the `ask` (?) method below
   implicit lazy val timeout: Timeout = Timeout(5.seconds) // usually we'd obtain the timeout from the system's configuration
 
@@ -45,30 +40,31 @@ trait OrderingRoutes extends JsonSupport {
 
   def tokenAuthenticator(credentials: Credentials): Future[Option[UserIdentity]] = {
     credentials match {
-      case Credentials.Provided(token) => (identityRegistryActor ? ExtractUserIdentity(token)).mapTo[Option[UserIdentity]]
+      case Credentials.Provided(token) => identityRegistryActor ? (ExtractUserIdentity(token, _))
       case _ => Future.successful(None)
     }
   }
 
   private def getOrdersRoute(userIdentity: UserIdentity): Route = (get & pathEndOrSingleSlash) {
-    val orders: Future[Vector[OrderSummary]] = (orderingRegistryActor ? GetOrders(userIdentity)).mapTo[Vector[OrderSummary]]
+    val orders: Future[Vector[OrderSummary]] = orderingRegistryActor ? (GetOrders(userIdentity, _))
     complete(orders)
   }
 
   val getCardTypesRoute: Route = (get & path("cardtypes") & pathEndOrSingleSlash) {
-    val cardTypes: Future[Vector[CardType]] = (orderingRegistryActor ? GetCardTypes()).mapTo[Vector[CardType]]
+    val cardTypes: Future[Vector[CardType]] = orderingRegistryActor ? GetCardTypes
     complete(cardTypes)
   }
 
   val getOrderRoute: Route = (get & path(JavaUUID) & pathEnd) { id =>
-    val maybeOrder: Future[Option[Order]] = (orderingRegistryActor ? GetOrder(id)).mapTo[Option[Order]]
+    val maybeOrder: Future[Option[Order]] = orderingRegistryActor ? (GetOrder(id, _))
     rejectEmptyResponse {
       complete(maybeOrder)
     }
   }
 
   private def doCancel(requestUuid: UUID, command: CancelOrderCommand)(implicit executor: ExecutionContext): Route = {
-    val statusCode = (orderingRegistryActor ? CancelOrder(command, requestUuid)).mapTo[Boolean].map {
+    val result: Future[Boolean] = orderingRegistryActor ? (CancelOrder(command, requestUuid, _))
+    val statusCode = result.map {
       case true => StatusCodes.OK
       case false => StatusCodes.BadRequest
     }
@@ -85,7 +81,8 @@ trait OrderingRoutes extends JsonSupport {
   }
 
   private def doShip(requestUuid: UUID, command: ShipOrderCommand)(implicit executor: ExecutionContext): Route = {
-    val statusCode = (orderingRegistryActor ? ShipOrder(command, requestUuid)).mapTo[Boolean].map {
+    val result: Future[Boolean] = orderingRegistryActor ? (ShipOrder(command, requestUuid, _))
+    val statusCode = result.map {
       case true => StatusCodes.OK
       case false => StatusCodes.BadRequest
     }

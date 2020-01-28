@@ -2,46 +2,80 @@ package nudemeth.poc.ordering.api.controller
 
 import java.util.UUID
 
-import akka.actor.{ Actor, ActorLogging, Props }
-import akka.pattern.pipe
-import akka.util.Timeout
-import nudemeth.poc.ordering.api.application.command.{ CancelOrderCommand, IdentifiedCommand, ShipOrderCommand }
+import akka.actor.typed.{ ActorRef, Behavior }
+import akka.actor.typed.scaladsl.Behaviors
 
-import scala.concurrent.duration._
+import scala.reflect.runtime.universe._
+import nudemeth.poc.ordering.api.application.command.{ CancelOrderCommand, IdentifiedCommand, ShipOrderCommand }
 import nudemeth.poc.ordering.api.application.query.OrderQueryable
+import nudemeth.poc.ordering.api.application.query.viewmodel.{ CardType, Order, OrderSummary }
 import nudemeth.poc.ordering.util.mediator.MediatorDuty
 import nudemeth.poc.ordering.api.infrastructure.service.IdentityService.UserIdentity
 
 import scala.concurrent.ExecutionContext
+import scala.util.{ Failure, Success }
 
 object OrderingRegistryActor {
-  final case class ActionPerformed(description: String)
-  final case class GetOrders(userIdentity: UserIdentity)
-  final case class GetCardTypes()
-  final case class GetOrder(id: UUID)
-  final case class CancelOrder(command: CancelOrderCommand, requestId: UUID)
-  final case class ShipOrder(command: ShipOrderCommand, requestId: UUID)
+  sealed trait Command
+  final case class GetOrders(userIdentity: UserIdentity, replyTo: ActorRef[Vector[OrderSummary]]) extends Command
+  final case class GetCardTypes(replyTo: ActorRef[Vector[CardType]]) extends Command
+  final case class GetOrder(id: UUID, replyTo: ActorRef[Option[Order]]) extends Command
+  final case class CancelOrder(command: CancelOrderCommand, requestId: UUID, replyTo: ActorRef[Boolean]) extends Command
+  final case class ShipOrder(command: ShipOrderCommand, requestId: UUID, replyTo: ActorRef[Boolean]) extends Command
 
-  def props(repository: OrderQueryable, mediator: MediatorDuty): Props = Props(new OrderingRegistryActor(repository, mediator))
-}
+  sealed trait Result extends Command
+  private final case class Reply[T: TypeTag](result: T, replyTo: ActorRef[T]) extends Result
+  private final case class GetOrdersSuccess(result: Vector[OrderSummary], replyTo: ActorRef[Vector[OrderSummary]]) extends Result
+  private final case class GetOrdersFailure(result: Vector[OrderSummary], replyTo: ActorRef[Vector[OrderSummary]]) extends Result
 
-class OrderingRegistryActor(repository: OrderQueryable, mediator: MediatorDuty) extends Actor with ActorLogging {
-  import nudemeth.poc.ordering.api.controller.OrderingRegistryActor._
-  implicit val ec: ExecutionContext = context.dispatcher
-  implicit val timeout: Timeout = 10.seconds
+  def apply(repository: OrderQueryable, mediator: MediatorDuty): Behavior[Command] = Behaviors.receive { (ctx, message) =>
+    implicit val executionContext: ExecutionContext = ctx.executionContext
+    message match {
+      case GetOrders(userIdentity, replyTo) =>
+        ctx.pipeToSelf(repository.getOrdersByUserIdAsync(userIdentity.id)) {
+          case Success(value) => GetOrdersSuccess(value, replyTo)
+          case Failure(ex) => Reply(ex, replyTo)
+        }
+        Behaviors.same
+      case GetOrder(id, replyTo) =>
+        ctx.pipeToSelf(repository.getOrderAsync(id)) {
+          case Success(value) => Reply(value, replyTo)
+          case Failure(ex) => Reply(ex, replyTo)
+        }
+        Behaviors.same
+      case GetCardTypes(replyTo) =>
+        ctx.pipeToSelf(repository.getCardTypesAsync) {
+          case Success(value) => Reply(value, replyTo)
+          case Failure(ex) => Reply(ex, replyTo)
+        }
+        Behaviors.same
+      case CancelOrder(command, requestId, replyTo) =>
+        val requestCancelOrder = IdentifiedCommand[CancelOrderCommand, Boolean](command, requestId)
+        ctx.pipeToSelf(mediator.send(requestCancelOrder)) {
+          case Success(value) => Reply(value, replyTo)
+          case Failure(ex) => Reply(ex, replyTo)
+        }
+        Behaviors.same
+      case ShipOrder(command, requestId, replyTo) =>
+        val requestShipOrder = IdentifiedCommand[ShipOrderCommand, Boolean](command, requestId)
+        ctx.pipeToSelf(mediator.send(requestShipOrder)) {
+          case Success(value) => Reply(value, replyTo)
+          case Failure(ex) => Reply(ex, replyTo)
+        }
+        Behaviors.same
 
-  def receive: Receive = {
-    case GetOrders(userIdentity: UserIdentity) =>
-      repository.getOrdersByUserIdAsync(userIdentity.id).pipeTo(sender())
-    case GetOrder(id) =>
-      repository.getOrderAsync(id).pipeTo(sender())
-    case GetCardTypes() =>
-      repository.getCardTypesAsync.pipeTo(sender())
-    case CancelOrder(command, requestId) =>
-      val requestCancelOrder = IdentifiedCommand[CancelOrderCommand, Boolean](command, requestId)
-      mediator.send(requestCancelOrder).pipeTo(sender())
-    case ShipOrder(command, requestId) =>
-      val requestShipOrder = IdentifiedCommand[ShipOrderCommand, Boolean](command, requestId)
-      mediator.send(requestShipOrder).pipeTo(sender())
+      case GetOrdersSuccess(result: Vector[OrderSummary], replyTo: ActorRef[Vector[OrderSummary]]) =>
+        replyTo ! result
+        Behaviors.same
+      case Reply(result: Option[Order], replyTo: ActorRef[Option[Order]]) =>
+        replyTo ! result
+        Behaviors.same
+      case Reply(result: Vector[CardType], replyTo: ActorRef[Vector[CardType]]) =>
+        replyTo ! result
+        Behaviors.same
+      case Reply(result: Boolean, replyTo: ActorRef[Boolean]) =>
+        replyTo ! result
+        Behaviors.same
+    }
   }
 }

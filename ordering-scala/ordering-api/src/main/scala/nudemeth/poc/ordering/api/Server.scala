@@ -1,13 +1,15 @@
 package nudemeth.poc.ordering.api
 
-//#quick-start-server
+import akka.actor.typed.scaladsl.adapter._
+import akka.actor.typed.scaladsl.Behaviors
+import akka.actor.typed.{ ActorSystem, Behavior, PostStop }
+
 import scala.concurrent.{ Await, ExecutionContext, Future }
 import scala.concurrent.duration.Duration
 import scala.util.{ Failure, Success }
-import akka.actor.{ ActorRef, ActorSystem }
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.server.Route
-import akka.stream.ActorMaterializer
+import akka.http.scaladsl.Http.ServerBinding
+import akka.stream.Materializer
 import nudemeth.poc.ordering.api.application.command.{ CancelOrderCommand, CancelOrderCommandHandler, IdentifiedCommand, IdentifiedCommandHandler, ShipOrderCommand, ShipOrderCommandHandler }
 import nudemeth.poc.ordering.api.application.query.{ OrderQuery, OrderQueryable }
 import nudemeth.poc.ordering.api.controller.{ OrderingRegistryActor, OrderingRoutes }
@@ -17,48 +19,65 @@ import nudemeth.poc.ordering.domain.model.aggregate.buyer.BuyerRepositoryOperati
 import nudemeth.poc.ordering.infrastructure.repository.{ BuyerRepository, OrderRepository }
 
 //#main-class
-object Server extends App with OrderingRoutes {
+object Server {
+  sealed trait Command
+  private final case class StartFailed(cause: Throwable) extends Command
+  private final case class Started(binding: ServerBinding) extends Command
+  private final case object Stop extends Command
 
-  // set up ActorSystem and other dependencies here
-  //#main-class
-  //#server-bootstrapping
-  implicit val system: ActorSystem = ActorSystem("ordering-system")
-  implicit val materializer: ActorMaterializer = ActorMaterializer()
-  implicit val executionContext: ExecutionContext = system.dispatcher
-  //#server-bootstrapping
+  def apply(host: String, port: Int): Behavior[Command] = Behaviors.setup { ctx =>
+    implicit val system: ActorSystem[_] = ctx.system
+    implicit val untypedSystem: akka.actor.ActorSystem = ctx.system.toClassic
+    implicit val materializer: Materializer = Materializer(ctx.system)
+    implicit val executionContext: ExecutionContext = ctx.system.executionContext
 
-  val orderRepo: OrderRepository = new OrderRepository()
-  val buyerRepo: BuyerRepositoryOperations = BuyerRepository()
-  val orderingQuery: OrderQueryable = new OrderQuery()
-  val handlers: Map[Class[_ <: Request[Any]], _ <: RequestHandler[_ <: Request[Any], Any]] = Map(
-    classOf[CancelOrderCommand] -> CancelOrderCommandHandler(orderRepo),
-    classOf[ShipOrderCommand] -> ShipOrderCommandHandler(orderRepo),
-    classOf[IdentifiedCommand[CancelOrderCommand, Boolean]] -> IdentifiedCommandHandler[CancelOrderCommand, Boolean](),
-    classOf[IdentifiedCommand[ShipOrderCommand, Boolean]] -> IdentifiedCommandHandler[ShipOrderCommand, Boolean]())
-  val mediator: Mediator = new Mediator(handlers)
-  var identityRegistryActor: ActorRef = system.actorOf(IdentityService.props, "identity-actor")
-  val orderingRegistryActor: ActorRef = system.actorOf(OrderingRegistryActor.props(orderingQuery, mediator), "ordering-actor")
+    val orderRepo: OrderRepository = new OrderRepository()
+    val buyerRepo: BuyerRepositoryOperations = BuyerRepository()
+    val orderingQuery: OrderQueryable = new OrderQuery()
+    val handlers: Map[Class[_ <: Request[Any]], _ <: RequestHandler[_ <: Request[Any], Any]] = Map(
+      classOf[CancelOrderCommand] -> CancelOrderCommandHandler(orderRepo),
+      classOf[ShipOrderCommand] -> ShipOrderCommandHandler(orderRepo),
+      classOf[IdentifiedCommand[CancelOrderCommand, Boolean]] -> IdentifiedCommandHandler[CancelOrderCommand, Boolean](),
+      classOf[IdentifiedCommand[ShipOrderCommand, Boolean]] -> IdentifiedCommandHandler[ShipOrderCommand, Boolean]())
+    val mediator: Mediator = new Mediator(handlers)
+    val identityRegistryActor = ctx.spawn(IdentityService(), "identity-actor")
+    val orderingRegistryActor = ctx.spawn(OrderingRegistryActor(orderingQuery, mediator), "ordering-actor")
+    val routes = new OrderingRoutes(orderingRegistryActor, identityRegistryActor)
+    val serverBinding: Future[Http.ServerBinding] = Http().bindAndHandle(routes.orderingRoutes, "localhost", 8080)
 
-  //#main-class
-  // from the OrderingRoutes trait
-  lazy val routes: Route = orderingRoutes
-  //#main-class
+    ctx.pipeToSelf(serverBinding) {
+      case Success(binding) => Started(binding)
+      case Failure(ex) => StartFailed(ex)
+    }
 
-  //#http-server
-  val serverBinding: Future[Http.ServerBinding] = Http().bindAndHandle(routes, "localhost", 8080)
+    def running(binding: ServerBinding): Behavior[Command] = {
+      Behaviors.receiveMessagePartial[Command] {
+        case Stop =>
+          ctx.log.info(s"Stopping server http://${binding.localAddress.getHostString}:${binding.localAddress.getPort}/")
+          Behaviors.stopped
+      }.receiveSignal {
+        case (_, PostStop) =>
+          binding.unbind()
+          Behaviors.same
+      }
+    }
 
-  serverBinding.onComplete {
-    case Success(bound) =>
-      println(s"Server online at http://${bound.localAddress.getHostString}:${bound.localAddress.getPort}/")
-    case Failure(e) =>
-      Console.err.println(s"Server could not start!")
-      e.printStackTrace()
-      system.terminate()
+    def starting(wasStopped: Boolean): Behaviors.Receive[Command] = {
+      Behaviors.receiveMessage[Command] {
+        case StartFailed(cause) => throw new RuntimeException("Server failed to start", cause)
+        case Started(binding) =>
+          ctx.log.info(s"Server online at http://${binding.localAddress.getHostString}:${binding.localAddress.getPort}/")
+          running(binding)
+        case Stop => starting(true)
+      }
+    }
+
+    starting(false)
   }
 
-  Await.result(system.whenTerminated, Duration.Inf)
-  //#http-server
-  //#main-class
+  def main(args: Array[String]): Unit = {
+    val system: ActorSystem[Command] = ActorSystem(Server("localhost", 8080), "ordering-system")
+    Await.result(system.whenTerminated, Duration.Inf)
+  }
+
 }
-//#main-class
-//#quick-start-server
