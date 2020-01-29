@@ -46,29 +46,36 @@ class OrderingRoutes(orderingRegistryActor: ActorRef[OrderingRegistryActor.Comma
   }
 
   private def getOrdersRoute(userIdentity: UserIdentity): Route = (get & pathEndOrSingleSlash) {
-    val orders: Future[Vector[OrderSummary]] = orderingRegistryActor ? (GetOrders(userIdentity, _))
-    complete(orders)
+    val orders: Future[Try[Vector[OrderSummary]]] = orderingRegistryActor ? (GetOrders(userIdentity, _))
+    onSuccess(orders) {
+      case Success(value) => complete(value)
+      case Failure(ex) => complete(StatusCodes.InternalServerError -> ex)
+    }
   }
 
   val getCardTypesRoute: Route = (get & path("cardtypes") & pathEndOrSingleSlash) {
-    val cardTypes: Future[Vector[CardType]] = orderingRegistryActor ? GetCardTypes
-    complete(cardTypes)
+    val cardTypes: Future[Try[Vector[CardType]]] = orderingRegistryActor ? GetCardTypes
+    onSuccess(cardTypes) {
+      case Success(value) => complete(value)
+      case Failure(ex) => complete(StatusCodes.InternalServerError -> ex)
+    }
   }
 
   val getOrderRoute: Route = (get & path(JavaUUID) & pathEnd) { id =>
-    val maybeOrder: Future[Option[Order]] = orderingRegistryActor ? (GetOrder(id, _))
-    rejectEmptyResponse {
-      complete(maybeOrder)
+    val maybeOrder: Future[Try[Option[Order]]] = orderingRegistryActor ? (GetOrder(id, _))
+    onSuccess(maybeOrder) {
+      case Success(value) => rejectEmptyResponse(complete(value))
+      case Failure(ex) => complete(StatusCodes.InternalServerError -> ex)
     }
   }
 
   private def doCancel(requestUuid: UUID, command: CancelOrderCommand)(implicit executor: ExecutionContext): Route = {
-    val result: Future[Boolean] = orderingRegistryActor ? (CancelOrder(command, requestUuid, _))
-    val statusCode = result.map {
-      case true => StatusCodes.OK
-      case false => StatusCodes.BadRequest
+    val result: Future[Try[Boolean]] = orderingRegistryActor ? (CancelOrder(command, requestUuid, _))
+    onSuccess(result) {
+      case Success(value) if value => complete(StatusCodes.OK)
+      case Success(value) if !value => complete(StatusCodes.BadRequest)
+      case Failure(ex) => complete(StatusCodes.InternalServerError -> ex)
     }
-    complete(statusCode)
   }
 
   val cancelOrderRoute: Route = (put & path("cancel") & pathEndOrSingleSlash & extractExecutionContext) { implicit executor =>
@@ -81,12 +88,12 @@ class OrderingRoutes(orderingRegistryActor: ActorRef[OrderingRegistryActor.Comma
   }
 
   private def doShip(requestUuid: UUID, command: ShipOrderCommand)(implicit executor: ExecutionContext): Route = {
-    val result: Future[Boolean] = orderingRegistryActor ? (ShipOrder(command, requestUuid, _))
-    val statusCode = result.map {
-      case true => StatusCodes.OK
-      case false => StatusCodes.BadRequest
+    val result: Future[Try[Boolean]] = orderingRegistryActor ? (ShipOrder(command, requestUuid, _))
+    onSuccess(result) {
+      case Success(value) if value => complete(StatusCodes.OK)
+      case Success(value) if !value => complete(StatusCodes.BadRequest)
+      case Failure(ex) => complete(StatusCodes.InternalServerError -> ex)
     }
-    complete(statusCode)
   }
 
   val shipOrderRoute: Route = (put & path("ship") & pathEndOrSingleSlash & extractExecutionContext) { implicit executor =>
