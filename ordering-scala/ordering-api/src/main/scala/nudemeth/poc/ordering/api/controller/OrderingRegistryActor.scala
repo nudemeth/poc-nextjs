@@ -29,40 +29,30 @@ object OrderingRegistryActor {
   private final case class CancelOrderResult(result: Try[Boolean], replyTo: ActorRef[Try[Boolean]]) extends Result
   private final case class ShipOrderResult(result: Try[Boolean], replyTo: ActorRef[Try[Boolean]]) extends Result
 
+  private def mapToResult[A, T <: Result](resultProcess: (Try[A], ActorRef[Try[A]]) => T, replyTo: ActorRef[Try[A]]): Try[A] => T = {
+    case Success(value) => resultProcess(Success(value), replyTo)
+    case Failure(ex) => resultProcess(Failure(ex), replyTo)
+  }
+
   def apply(repository: OrderQueryable, mediator: MediatorDuty): Behavior[Command] = Behaviors.receive { (ctx, message) =>
     implicit val executionContext: ExecutionContext = ctx.executionContext
     message match {
       case GetOrders(userIdentity, replyTo) =>
-        ctx.pipeToSelf(repository.getOrdersByUserIdAsync(userIdentity.id)) {
-          case Success(value) => GetOrdersResult(Success(value), replyTo)
-          case Failure(ex) => GetOrdersResult(Failure(ex), replyTo)
-        }
+        ctx.pipeToSelf(repository.getOrdersByUserIdAsync(userIdentity.id))(mapToResult(GetOrdersResult, replyTo))
         Behaviors.same
       case GetOrder(id, replyTo) =>
-        ctx.pipeToSelf(repository.getOrderAsync(id)) {
-          case Success(value) => GetOrderResult(Success(value), replyTo)
-          case Failure(ex) => GetOrderResult(Failure(ex), replyTo)
-        }
+        ctx.pipeToSelf(repository.getOrderAsync(id))(mapToResult(GetOrderResult, replyTo))
         Behaviors.same
       case GetCardTypes(replyTo) =>
-        ctx.pipeToSelf(repository.getCardTypesAsync) {
-          case Success(value) => GetCardTypesResult(Success(value), replyTo)
-          case Failure(ex) => GetCardTypesResult(Failure(ex), replyTo)
-        }
+        ctx.pipeToSelf(repository.getCardTypesAsync)(mapToResult(GetCardTypesResult, replyTo))
         Behaviors.same
       case CancelOrder(command, requestId, replyTo) =>
         val requestCancelOrder = IdentifiedCommand[CancelOrderCommand, Boolean](command, requestId)
-        ctx.pipeToSelf(mediator.send(requestCancelOrder)) {
-          case Success(value) => CancelOrderResult(Success(value), replyTo)
-          case Failure(ex) => CancelOrderResult(Failure(ex), replyTo)
-        }
+        ctx.pipeToSelf(mediator.send(requestCancelOrder))(mapToResult(CancelOrderResult, replyTo))
         Behaviors.same
       case ShipOrder(command, requestId, replyTo) =>
         val requestShipOrder = IdentifiedCommand[ShipOrderCommand, Boolean](command, requestId)
-        ctx.pipeToSelf(mediator.send(requestShipOrder)) {
-          case Success(value) => ShipOrderResult(Success(value), replyTo)
-          case Failure(ex) => ShipOrderResult(Failure(ex), replyTo)
-        }
+        ctx.pipeToSelf(mediator.send(requestShipOrder))(mapToResult(ShipOrderResult, replyTo))
         Behaviors.same
 
       case GetOrdersResult(result: Try[Vector[OrderSummary]], replyTo: ActorRef[Try[Vector[OrderSummary]]]) =>
