@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS ordering.order_by_id (
    payment_method_card_holder_name TEXT,
    payment_method_card_expiration TIMESTAMP,
    payment_method_card_type TEXT,
-   order_items MAP<TEXT, FROZEN <tuple<INT, DECIMAL, TEXT>>>, -- {product_name, {units, unit_price, picture_url}}
+   order_items MAP<TEXT, FROZEN <TUPLE<INT, DECIMAL, TEXT>>>, -- {product_name, {units, unit_price, picture_url}}
    PRIMARY KEY (order_id)
 );
 
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS ordering.payment_method (
 CREATE TABLE IF NOT EXISTS ordering.payment_method (
     buyer_id UUID,
     name TEXT,
-    payment_methods LIST<TEXT, TEXT, TEXT, TEXT, TIMESTAMP, TEXT>,
+    payment_methods LIST<FROZEN <TUPLE<TEXT, TEXT, TEXT, TEXT, TIMESTAMP, TEXT>>>,
     PRIMARY KEY (buyer_id)
 );
 
@@ -71,7 +71,6 @@ INSERT INTO ordering.card_type (name) VALUES('VISA');
 INSERT INTO ordering.card_type (name) VALUES('MasterCard');
 INSERT INTO ordering.card_type (name) VALUES('Amex');
 INSERT INTO ordering.card_type (name) VALUES('JCB');
-
 
 INSERT INTO ordering.payment_method (buyer_id, payment_method_id, alias, card_number, card_security_number, card_holder_name, card_expiration, card_type)
 VALUES (2f17c7e4-a6b6-4ba0-a1eb-9b4f6d2ce4df, 0914208a-d69d-4f15-a826-b2752abfee44, 'MyVisaCard', '1111 2222 3333 4444', '000', 'NAME SURNAME', '2022-01-01', 'VISA');
