@@ -34,17 +34,17 @@ object OrderingRegistryActor {
     case Failure(ex) => resultProcess(Failure(ex), replyTo)
   }
 
-  def apply(repository: OrderQueryable, mediator: MediatorDuty): Behavior[Command] = Behaviors.receive { (ctx, message) =>
+  def apply(orderingQuery: OrderQueryable, mediator: MediatorDuty): Behavior[Command] = Behaviors.receive { (ctx, message) =>
     implicit val executionContext: ExecutionContext = ctx.executionContext
     message match {
       case GetOrders(userIdentity, replyTo) =>
-        ctx.pipeToSelf(repository.getOrdersByUserIdAsync(userIdentity.id))(mapToResult(GetOrdersResult, replyTo))
+        ctx.pipeToSelf(orderingQuery.getOrdersByUserIdAsync(userIdentity.id))(mapToResult(GetOrdersResult, replyTo))
         Behaviors.same
       case GetOrder(id, replyTo) =>
-        ctx.pipeToSelf(repository.getOrderAsync(id))(mapToResult(GetOrderResult, replyTo))
+        ctx.pipeToSelf(orderingQuery.getOrderAsync(id))(mapToResult(GetOrderResult, replyTo))
         Behaviors.same
       case GetCardTypes(replyTo) =>
-        ctx.pipeToSelf(repository.getCardTypesAsync)(mapToResult(GetCardTypesResult, replyTo))
+        ctx.pipeToSelf(orderingQuery.getCardTypesAsync)(mapToResult(GetCardTypesResult, replyTo))
         Behaviors.same
       case CancelOrder(command, requestId, replyTo) =>
         val requestCancelOrder = IdentifiedCommand[CancelOrderCommand, Boolean](command, requestId)
