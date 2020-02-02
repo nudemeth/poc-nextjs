@@ -13,7 +13,8 @@ object Connector {
   private val password = config.getString("cassandra.password")
 
   lazy val connector: CassandraConnection = ContactPoints(hosts)
-    .withClusterBuilder(
-      _.withCredentials(username, password))
+    .withClusterBuilder(_
+      .withCredentials(username, password)
+      .withoutMetrics())
     .keySpace(keyspace)
 }

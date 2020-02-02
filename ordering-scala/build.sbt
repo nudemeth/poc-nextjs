@@ -40,9 +40,6 @@ lazy val api = (project in file("./ordering-api"))
 
       "com.datastax.oss"  %  "java-driver-core"     % "4.3.0",
 
-      "com.outworkers"    %% "phantom-dsl"          % phantomVersion,
-      "com.outworkers"    %% "phantom-jdk8"         % phantomVersion,
-
       "ch.qos.logback"    %  "logback-classic"      % logbackVersion   % Runtime,
 
       "com.pauldijou"     %% "jwt-core"             % "4.2.0"
