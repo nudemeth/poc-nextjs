@@ -43,7 +43,7 @@ object Server {
     val identityRegistryActor = ctx.spawn(IdentityService(), "identity-actor")
     val orderingRegistryActor = ctx.spawn(OrderingRegistryActor(orderingQuery, mediator), "ordering-actor")
     val routes = new OrderingRoutes(orderingRegistryActor, identityRegistryActor)
-    val serverBinding: Future[Http.ServerBinding] = Http().bindAndHandle(routes.orderingRoutes, "localhost", 8080)
+    val serverBinding: Future[Http.ServerBinding] = Http().bindAndHandle(routes.orderingRoutes, host, port)
 
     ctx.pipeToSelf(serverBinding) {
       case Success(binding) => Started(binding)
