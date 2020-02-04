@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS ordering.payment_method (
     PRIMARY KEY (buyer_id, payment_method_id)
 );
 
-CREATE TABLE IF NOT EXISTS ordering.payment_method (
+CREATE TABLE IF NOT EXISTS ordering.buyer (
     buyer_id UUID,
     name TEXT,
     payment_methods LIST<FROZEN <TUPLE<TEXT, TEXT, TEXT, TEXT, TIMESTAMP, TEXT>>>,
