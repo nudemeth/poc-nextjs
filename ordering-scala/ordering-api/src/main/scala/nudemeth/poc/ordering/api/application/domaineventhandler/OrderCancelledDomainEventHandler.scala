@@ -12,9 +12,15 @@ import scala.concurrent.{ ExecutionContext, Future }
 case class OrderCancelledDomainEventHandler(orderPaymentRepo: OrderPaymentRepositoryOperations, buyerRepo: BuyerRepositoryOperations, orderingIntegrationEventService: OrderingIntegrationEventServiceOperations) extends NotificationHandler[OrderCancelledDomainEvent] {
   override def handle(notification: OrderCancelledDomainEvent)(implicit executor: ExecutionContext): Future[Unit] = {
     for {
-      order <- orderPaymentRepo.getOrderAsync(notification.order.orderId)
-      buyer <- buyerRepo.find(order.get.order.buyerId)
-      event = OrderStatusChangedToCancelledIntegrationEvent(order.get.order.orderId, order.get.order.orderStatus, buyer.get.name)
+      maybeOrderPayment <- orderPaymentRepo.getOrderAsync(notification.order.orderId)
+    } yield for {
+      orderPayment <- maybeOrderPayment
+    } yield for {
+      maybeBuyer <- buyerRepo.find(orderPayment.order.buyerId)
+    } yield for {
+      buyer <- maybeBuyer
+      event = OrderStatusChangedToCancelledIntegrationEvent(orderPayment.order.orderId, orderPayment.order.orderStatus, buyer.name)
+    } yield for {
       result <- orderingIntegrationEventService.publishThroughEventBusAsync(event)
     } yield result
   }
