@@ -4,6 +4,7 @@ import java.time.Instant
 import java.util.UUID
 
 import nudemeth.poc.ordering.domain.exception.OrderingDomainException
+import nudemeth.poc.ordering.domain.model.Entity
 
 case class Order(
   orderId: UUID,
@@ -12,14 +13,14 @@ case class Order(
   address: Address,
   orderStatus: String,
   orderItems: Vector[OrderItem],
-  description: Option[String]) {
+  description: Option[String]) extends Entity(orderId) {
 
   def setCancelledStatus(): Order = {
     if (orderStatus == "Paid" || orderStatus == "Shipped") {
       raiseStatusChangeException("Cancelled")
     }
+    //Entity.addDomainEvent()
     this.copy(orderStatus = "Cancelled", description = Some("The order was cancelled."))
-    //AddDomainEvent
   }
 
   def setShippedStatus(): Order = {
