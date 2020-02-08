@@ -9,7 +9,7 @@ abstract class Entity(id: UUID) {
 }
 
 object Entity {
-  def addDomainEvent(eventItem: Notification, domainEvents: Vector[Notification]): Vector[Notification] = {
-    domainEvents :+ eventItem
+  def addDomainEvents(event: Notification, domainEvents: Vector[Notification]): Vector[Notification] = {
+    domainEvents :+ event
   }
 }
