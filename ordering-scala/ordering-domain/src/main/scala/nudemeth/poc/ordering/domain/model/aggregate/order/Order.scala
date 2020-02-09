@@ -8,34 +8,34 @@ import nudemeth.poc.ordering.domain.exception.OrderingDomainException
 import nudemeth.poc.ordering.domain.model.Entity
 import nudemeth.poc.ordering.util.mediator.Notification
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 case class Order(
-                  orderId: UUID,
-                  buyerId: UUID,
-                  orderDate: Instant,
-                  address: Address,
-                  orderStatus: String,
-                  orderItems: Vector[OrderItem],
-                  description: Option[String]) extends Entity(orderId) {
+  orderId: UUID,
+  buyerId: UUID,
+  orderDate: Instant,
+  address: Address,
+  orderStatus: String,
+  orderItems: Vector[OrderItem],
+  description: Option[String]) extends Entity(orderId) {
 
-  def setCancelledStatus(): Try[Order] = {
+  def setCancelledStatus(domainEvents: Vector[Notification]): Try[(Order, Vector[Notification])] = {
     if (orderStatus == "Paid" || orderStatus == "Shipped") {
       Failure(raiseStatusChangeException("Cancelled"))
     } else {
       val cancelledOrder = this.copy(orderStatus = "Cancelled", description = Some("The order was cancelled."))
-      //val newDomainEvents = domainEvents :+ OrderCancelledDomainEvent(cancelledOrder)
-      //AddDomainEvent
-      Success(cancelledOrder)
+      val updatedDomainEvents = domainEvents :+ OrderCancelledDomainEvent(cancelledOrder)
+      Success(cancelledOrder, updatedDomainEvents)
     }
   }
 
-  def setShippedStatus(): Try[Order] = {
+  def setShippedStatus(domainEvents: Vector[Notification]): Try[(Order, Vector[Notification])] = {
     if (orderStatus != "Paid") {
       Failure(raiseStatusChangeException("Shipped"))
     } else {
-      //AddDomainEvent
-      Success(this.copy(orderStatus = "Shipped", description = Some("The order was shipped.")))
+      val shippedOrder = this.copy(orderStatus = "Shipped", description = Some("The order was shipped."))
+      val updatedDomainEvents = domainEvents :+ OrderCancelledDomainEvent(shippedOrder)
+      Success(shippedOrder, updatedDomainEvents)
     }
   }
 
@@ -44,3 +44,4 @@ case class Order(
   }
 
 }
+
