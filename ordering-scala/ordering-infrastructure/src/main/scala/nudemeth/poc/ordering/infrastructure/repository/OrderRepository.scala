@@ -8,6 +8,7 @@ import nudemeth.poc.ordering.domain.model.aggregate.buyer.{ CardType, PaymentMet
 import nudemeth.poc.ordering.domain.model.aggregate.order.{ Address, Order, OrderItem, OrderPayment, OrderPaymentRepositoryOperations }
 import nudemeth.poc.ordering.infrastructure.{ Connector, OrderingContext }
 import nudemeth.poc.ordering.infrastructure.repository.entity.{ OrderByBuyerEntity, OrderByIdEntity }
+import nudemeth.poc.ordering.util.mediator.Notification
 
 import scala.concurrent.Future
 
@@ -20,7 +21,7 @@ class OrderRepository extends OrderPaymentRepositoryOperations {
     }
   }
 
-  override def addOrUpdateOrderAsync(order: Order, paymentMethod: PaymentMethod): Future[Unit] = {
+  override def addOrUpdateOrderAsync(order: Order, paymentMethod: PaymentMethod, domainEvents: Vector[Notification]): Future[Unit] = {
     val orderByIdEntity = OrderByIdEntity(
       order.orderId,
       order.buyerId,
@@ -40,6 +41,7 @@ class OrderRepository extends OrderPaymentRepositoryOperations {
       paymentMethod.cardType.toString,
       order.orderItems.map(o => o.productId -> (o.productName, o.pictureUrl, o.unitPrice, o.discount, o.units)).toMap)
     val orderByBuyerEntity = OrderByBuyerEntity(order.orderId, order.buyerId, order.orderDate.atOffset(ZoneOffset.UTC), order.orderStatus, order.orderItems.size)
+    // DispatchDomainEvents()
     Batch.logged
       .add(OrderingContext.OrderTable.saveOrUpdateTransaction(orderByIdEntity))
       .add(OrderingContext.OrderByBuyerTable.saveOrUpdateTransaction(orderByBuyerEntity))
