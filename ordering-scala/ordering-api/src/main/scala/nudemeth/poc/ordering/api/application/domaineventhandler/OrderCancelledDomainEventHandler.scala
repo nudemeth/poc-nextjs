@@ -5,12 +5,12 @@ import nudemeth.poc.ordering.api.application.integrationevent.event.OrderStatusC
 import nudemeth.poc.ordering.domain.event.OrderCancelledDomainEvent
 import nudemeth.poc.ordering.domain.model.aggregate.buyer.BuyerRepositoryOperations
 import nudemeth.poc.ordering.domain.model.aggregate.order.OrderPaymentRepositoryOperations
-import nudemeth.poc.ordering.util.mediator.NotificationHandler
+import nudemeth.poc.ordering.util.mediator.{ MediatorDuty, NotificationHandler }
 
 import scala.concurrent.{ ExecutionContext, Future }
 
 case class OrderCancelledDomainEventHandler(orderPaymentRepo: OrderPaymentRepositoryOperations, buyerRepo: BuyerRepositoryOperations, orderingIntegrationEventService: OrderingIntegrationEventServiceOperations) extends NotificationHandler[OrderCancelledDomainEvent] {
-  override def handle(notification: OrderCancelledDomainEvent)(implicit executor: ExecutionContext): Future[Unit] = {
+  override def handle(notification: OrderCancelledDomainEvent, mediator: MediatorDuty)(implicit executor: ExecutionContext): Future[Unit] = {
     for {
       maybeOrderPayment <- orderPaymentRepo.getOrderAsync(notification.order.orderId)
     } yield for {

@@ -11,10 +11,13 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.Http.ServerBinding
 import akka.stream.Materializer
 import nudemeth.poc.ordering.api.application.command.{ CancelOrderCommand, CancelOrderCommandHandler, IdentifiedCommand, IdentifiedCommandHandler, ShipOrderCommand, ShipOrderCommandHandler }
+import nudemeth.poc.ordering.api.application.domaineventhandler.OrderCancelledDomainEventHandler
+import nudemeth.poc.ordering.api.application.integrationevent.{ OrderingIntegrationEventService, OrderingIntegrationEventServiceOperations }
 import nudemeth.poc.ordering.api.application.query.{ OrderQuery, OrderQueryable }
 import nudemeth.poc.ordering.api.controller.{ OrderingRegistryActor, OrderingRoutes }
-import nudemeth.poc.ordering.util.mediator.{ Mediator, Request, RequestHandler }
+import nudemeth.poc.ordering.util.mediator.{ Mediator, Notification, NotificationHandler, Request, RequestHandler }
 import nudemeth.poc.ordering.api.infrastructure.service.IdentityService
+import nudemeth.poc.ordering.domain.event.OrderCancelledDomainEvent
 import nudemeth.poc.ordering.domain.model.aggregate.buyer.BuyerRepositoryOperations
 import nudemeth.poc.ordering.infrastructure.repository.{ BuyerRepository, OrderRepository }
 
@@ -31,15 +34,18 @@ object Server {
     implicit val materializer: Materializer = Materializer(ctx.system)
     implicit val executionContext: ExecutionContext = ctx.system.executionContext
 
-    val orderRepo: OrderRepository = new OrderRepository()
+    val orderRepo: OrderRepository = OrderRepository()
     val buyerRepo: BuyerRepositoryOperations = BuyerRepository()
     val orderingQuery: OrderQueryable = new OrderQuery()
+    val orderingIntegrationEventService = OrderingIntegrationEventService()
     val handlers: Map[Class[_ <: Request[Any]], _ <: RequestHandler[_ <: Request[Any], Any]] = Map(
       classOf[CancelOrderCommand] -> CancelOrderCommandHandler(orderRepo),
       classOf[ShipOrderCommand] -> ShipOrderCommandHandler(orderRepo),
       classOf[IdentifiedCommand[CancelOrderCommand, Boolean]] -> IdentifiedCommandHandler[CancelOrderCommand, Boolean](),
       classOf[IdentifiedCommand[ShipOrderCommand, Boolean]] -> IdentifiedCommandHandler[ShipOrderCommand, Boolean]())
-    val mediator: Mediator = new Mediator(handlers)
+    val notificationHandlers: Map[Class[_ <: Notification], _ <: NotificationHandler[_ <: Notification]] = Map(
+      classOf[OrderCancelledDomainEvent] -> OrderCancelledDomainEventHandler(orderRepo, buyerRepo, orderingIntegrationEventService))
+    val mediator: Mediator = new Mediator(handlers, notificationHandlers)
     val identityRegistryActor = ctx.spawn(IdentityService(), "identity-actor")
     val orderingRegistryActor = ctx.spawn(OrderingRegistryActor(orderingQuery, mediator), "ordering-actor")
     val routes = new OrderingRoutes(orderingRegistryActor, identityRegistryActor)
