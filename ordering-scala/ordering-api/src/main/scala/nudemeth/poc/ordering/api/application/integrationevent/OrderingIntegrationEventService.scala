@@ -5,6 +5,10 @@ import scala.concurrent.{ ExecutionContext, Future }
 
 case class OrderingIntegrationEventService() extends OrderingIntegrationEventServiceOperations {
   override def publishThroughEventBusAsync(event: IntegrationEvent)(implicit executor: ExecutionContext): Future[Unit] = {
+    saveEventAndOrderingContextChangesAsync(event)
+  }
+
+  private def saveEventAndOrderingContextChangesAsync(event: IntegrationEvent): Future[Unit] = {
     Future.unit
   }
 }
