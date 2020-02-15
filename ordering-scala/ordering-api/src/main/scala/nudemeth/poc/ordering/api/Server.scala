@@ -19,6 +19,8 @@ import nudemeth.poc.ordering.util.mediator.{ Mediator, Notification, Notificatio
 import nudemeth.poc.ordering.api.infrastructure.service.IdentityService
 import nudemeth.poc.ordering.domain.event.OrderCancelledDomainEvent
 import nudemeth.poc.ordering.domain.model.aggregate.buyer.BuyerRepositoryOperations
+import nudemeth.poc.ordering.infrastructure.OrderingContext
+import nudemeth.poc.ordering.infrastructure.eventbus.rabbitmq.EventBusRabbitMq
 import nudemeth.poc.ordering.infrastructure.repository.{ BuyerRepository, OrderRepository }
 
 //#main-class
@@ -34,10 +36,10 @@ object Server {
     implicit val materializer: Materializer = Materializer(ctx.system)
     implicit val executionContext: ExecutionContext = ctx.system.executionContext
 
-    val orderRepo: OrderRepository = OrderRepository()
-    val buyerRepo: BuyerRepositoryOperations = BuyerRepository()
+    val orderRepo: OrderRepository = OrderRepository(OrderingContext)
+    val buyerRepo: BuyerRepositoryOperations = BuyerRepository(OrderingContext)
     val orderingQuery: OrderQueryable = new OrderQuery()
-    val orderingIntegrationEventService = OrderingIntegrationEventService()
+    val orderingIntegrationEventService = OrderingIntegrationEventService(EventBusRabbitMq())
     val handlers: Map[Class[_ <: Request[Any]], _ <: RequestHandler[_ <: Request[Any], Any]] = Map(
       classOf[CancelOrderCommand] -> CancelOrderCommandHandler(orderRepo),
       classOf[ShipOrderCommand] -> ShipOrderCommandHandler(orderRepo),

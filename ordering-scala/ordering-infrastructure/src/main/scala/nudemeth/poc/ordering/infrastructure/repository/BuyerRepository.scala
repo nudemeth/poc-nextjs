@@ -4,17 +4,20 @@ import java.time.ZoneOffset
 import java.util.UUID
 
 import com.outworkers.phantom.dsl._
+import nudemeth.poc.ordering.domain.model.UnitOfWork
 import nudemeth.poc.ordering.domain.model.aggregate.buyer.{ Buyer, BuyerRepositoryOperations, CardType, PaymentMethod }
 import nudemeth.poc.ordering.infrastructure.repository.entity.BuyerEntity
 import nudemeth.poc.ordering.infrastructure.{ Connector, OrderingContext }
 
 import scala.concurrent.Future
 
-case class BuyerRepository() extends BuyerRepositoryOperations {
+case class BuyerRepository(orderingContext: OrderingContext) extends BuyerRepositoryOperations {
   implicit val session: Session = Connector.connector.session
 
+  override val unitOfWork: UnitOfWork = orderingContext
+
   override def addOrUpdate(buyer: Buyer): Future[Unit] = {
-    OrderingContext.BuyerTable.saveOrUpdate(
+    orderingContext.BuyerTable.saveOrUpdate(
       BuyerEntity(
         buyer.buyerId,
         buyer.name,
@@ -30,7 +33,7 @@ case class BuyerRepository() extends BuyerRepositoryOperations {
   }
 
   override def find(buyerId: UUID): Future[Option[Buyer]] = {
-    OrderingContext.BuyerTable.getById(buyerId).map {
+    orderingContext.BuyerTable.getById(buyerId).map {
       case None => None
       case Some(e) => Some(Buyer(
         e.buyerId,

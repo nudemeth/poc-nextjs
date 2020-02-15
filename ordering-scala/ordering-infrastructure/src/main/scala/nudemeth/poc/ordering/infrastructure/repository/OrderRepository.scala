@@ -3,6 +3,7 @@ import java.time.ZoneOffset
 import java.util.UUID
 
 import com.outworkers.phantom.dsl._
+import nudemeth.poc.ordering.domain.model.UnitOfWork
 import nudemeth.poc.ordering.domain.model.aggregate.order
 import nudemeth.poc.ordering.domain.model.aggregate.buyer.{ CardType, PaymentMethod }
 import nudemeth.poc.ordering.domain.model.aggregate.order.{ Address, Order, OrderItem, OrderPayment, OrderPaymentRepositoryOperations }
@@ -12,11 +13,13 @@ import nudemeth.poc.ordering.util.mediator.{ Mediator, Notification }
 
 import scala.concurrent.Future
 
-case class OrderRepository() extends OrderPaymentRepositoryOperations {
+case class OrderRepository(orderingContext: OrderingContext) extends OrderPaymentRepositoryOperations {
   implicit val session: Session = Connector.connector.session
 
+  override val unitOfWork: UnitOfWork = orderingContext
+
   override def getOrderAsync(id: UUID): Future[Option[OrderPayment]] = {
-    OrderingContext.OrderTable.getById(id).map { e =>
+    orderingContext.OrderTable.getById(id).map { e =>
       mapToDomainModel(e)
     }
   }
@@ -42,8 +45,8 @@ case class OrderRepository() extends OrderPaymentRepositoryOperations {
       order.orderItems.map(o => o.productId -> (o.productName, o.pictureUrl, o.unitPrice, o.discount, o.units)).toMap)
     val orderByBuyerEntity = OrderByBuyerEntity(order.orderId, order.buyerId, order.orderDate.atOffset(ZoneOffset.UTC), order.orderStatus, order.orderItems.size)
     Batch.logged
-      .add(OrderingContext.OrderTable.saveOrUpdateTransaction(orderByIdEntity))
-      .add(OrderingContext.OrderByBuyerTable.saveOrUpdateTransaction(orderByBuyerEntity))
+      .add(orderingContext.OrderTable.saveOrUpdateTransaction(orderByIdEntity))
+      .add(orderingContext.OrderByBuyerTable.saveOrUpdateTransaction(orderByBuyerEntity))
       .future()
       .map(_ => ())
   }
