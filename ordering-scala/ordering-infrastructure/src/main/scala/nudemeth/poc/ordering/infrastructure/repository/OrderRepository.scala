@@ -44,6 +44,10 @@ case class OrderRepository(orderingContext: OrderingContext) extends OrderPaymen
       paymentMethod.cardType.toString,
       order.orderItems.map(o => o.productId -> (o.productName, o.pictureUrl, o.unitPrice, o.discount, o.units)).toMap)
     val orderByBuyerEntity = OrderByBuyerEntity(order.orderId, order.buyerId, order.orderDate.atOffset(ZoneOffset.UTC), order.orderStatus, order.orderItems.size)
+    val a = Batch.logged
+      .add(orderingContext.OrderTable.saveOrUpdateTransaction(orderByIdEntity))
+      .add(orderingContext.OrderByBuyerTable.saveOrUpdateTransaction(orderByBuyerEntity))
+
     Batch.logged
       .add(orderingContext.OrderTable.saveOrUpdateTransaction(orderByIdEntity))
       .add(orderingContext.OrderByBuyerTable.saveOrUpdateTransaction(orderByBuyerEntity))

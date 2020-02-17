@@ -1,10 +1,13 @@
 package nudemeth.poc.ordering.infrastructure
 
+import com.outworkers.phantom.builder.Unspecified
+import com.outworkers.phantom.builder.batch.BatchQuery
 import com.outworkers.phantom.connectors.CassandraConnection
 import com.outworkers.phantom.dsl._
-import nudemeth.poc.ordering.domain.model.UnitOfWork
+import nudemeth.poc.ordering.domain.model.{ Transactions, UnitOfWork }
 import nudemeth.poc.ordering.infrastructure.idempotency.table._
 import nudemeth.poc.ordering.infrastructure.repository.table._
+import nudemeth.poc.ordering.util.mediator.MediatorDuty
 
 import scala.concurrent.Future
 
@@ -15,12 +18,20 @@ class OrderingContext(override val connector: CassandraConnection) extends Datab
   object ClientRequestTable extends ClientRequestTable with connector.Connector
   object BuyerTable extends BuyerTable with connector.Connector
 
-  override def saveChangeAsync(): Future[Int] = {
-    Future.successful(0)
+  override def saveChangeAsync(transactions: Transactions): Future[Int] = {
+    transactions.execute()
   }
 
-  override def saveEntitiesAsync(): Future[Boolean] = {
-    Future.successful(true)
+  override def saveEntitiesAsync(transactions: Transactions): Future[Boolean] = {
+    for {
+      result <- dispatchDomainEventsAsync()
+      saveResult <- saveChangeAsync(transactions)
+    } yield true
+  }
+
+  private def dispatchDomainEventsAsync(): Future[Unit] = {
+    //mediator
+    Future.unit
   }
 }
 
