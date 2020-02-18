@@ -1,7 +1,5 @@
 package nudemeth.poc.ordering.infrastructure
 
-import com.outworkers.phantom.builder.Unspecified
-import com.outworkers.phantom.builder.batch.BatchQuery
 import com.outworkers.phantom.connectors.CassandraConnection
 import com.outworkers.phantom.dsl._
 import nudemeth.poc.ordering.domain.model.{ Transactions, UnitOfWork }
