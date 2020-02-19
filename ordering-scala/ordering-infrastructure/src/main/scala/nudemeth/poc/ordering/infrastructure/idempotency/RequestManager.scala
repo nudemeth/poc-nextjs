@@ -9,9 +9,9 @@ import nudemeth.poc.ordering.infrastructure.idempotency.entity.ClientRequestEnti
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.reflect.runtime.universe._
 
-case class RequestManager() extends RequestManagerOperations {
+case class RequestManager(orderingContext: OrderingContext) extends RequestManagerOperations {
   override def existAsync(id: UUID)(implicit executor: ExecutionContext): Future[Boolean] = {
-    OrderingContext.ClientRequestTable.getById(id).map(_.isDefined)
+    orderingContext.ClientRequestTable.getById(id).map(_.isDefined)
   }
 
   override def createRequestForCommandAsync[T](id: UUID)(implicit executor: ExecutionContext, tag: TypeTag[T]): Future[Unit] = {
@@ -20,7 +20,7 @@ case class RequestManager() extends RequestManagerOperations {
         throw OrderingDomainException(s"Request with $id already exists")
       }
       val clientRequest = entity.ClientRequestEntity(id, typeOf[T].typeSymbol.fullName, OffsetDateTime.now())
-      OrderingContext.ClientRequestTable.saveOrUpdate(clientRequest).map(_ => ())
+      orderingContext.ClientRequestTable.saveOrUpdate(clientRequest).map(_ => ())
     }
   }
 }

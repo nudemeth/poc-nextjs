@@ -9,7 +9,7 @@ import nudemeth.poc.ordering.util.mediator.MediatorDuty
 
 import scala.concurrent.Future
 
-class OrderingContext(override val connector: CassandraConnection) extends Database[OrderingContext](connector) with UnitOfWork {
+case class OrderingContext(override val connector: CassandraConnection, mediator: MediatorDuty) extends Database[OrderingContext](connector) with UnitOfWork {
   object OrderTable extends OrderByIdTable with connector.Connector
   object OrderByBuyerTable extends OrderByBuyerTable with connector.Connector
   object CardTypeTable extends CardTypeTable with connector.Connector
@@ -32,5 +32,3 @@ class OrderingContext(override val connector: CassandraConnection) extends Datab
     Future.unit
   }
 }
-
-object OrderingContext extends OrderingContext(Connector.connector)
