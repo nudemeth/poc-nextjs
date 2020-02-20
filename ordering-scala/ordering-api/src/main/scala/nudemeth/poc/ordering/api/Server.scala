@@ -39,7 +39,7 @@ object Server {
     val orderingQuery: OrderQueryable = new OrderQuery()
     val orderingIntegrationEventService = OrderingIntegrationEventService(EventBusRabbitMq())
 
-    val orderingContext: OrderingContext = OrderingContext(Connector.connector, mediator)
+    lazy val orderingContext: OrderingContext = OrderingContext(Connector.connector, mediator)
     lazy val orderRepo: OrderRepository = OrderRepository(orderingContext)
     lazy val buyerRepo: BuyerRepositoryOperations = BuyerRepository(orderingContext)
     lazy val handlers: Map[Class[_ <: Request[Any]], _ <: RequestHandler[_ <: Request[Any], Any]] = Map(
