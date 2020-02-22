@@ -10,9 +10,9 @@ case class ShipOrderCommandHandler(orderRepository: OrderPaymentRepositoryOperat
   override def handle(command: ShipOrderCommand, mediator: MediatorDuty)(implicit executor: ExecutionContext): Future[Boolean] = {
     orderRepository.getOrderAsync(command.orderId).flatMap {
       case None => Future.successful(false)
-      case Some(o) => o.order.setShippedStatus(Vector()) match {
+      case Some(o) => o.setShippedStatus() match {
         case Failure(exception) => Future.successful(false)
-        case Success(value) => orderRepository.addOrUpdateOrderAsync(value._1, o.paymentMethod, value._2).map(_ => true)
+        case Success(value) => orderRepository.addOrUpdateOrderAsync(value.order, value.paymentMethod, value.domainEvents).map(_ => true)
       }
     }
   }

@@ -46,7 +46,7 @@ case class BuyerRepository(orderingContext: OrderingContext) extends BuyerReposi
             pm._4,
             pm._5.toInstant,
             CardType.apply(pm._6)))
-          .toVector))
+          .toVector, Vector()))
     }
   }
 }

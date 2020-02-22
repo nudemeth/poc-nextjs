@@ -17,31 +17,7 @@ case class Order(
   address: Address,
   orderStatus: String,
   orderItems: Vector[OrderItem],
-  description: Option[String]) extends Entity(orderId) {
-
-  def setCancelledStatus(domainEvents: Vector[Notification]): Try[(Order, Vector[Notification])] = {
-    if (orderStatus == "Paid" || orderStatus == "Shipped") {
-      Failure(raiseStatusChangeException("Cancelled"))
-    } else {
-      val cancelledOrder = this.copy(orderStatus = "Cancelled", description = Some("The order was cancelled."))
-      val updatedDomainEvents = domainEvents :+ OrderCancelledDomainEvent(cancelledOrder)
-      Success(cancelledOrder, updatedDomainEvents)
-    }
-  }
-
-  def setShippedStatus(domainEvents: Vector[Notification]): Try[(Order, Vector[Notification])] = {
-    if (orderStatus != "Paid") {
-      Failure(raiseStatusChangeException("Shipped"))
-    } else {
-      val shippedOrder = this.copy(orderStatus = "Shipped", description = Some("The order was shipped."))
-      val updatedDomainEvents = domainEvents :+ OrderCancelledDomainEvent(shippedOrder)
-      Success(shippedOrder, updatedDomainEvents)
-    }
-  }
-
-  private def raiseStatusChangeException(nextStatus: String): OrderingDomainException = {
-    OrderingDomainException(s"Is not possible to change the order status from $orderStatus to $nextStatus.")
-  }
+  description: Option[String]) {
 
 }
 

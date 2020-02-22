@@ -10,9 +10,9 @@ case class CancelOrderCommandHandler(orderRepository: OrderPaymentRepositoryOper
   override def handle(command: CancelOrderCommand, mediator: MediatorDuty)(implicit executor: ExecutionContext): Future[Boolean] = {
     orderRepository.getOrderAsync(command.orderId).flatMap {
       case None => Future.successful(false)
-      case Some(o) => o.order.setCancelledStatus(Vector()) match {
+      case Some(o) => o.setCancelledStatus() match {
         case Failure(ex) => Future.successful(false)
-        case Success(value) => orderRepository.addOrUpdateOrderAsync(value._1, o.paymentMethod, value._2).map(_ => true)
+        case Success(value) => orderRepository.addOrUpdateOrderAsync(value.order, value.paymentMethod, value.domainEvents).map(_ => true)
       }
     }
   }
