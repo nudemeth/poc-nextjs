@@ -1,20 +1,18 @@
 package nudemeth.poc.ordering.infrastructure
 
-import com.outworkers.phantom.connectors.CassandraConnection
 import com.outworkers.phantom.dsl._
 import nudemeth.poc.ordering.domain.model.{ Transactions, UnitOfWork }
-import nudemeth.poc.ordering.infrastructure.idempotency.table._
-import nudemeth.poc.ordering.infrastructure.repository.table._
+import nudemeth.poc.ordering.infrastructure.repository.OrderingDatabase
 import nudemeth.poc.ordering.util.mediator.MediatorDuty
 
 import scala.concurrent.Future
 
-case class OrderingContext(override val connector: CassandraConnection, mediator: MediatorDuty) extends Database[OrderingContext](connector) with UnitOfWork {
-  object OrderTable extends OrderByIdTable with connector.Connector
-  object OrderByBuyerTable extends OrderByBuyerTable with connector.Connector
-  object CardTypeTable extends CardTypeTable with connector.Connector
-  object ClientRequestTable extends ClientRequestTable with connector.Connector
-  object BuyerTable extends BuyerTable with connector.Connector
+case class OrderingContext(database: OrderingDatabase, mediator: MediatorDuty) extends UnitOfWork {
+  val OrderTable: database.OrderTable.type = database.OrderTable
+  val OrderByBuyerTable: database.OrderByBuyerTable.type = database.OrderByBuyerTable
+  val CardTypeTable: database.CardTypeTable.type = database.CardTypeTable
+  val ClientRequestTable: database.ClientRequestTable.type = database.ClientRequestTable
+  val BuyerTable: database.BuyerTable.type = database.BuyerTable
 
   override def saveChangeAsync(transactions: Transactions): Future[Int] = {
     transactions.execute()

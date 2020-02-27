@@ -21,7 +21,7 @@ import nudemeth.poc.ordering.domain.event.OrderCancelledDomainEvent
 import nudemeth.poc.ordering.domain.model.aggregate.buyer.BuyerRepositoryOperations
 import nudemeth.poc.ordering.infrastructure.{ Connector, OrderingContext }
 import nudemeth.poc.ordering.infrastructure.eventbus.rabbitmq.EventBusRabbitMq
-import nudemeth.poc.ordering.infrastructure.repository.{ BuyerRepository, OrderRepository }
+import nudemeth.poc.ordering.infrastructure.repository.{ BuyerRepository, OrderRepository, OrderingDatabase }
 
 //#main-class
 object Server {
@@ -39,7 +39,7 @@ object Server {
     val orderingQuery: OrderQueryable = new OrderQuery()
     val orderingIntegrationEventService = OrderingIntegrationEventService(EventBusRabbitMq())
 
-    lazy val orderingContext: OrderingContext = OrderingContext(Connector.connector, mediator)
+    lazy val orderingContext: OrderingContext = OrderingContext(OrderingDatabase(), mediator)
     lazy val orderRepo: OrderRepository = OrderRepository(orderingContext)
     lazy val buyerRepo: BuyerRepositoryOperations = BuyerRepository(orderingContext)
     lazy val handlers: Map[Class[_ <: Request[Any]], _ <: RequestHandler[_ <: Request[Any], Any]] = Map(
