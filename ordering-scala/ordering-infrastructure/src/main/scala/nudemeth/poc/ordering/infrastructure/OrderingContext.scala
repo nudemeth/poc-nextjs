@@ -14,14 +14,14 @@ case class OrderingContext(database: OrderingDatabase, mediator: MediatorDuty) e
   val ClientRequestTable: database.ClientRequestTable.type = database.ClientRequestTable
   val BuyerTable: database.BuyerTable.type = database.BuyerTable
 
-  override def saveChangeAsync(transactions: Transactions): Future[Int] = {
+  override def saveChangesAsync[T](transactions: Transactions[T]): Future[T] = {
     transactions.execute()
   }
 
-  override def saveEntitiesAsync(transactions: Transactions): Future[Boolean] = {
+  override def saveEntitiesAsync[T](transactions: Transactions[T]): Future[Boolean] = {
     for {
       result <- dispatchDomainEventsAsync()
-      saveResult <- saveChangeAsync(transactions)
+      saveResult <- saveChangesAsync(transactions)
     } yield true
   }
 

@@ -3,7 +3,7 @@ import java.time.ZoneOffset
 import java.util.UUID
 
 import com.outworkers.phantom.dsl._
-import nudemeth.poc.ordering.domain.model.UnitOfWork
+import nudemeth.poc.ordering.domain.model.{ Transactions, UnitOfWork }
 import nudemeth.poc.ordering.domain.model.aggregate.order
 import nudemeth.poc.ordering.domain.model.aggregate.buyer.{ CardType, PaymentMethod }
 import nudemeth.poc.ordering.domain.model.aggregate.order.{ Address, Order, OrderItem, OrderPayment, OrderPaymentRepositoryOperations }
@@ -24,7 +24,7 @@ case class OrderRepository(orderingContext: OrderingContext) extends OrderPaymen
     }
   }
 
-  override def addOrUpdateOrderAsync(order: Order, paymentMethod: PaymentMethod, domainEvents: Vector[Notification]): Future[Unit] = {
+  override def addOrUpdateOrderAsync(order: Order, paymentMethod: PaymentMethod, domainEvents: Vector[Notification]): Transactions[Unit] = {
     val orderByIdEntity = OrderByIdEntity(
       order.orderId,
       order.buyerId,
@@ -44,11 +44,10 @@ case class OrderRepository(orderingContext: OrderingContext) extends OrderPaymen
       paymentMethod.cardType.toString,
       order.orderItems.map(o => o.productId -> (o.productName, o.pictureUrl, o.unitPrice, o.discount, o.units)).toMap)
     val orderByBuyerEntity = OrderByBuyerEntity(order.orderId, order.buyerId, order.orderDate.atOffset(ZoneOffset.UTC), order.orderStatus, order.orderItems.size)
-    Batch.logged
+    val batch = Batch.logged
       .add(orderingContext.OrderTable.saveOrUpdateTransaction(orderByIdEntity))
       .add(orderingContext.OrderByBuyerTable.saveOrUpdateTransaction(orderByBuyerEntity))
-      .future()
-      .map(_ => ())
+    CassandraTransactions(batch, _ => ())
   }
 
   private def mapToDomainModel(mbEntity: Option[OrderByIdEntity]): Option[OrderPayment] = {

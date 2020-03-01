@@ -12,8 +12,6 @@ import nudemeth.poc.ordering.infrastructure.{ Connector, OrderingContext }
 import scala.concurrent.Future
 
 case class BuyerRepository(orderingContext: OrderingContext) extends BuyerRepositoryOperations {
-  implicit val session: Session = Connector.connector.session
-
   override val unitOfWork: UnitOfWork = orderingContext
 
   override def addOrUpdate(buyer: Buyer): Future[Unit] = {

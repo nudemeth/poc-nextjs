@@ -1,11 +1,17 @@
 package nudemeth.poc.ordering.infrastructure.repository
 
+import com.outworkers.phantom.builder.Unspecified
+import com.outworkers.phantom.builder.batch.BatchQuery
+import com.outworkers.phantom.dsl._
 import nudemeth.poc.ordering.domain.model.Transactions
+import nudemeth.poc.ordering.infrastructure.Connector
 
 import scala.concurrent.Future
 
-case class CassandraTransactions() extends Transactions {
-  override def execute[T](): Future[T] = {
-    Future.successful(new T)
+case class CassandraTransactions[T](batchQuery: BatchQuery[Unspecified], mapToResult: ResultSet => T) extends Transactions[T] {
+  implicit val session: Session = Connector.connector.session
+
+  override def execute(): Future[T] = {
+    batchQuery.future().map(mapToResult)
   }
 }

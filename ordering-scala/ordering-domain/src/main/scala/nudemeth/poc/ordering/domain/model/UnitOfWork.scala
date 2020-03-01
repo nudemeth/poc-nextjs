@@ -3,6 +3,6 @@ package nudemeth.poc.ordering.domain.model
 import scala.concurrent.Future
 
 trait UnitOfWork {
-  def saveChangeAsync(transactions: Transactions): Future[Int]
-  def saveEntitiesAsync(transactions: Transactions): Future[Boolean]
+  def saveChangesAsync[T](transactions: Transactions[T]): Future[T]
+  def saveEntitiesAsync[T](transactions: Transactions[T]): Future[Boolean]
 }
