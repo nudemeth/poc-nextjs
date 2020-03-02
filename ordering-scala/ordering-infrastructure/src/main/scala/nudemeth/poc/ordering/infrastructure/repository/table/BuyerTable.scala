@@ -4,9 +4,12 @@ import java.time.OffsetDateTime
 import java.util.UUID
 
 import com.outworkers.phantom.Table
+import com.outworkers.phantom.builder.Specified
+import com.outworkers.phantom.builder.query.InsertQuery
 import com.outworkers.phantom.dsl._
 import com.outworkers.phantom.jdk8.indexed._
 import nudemeth.poc.ordering.infrastructure.repository.entity.BuyerEntity
+import shapeless.HNil
 
 import scala.concurrent.Future
 
@@ -25,11 +28,15 @@ abstract class BuyerTable extends Table[BuyerTable, BuyerEntity] {
   }
 
   def saveOrUpdate(buyer: BuyerEntity): Future[ResultSet] = {
+    saveOrUpdateTransaction(buyer).future()
+  }
+
+  def saveOrUpdateTransaction(buyer: BuyerEntity): InsertQuery[BuyerTable, BuyerEntity, Specified, HNil] = {
     insert
       .value(_.buyerId, buyer.buyerId)
       .value(_.name, buyer.name)
       .value(_.paymentMethods, buyer.paymentMethods)
-      .future()
+      .consistencyLevel_=(ConsistencyLevel.ALL)
   }
 
   def deleteById(id: UUID): Future[ResultSet] = {
