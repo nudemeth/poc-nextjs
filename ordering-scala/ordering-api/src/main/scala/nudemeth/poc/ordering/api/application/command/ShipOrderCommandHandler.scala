@@ -12,8 +12,8 @@ case class ShipOrderCommandHandler(orderRepository: OrderPaymentRepositoryOperat
       case None => Future.successful(false)
       case Some(o) => o.setShippedStatus() match {
         case Failure(exception) => Future.successful(false)
-        case Success(value) =>
-          val transactions = orderRepository.addOrUpdateOrderAsync(value.order, value.paymentMethod, value.domainEvents)
+        case Success(orderPayment) =>
+          val transactions = orderRepository.addOrUpdateOrderAsync(orderPayment)
           orderRepository.unitOfWork.saveEntitiesAsync(transactions).map(_ => true)
       }
     }

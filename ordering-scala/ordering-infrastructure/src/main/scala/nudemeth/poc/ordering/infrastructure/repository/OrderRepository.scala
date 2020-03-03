@@ -24,30 +24,30 @@ case class OrderRepository(orderingContext: OrderingContext) extends OrderPaymen
     }
   }
 
-  override def addOrUpdateOrderAsync(order: Order, paymentMethod: PaymentMethod, domainEvents: Vector[Notification]): Transactions[Unit] = {
+  override def addOrUpdateOrderAsync(orderPayment: OrderPayment): Transactions[Unit] = {
     val orderByIdEntity = OrderByIdEntity(
-      order.orderId,
-      order.buyerId,
-      order.orderDate.atOffset(ZoneOffset.UTC),
-      order.description,
-      order.address.city,
-      order.address.country,
-      order.address.state,
-      order.address.street,
-      order.address.zipCode,
-      order.orderStatus,
-      paymentMethod.alias,
-      paymentMethod.cardNumber,
-      paymentMethod.cardSecurityNumber,
-      paymentMethod.cardHolderName,
-      paymentMethod.cardExpiration.atOffset(ZoneOffset.UTC),
-      paymentMethod.cardType.toString,
-      order.orderItems.map(o => o.productId -> (o.productName, o.pictureUrl, o.unitPrice, o.discount, o.units)).toMap)
-    val orderByBuyerEntity = OrderByBuyerEntity(order.orderId, order.buyerId, order.orderDate.atOffset(ZoneOffset.UTC), order.orderStatus, order.orderItems.size)
+      orderPayment.order.orderId,
+      orderPayment.order.buyerId,
+      orderPayment.order.orderDate.atOffset(ZoneOffset.UTC),
+      orderPayment.order.description,
+      orderPayment.order.address.city,
+      orderPayment.order.address.country,
+      orderPayment.order.address.state,
+      orderPayment.order.address.street,
+      orderPayment.order.address.zipCode,
+      orderPayment.order.orderStatus,
+      orderPayment.paymentMethod.alias,
+      orderPayment.paymentMethod.cardNumber,
+      orderPayment.paymentMethod.cardSecurityNumber,
+      orderPayment.paymentMethod.cardHolderName,
+      orderPayment.paymentMethod.cardExpiration.atOffset(ZoneOffset.UTC),
+      orderPayment.paymentMethod.cardType.toString,
+      orderPayment.order.orderItems.map(o => o.productId -> (o.productName, o.pictureUrl, o.unitPrice, o.discount, o.units)).toMap)
+    val orderByBuyerEntity = OrderByBuyerEntity(orderPayment.order.orderId, orderPayment.order.buyerId, orderPayment.order.orderDate.atOffset(ZoneOffset.UTC), orderPayment.order.orderStatus, orderPayment.order.orderItems.size)
     val batch = Batch.logged
       .add(orderingContext.OrderTable.saveOrUpdateTransaction(orderByIdEntity))
       .add(orderingContext.OrderByBuyerTable.saveOrUpdateTransaction(orderByBuyerEntity))
-    CassandraTransactions(batch, _ => ())
+    CassandraTransactions(batch, _ => (), orderPayment.domainEvents)
   }
 
   private def mapToDomainModel(mbEntity: Option[OrderByIdEntity]): Option[OrderPayment] = {
