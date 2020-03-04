@@ -1,9 +1,9 @@
 package nudemeth.poc.ordering.infrastructure
 
 import com.outworkers.phantom.dsl._
-import nudemeth.poc.ordering.domain.model.{ Transactions, UnitOfWork }
+import nudemeth.poc.ordering.domain.model.{Transactions, UnitOfWork}
 import nudemeth.poc.ordering.infrastructure.repository.OrderingDatabase
-import nudemeth.poc.ordering.util.mediator.MediatorDuty
+import nudemeth.poc.ordering.util.mediator.{MediatorDuty, Notification}
 
 import scala.concurrent.Future
 
@@ -20,13 +20,12 @@ case class OrderingContext(database: OrderingDatabase, mediator: MediatorDuty) e
 
   override def saveEntitiesAsync[T](transactions: Transactions[T]): Future[Boolean] = {
     for {
-      result <- dispatchDomainEventsAsync()
+      result <- dispatchDomainEventsAsync(transactions.domainEvents)
       saveResult <- saveChangesAsync(transactions)
     } yield true
   }
 
-  private def dispatchDomainEventsAsync(): Future[Unit] = {
-    //mediator
+  private def dispatchDomainEventsAsync(domainEvents: Vector[Notification]): Future[Unit] = {
     Future.unit
   }
 }
