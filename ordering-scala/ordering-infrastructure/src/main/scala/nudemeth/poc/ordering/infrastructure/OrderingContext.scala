@@ -1,9 +1,9 @@
 package nudemeth.poc.ordering.infrastructure
 
 import com.outworkers.phantom.dsl._
-import nudemeth.poc.ordering.domain.model.{Transactions, UnitOfWork}
+import nudemeth.poc.ordering.domain.model.{ Transactions, UnitOfWork }
 import nudemeth.poc.ordering.infrastructure.repository.OrderingDatabase
-import nudemeth.poc.ordering.util.mediator.{MediatorDuty, Notification}
+import nudemeth.poc.ordering.util.mediator.{ MediatorDuty, Notification }
 
 import scala.concurrent.Future
 
@@ -26,6 +26,6 @@ case class OrderingContext(database: OrderingDatabase, mediator: MediatorDuty) e
   }
 
   private def dispatchDomainEventsAsync(domainEvents: Vector[Notification]): Future[Unit] = {
-    Future.unit
+    Future.sequence(domainEvents.map(d => mediator.publish(d))).map(_ => ())
   }
 }
