@@ -42,7 +42,8 @@ lazy val api = (project in file("./ordering-api"))
 
       "ch.qos.logback"    %  "logback-classic"      % logbackVersion   % Runtime,
 
-      "com.pauldijou"     %% "jwt-core"             % "4.2.0"
+      "com.pauldijou"     %% "jwt-core"             % "4.2.0",
+      "com.newmotion"     %% "akka-rabbitmq"        % "5.1.2"
     )
   )
 
@@ -72,6 +73,8 @@ lazy val infrastructure = (project in file("./ordering-infrastructure"))
 
       "com.outworkers"    %% "phantom-dsl"          % phantomVersion,
       "com.outworkers"    %% "phantom-jdk8"         % phantomVersion,
+
+      "com.newmotion"     %% "akka-rabbitmq"        % "5.1.2",
 
       "org.scalatest"     %% "scalatest"            % "3.0.5"         % Test
     )

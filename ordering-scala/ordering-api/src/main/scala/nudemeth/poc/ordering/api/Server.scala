@@ -10,6 +10,7 @@ import scala.util.{ Failure, Success }
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.Http.ServerBinding
 import akka.stream.Materializer
+import com.newmotion.akka.rabbitmq.{ ConnectionActor, ConnectionFactory }
 import nudemeth.poc.ordering.api.application.command.{ CancelOrderCommand, CancelOrderCommandHandler, IdentifiedCommand, IdentifiedCommandHandler, ShipOrderCommand, ShipOrderCommandHandler }
 import nudemeth.poc.ordering.api.application.domaineventhandler.OrderCancelledDomainEventHandler
 import nudemeth.poc.ordering.api.application.integrationevent.{ OrderingIntegrationEventService, OrderingIntegrationEventServiceOperations }
@@ -36,8 +37,13 @@ object Server {
     implicit val materializer: Materializer = Materializer(ctx.system)
     implicit val executionContext: ExecutionContext = ctx.system.executionContext
 
+    val rabbitMqFactory = new ConnectionFactory()
+    rabbitMqFactory.setHost("rabbit-mq")
+    rabbitMqFactory.setUsername("username")
+    rabbitMqFactory.setPassword("password")
+    val rabbitMqConnectionActor = untypedSystem.actorOf(ConnectionActor.props(rabbitMqFactory), "ordering-eventbus-connection-actor")
     val orderingQuery: OrderQueryable = new OrderQuery()
-    val orderingIntegrationEventService = OrderingIntegrationEventService(EventBusRabbitMq())
+    val orderingIntegrationEventService = OrderingIntegrationEventService(EventBusRabbitMq(rabbitMqConnectionActor))
 
     lazy val orderingContext: OrderingContext = OrderingContext(OrderingDatabase(), mediator)
     lazy val orderRepo: OrderRepository = OrderRepository(orderingContext)

@@ -1,9 +1,12 @@
 package nudemeth.poc.ordering.infrastructure.eventbus.rabbitmq
 
+import akka.actor.ActorRef
+import com.newmotion.akka.rabbitmq.{ ChannelActor, CreateChannel }
 import nudemeth.poc.ordering.infrastructure.eventbus.{ EventBusOperations, IntegrationEvent, IntegrationEventHandlerOperations }
 
-case class EventBusRabbitMq() extends EventBusOperations {
+case class EventBusRabbitMq(connectionActor: ActorRef) extends EventBusOperations {
   override def publish(integrationEvent: IntegrationEvent): Unit = {
+    connectionActor ! CreateChannel(ChannelActor.props(), Some("ordering-eventbus-publisher-actor"))
 
   }
 
