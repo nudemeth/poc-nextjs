@@ -75,6 +75,7 @@ lazy val infrastructure = (project in file("./ordering-infrastructure"))
       "com.outworkers"    %% "phantom-jdk8"         % phantomVersion,
 
       "com.newmotion"     %% "akka-rabbitmq"        % "5.1.2",
+      "io.spray"          %% "spray-json"           % "1.3.5",
 
       "org.scalatest"     %% "scalatest"            % "3.0.5"         % Test
     )

@@ -41,9 +41,9 @@ object Server {
     rabbitMqFactory.setHost("rabbit-mq")
     rabbitMqFactory.setUsername("username")
     rabbitMqFactory.setPassword("password")
-    val rabbitMqConnectionActor = untypedSystem.actorOf(ConnectionActor.props(rabbitMqFactory), "ordering-eventbus-connection-actor")
+    //val rabbitMqConnectionActor = untypedSystem.actorOf(ConnectionActor.props(rabbitMqFactory), "ordering-eventbus-connection-actor")
     val orderingQuery: OrderQueryable = new OrderQuery()
-    val orderingIntegrationEventService = OrderingIntegrationEventService(EventBusRabbitMq(rabbitMqConnectionActor))
+    val orderingIntegrationEventService = OrderingIntegrationEventService(EventBusRabbitMq(rabbitMqFactory.newConnection()))
 
     lazy val orderingContext: OrderingContext = OrderingContext(OrderingDatabase(), mediator)
     lazy val orderRepo: OrderRepository = OrderRepository(orderingContext)
