@@ -11,7 +11,7 @@ import nudemeth.poc.ordering.infrastructure.eventbus._
 import spray.json._
 import DefaultJsonProtocol._
 
-case class EventBusRabbitMq(connection: Connection, eventJsonConverter: IntegrationEventJsonConverter) extends EventBusOperations {
+case class EventBusRabbitMq(connection: Connection, eventJsonConverter: IntegrationEventJsonConverterOperations) extends EventBusOperations {
   implicit object UUIDFormat extends JsonFormat[UUID] {
     def write(uuid: UUID): JsString = JsString(uuid.toString)
     def read(value: JsValue): UUID = {
