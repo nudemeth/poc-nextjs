@@ -10,17 +10,18 @@ import scala.util.{ Failure, Success }
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.Http.ServerBinding
 import akka.stream.Materializer
-import com.newmotion.akka.rabbitmq.{ ConnectionActor, ConnectionFactory }
+import com.newmotion.akka.rabbitmq.ConnectionFactory
 import nudemeth.poc.ordering.api.application.command.{ CancelOrderCommand, CancelOrderCommandHandler, IdentifiedCommand, IdentifiedCommandHandler, ShipOrderCommand, ShipOrderCommandHandler }
 import nudemeth.poc.ordering.api.application.domaineventhandler.OrderCancelledDomainEventHandler
-import nudemeth.poc.ordering.api.application.integrationevent.{ OrderingIntegrationEventService, OrderingIntegrationEventServiceOperations }
+import nudemeth.poc.ordering.api.application.integrationevent.event.IntegrationEventJsonConverter
+import nudemeth.poc.ordering.api.application.integrationevent.OrderingIntegrationEventService
 import nudemeth.poc.ordering.api.application.query.{ OrderQuery, OrderQueryable }
 import nudemeth.poc.ordering.api.controller.{ OrderingRegistryActor, OrderingRoutes }
 import nudemeth.poc.ordering.util.mediator.{ Mediator, Notification, NotificationHandler, Request, RequestHandler }
 import nudemeth.poc.ordering.api.infrastructure.service.IdentityService
 import nudemeth.poc.ordering.domain.event.OrderCancelledDomainEvent
 import nudemeth.poc.ordering.domain.model.aggregate.buyer.BuyerRepositoryOperations
-import nudemeth.poc.ordering.infrastructure.{ Connector, OrderingContext }
+import nudemeth.poc.ordering.infrastructure.OrderingContext
 import nudemeth.poc.ordering.infrastructure.eventbus.rabbitmq.EventBusRabbitMq
 import nudemeth.poc.ordering.infrastructure.repository.{ BuyerRepository, OrderRepository, OrderingDatabase }
 
@@ -43,7 +44,7 @@ object Server {
     rabbitMqFactory.setPassword("password")
     //val rabbitMqConnectionActor = untypedSystem.actorOf(ConnectionActor.props(rabbitMqFactory), "ordering-eventbus-connection-actor")
     val orderingQuery: OrderQueryable = new OrderQuery()
-    val orderingIntegrationEventService = OrderingIntegrationEventService(EventBusRabbitMq(rabbitMqFactory.newConnection()))
+    val orderingIntegrationEventService = OrderingIntegrationEventService(EventBusRabbitMq(rabbitMqFactory.newConnection(), IntegrationEventJsonConverter))
 
     lazy val orderingContext: OrderingContext = OrderingContext(OrderingDatabase(), mediator)
     lazy val orderRepo: OrderRepository = OrderRepository(orderingContext)

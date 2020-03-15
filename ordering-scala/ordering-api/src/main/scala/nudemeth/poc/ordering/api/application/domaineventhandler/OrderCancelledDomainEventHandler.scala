@@ -19,7 +19,7 @@ case class OrderCancelledDomainEventHandler(orderPaymentRepo: OrderPaymentReposi
       maybeBuyer <- buyerRepo.find(orderPayment.order.buyerId)
     } yield for {
       buyer <- maybeBuyer
-      event = OrderStatusChangedToCancelledIntegrationEvent(orderPayment.order.orderId, orderPayment.order.orderStatus, buyer.name)
+      event = new OrderStatusChangedToCancelledIntegrationEvent(orderPayment.order.orderId, orderPayment.order.orderStatus, buyer.name)
     } yield for {
       result <- orderingIntegrationEventService.publishThroughEventBusAsync(event)
     } yield result
