@@ -1,15 +1,11 @@
 package nudemeth.poc.ordering.infrastructure.eventbus.rabbitmq
 
 import java.nio.charset.StandardCharsets
-import java.time.{ Instant, OffsetDateTime, ZoneOffset }
-import java.time.format.DateTimeFormatter
-import java.util.UUID
 
 import com.newmotion.akka.rabbitmq.{ BasicProperties, Channel, ChannelActor, Connection, CreateChannel }
 import com.rabbitmq.client.AMQP.BasicProperties
 import nudemeth.poc.ordering.infrastructure.eventbus._
 import spray.json._
-import DefaultJsonProtocol._
 
 case class EventBusRabbitMq(connection: Connection, eventJsonConverter: IntegrationEventJsonConverterOperations) extends EventBusOperations {
 
