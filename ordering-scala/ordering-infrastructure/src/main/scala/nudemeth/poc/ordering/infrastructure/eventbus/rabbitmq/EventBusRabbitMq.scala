@@ -7,7 +7,7 @@ import com.rabbitmq.client.AMQP.BasicProperties
 import nudemeth.poc.ordering.infrastructure.eventbus._
 import spray.json._
 
-case class EventBusRabbitMq(connection: Connection, eventJsonConverter: IntegrationEventJsonConverterOperations) extends EventBusOperations {
+case class EventBusRabbitMq(connection: Connection, eventJsonConverter: IntegrationEventJsonConverterOperations, subsManager: EventBusSubscriptionsManager) extends EventBusOperations {
 
   implicit object IntegrationEventFormat extends RootJsonFormat[IntegrationEvent] {
     def write(event: IntegrationEvent): JsValue = eventJsonConverter.writeJson(event)
