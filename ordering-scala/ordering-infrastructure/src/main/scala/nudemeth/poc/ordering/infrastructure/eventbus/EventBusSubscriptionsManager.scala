@@ -7,4 +7,5 @@ trait EventBusSubscriptionsManager {
   def removeSubscription[T <: IntegrationEvent, TH <: IntegrationEventHandlerOperations[T]]()(implicit eventTag: TypeTag[T], handlerTag: TypeTag[TH]): Unit
   def getEventKey[T]()(implicit eventTag: TypeTag[T]): String
   def hasSubscriptionsForEvent[T <: IntegrationEvent]()(implicit eventTag: TypeTag[T]): Boolean
+  def hasSubscriptionsForEvent(eventName: String): Boolean
 }
