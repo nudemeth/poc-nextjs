@@ -29,6 +29,7 @@ case class EventBusRabbitMq(connection: Connection, eventJsonConverter: Integrat
   }
 
   override def subscribe[T <: IntegrationEvent, TH <: IntegrationEventHandlerOperations[T]](): Unit = {
+    val a = InMemoryEventBusSubscriptionsManager()
 
   }
 

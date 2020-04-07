@@ -1,10 +1,15 @@
 package nudemeth.poc.ordering.infrastructure.eventbus
 
+import nudemeth.poc.ordering.util.event.Event
+
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 import scala.reflect.runtime.universe._
 
-case class InMemoryEventBusSubscriptionsManager(private val handlers: mutable.Map[String, Vector[SubscriptionInfo]], private val eventTypes: ArrayBuffer[Class[_]]) extends EventBusSubscriptionsManager {
+case class InMemoryEventBusSubscriptionsManager() extends EventBusSubscriptionsManager {
+  private val handlers: mutable.Map[String, Vector[SubscriptionInfo]] = new mutable.HashMap[String, Vector[SubscriptionInfo]]()
+  private val eventTypes: ArrayBuffer[Class[_]] = new ArrayBuffer[Class[_]]()
+  val onEventRemoved: Event[String] = new Event[String]()
 
   override def addSubscription[T <: IntegrationEvent, TH <: IntegrationEventHandlerOperations[T]]()(implicit eventTag: TypeTag[T], handlerTag: TypeTag[TH]): Unit = {
     val eventName = getEventKey[T]
@@ -55,7 +60,7 @@ case class InMemoryEventBusSubscriptionsManager(private val handlers: mutable.Ma
   }
 
   private def raiseOnEventRemoved(eventName: String): Unit = {
-
+    onEventRemoved(this, eventName)
   }
 
   private def findSubscriptionToRemove[T <: IntegrationEvent, TH <: IntegrationEventHandlerOperations[T]]()(implicit eventTag: TypeTag[T], handlerTag: TypeTag[TH]): Option[SubscriptionInfo] = {
