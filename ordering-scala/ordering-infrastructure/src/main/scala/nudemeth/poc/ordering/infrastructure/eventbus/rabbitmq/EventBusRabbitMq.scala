@@ -6,8 +6,9 @@ import com.newmotion.akka.rabbitmq.{ BasicProperties, Channel, ChannelActor, Con
 import com.rabbitmq.client.AMQP.BasicProperties
 import nudemeth.poc.ordering.infrastructure.eventbus._
 import spray.json._
+import scala.reflect.runtime.universe._
 
-case class EventBusRabbitMq(connection: Connection, eventJsonConverter: IntegrationEventJsonConverterOperations, subsManager: EventBusSubscriptionsManager) extends EventBusOperations {
+case class EventBusRabbitMq(connection: Connection, eventJsonConverter: IntegrationEventJsonConverterOperations, subsManager: EventBusSubscriptionsManager, queueName: String) extends EventBusOperations {
 
   implicit object IntegrationEventFormat extends RootJsonFormat[IntegrationEvent] {
     def write(event: IntegrationEvent): JsValue = eventJsonConverter.writeJson(event)
@@ -28,13 +29,22 @@ case class EventBusRabbitMq(connection: Connection, eventJsonConverter: Integrat
     publish(channel, event.getClass.getName, body)
   }
 
-  override def subscribe[T <: IntegrationEvent, TH <: IntegrationEventHandlerOperations[T]](): Unit = {
-    val a = InMemoryEventBusSubscriptionsManager()
+  override def subscribe[T <: IntegrationEvent, TH <: IntegrationEventHandlerOperations[T]]()(implicit eventTag: TypeTag[T], handlerTag: TypeTag[TH]): Unit = {
+    val eventName = subsManager.getEventKey[T]()
+    doInternalSubscription(eventName)
+    subsManager.addSubscription[T, TH]()
+  }
+
+  override def unsubscribe[T <: IntegrationEvent, TH <: IntegrationEventHandlerOperations[T]]()(implicit eventTag: TypeTag[T], handlerTag: TypeTag[TH]): Unit = {
 
   }
 
-  override def unsubscribe[T <: IntegrationEvent, TH <: IntegrationEventHandlerOperations[T]](): Unit = {
-
+  private def doInternalSubscription(eventName: String): Unit = {
+    val containsKey = subsManager.hasSubscriptionsForEvent(eventName)
+    if (!containsKey) {
+      val channel = connection.createChannel()
+      channel.queueBind(queueName, BROKER_NAME, eventName)
+    }
   }
 
 }
