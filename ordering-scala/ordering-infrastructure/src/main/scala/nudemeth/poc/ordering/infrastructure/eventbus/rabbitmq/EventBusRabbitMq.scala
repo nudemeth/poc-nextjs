@@ -36,7 +36,7 @@ case class EventBusRabbitMq(connection: Connection, eventJsonConverter: Integrat
   }
 
   override def unsubscribe[T <: IntegrationEvent, TH <: IntegrationEventHandlerOperations[T]]()(implicit eventTag: TypeTag[T], handlerTag: TypeTag[TH]): Unit = {
-
+    subsManager.removeSubscription[T, TH]()
   }
 
   private def doInternalSubscription(eventName: String): Unit = {
